@@ -22,6 +22,7 @@ class Config(BaseModel, extra=Extra.ignore):
 
     默认使用 SQLite
     """
+    datastore_database_echo: bool = False
 
     @root_validator(pre=True, allow_reuse=True)
     def set_database_url(cls, values: Dict):

@@ -66,6 +66,12 @@ def handle(session: AsyncSession = Depends(get_session)):
 - 默认: `sqlite+aiosqlite:///data_dir/data.db`
 - 说明: 数据库连接字符串，默认使用 SQLite 数据库
 
+### datastore_database_echo
+
+- 类型: `bool`
+- 默认: `False`
+- 说明: 是否显示数据库执行的语句与其参数列表
+
 ## 计划
 
 - [ ] 调整配置为 K-V 存储
