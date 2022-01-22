@@ -6,7 +6,7 @@
 
 <div align="center">
 
-# nonebot-plugin-datastore
+# NoneBot Plugin DataStore
 
 _✨ NoneBot 数据存储插件 ✨_
 
@@ -24,11 +24,19 @@ _✨ NoneBot 数据存储插件 ✨_
 
 ## 使用方式
 
-~待会儿写~
+加载插件后使用 `require` 获取导出方法
+
+```python
+from nonebot import require
+
+store = require("nonebot_plugin_localstore")
+
+DATA = store.PluginData("plugin_name")
+```
 
 ## 配置项
 
-配置方式：直接在 NoneBot 全局配置文件中添加以下配置项即可。
+配置方式：直接在 `NoneBot` 全局配置文件中添加以下配置项即可。
 
 ### cache_dir
 
