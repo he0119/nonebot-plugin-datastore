@@ -69,7 +69,7 @@ def handle(session: AsyncSession = Depends(get_session)):
 ## 计划
 
 - [ ] 调整配置为 K-V 存储
-- [ ] 调整配置存放位置至专门的配置目录
+- [x] 调整配置存放位置至专门的配置目录
 - [ ] 数据库为可选项
 - [ ] 支持将配置存放至数据库中
 - [ ] 支持 Alembic

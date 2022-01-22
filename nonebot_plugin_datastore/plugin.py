@@ -174,7 +174,7 @@ class PluginData:
     def config(self) -> ConfigData:
         """获取配置管理"""
         if not self._config:
-            self._config = ConfigData(self.data_dir / f"{self._name}.ini")
+            self._config = ConfigData(self.config_dir / f"{self._name}.ini")
         return self._config
 
     def save_pkl(self, data: object, filename: str, cache: bool = False) -> None:
