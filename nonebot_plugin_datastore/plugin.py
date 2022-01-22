@@ -1,5 +1,4 @@
-""" 插件数据
-"""
+""" 插件数据 """
 import configparser
 import json
 import os
@@ -151,7 +150,7 @@ class PluginData:
     @property
     def cache_dir(self) -> Path:
         """缓存目录"""
-        path = plugin_config.cache_dir / f"plugin-{self._name}"
+        path = plugin_config.datastore_cache_dir / f"plugin-{self._name}"
         # 如果文件夹不存在则自动新建
         os.makedirs(path, exist_ok=True)
         return path
@@ -159,7 +158,7 @@ class PluginData:
     @property
     def config_dir(self) -> Path:
         """配置目录"""
-        path = plugin_config.config_dir
+        path = plugin_config.datastore_config_dir
         # 如果文件夹不存在则自动新建
         os.makedirs(path, exist_ok=True)
         return path
@@ -167,7 +166,7 @@ class PluginData:
     @property
     def data_dir(self) -> Path:
         """数据目录"""
-        path = plugin_config.data_dir / f"plugin-{self._name}"
+        path = plugin_config.datastore_data_dir / f"plugin-{self._name}"
         # 如果文件夹不存在则自动新建
         os.makedirs(path, exist_ok=True)
         return path

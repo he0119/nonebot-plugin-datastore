@@ -1,3 +1,4 @@
+""" 数据库 """
 from typing import AsyncGenerator
 
 from nonebot import get_driver
@@ -7,7 +8,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from .config import plugin_config
 
-engine = create_async_engine(plugin_config.database_url, echo=True)
+engine = create_async_engine(plugin_config.datastore_database_url, echo=True)
 
 
 @get_driver().on_startup

@@ -1,3 +1,4 @@
+""" 配置 """
 from pathlib import Path
 from typing import Dict
 
@@ -13,10 +14,10 @@ BASE_DATA_DIR: Path = Path(store.get_data_dir(""))
 
 
 class Config(BaseModel, extra=Extra.ignore):
-    cache_dir: Path = BASE_CACHE_DIR
-    config_dir: Path = BASE_CONFIG_DIR
-    data_dir: Path = BASE_DATA_DIR
-    database_url: str
+    datastore_cache_dir: Path = BASE_CACHE_DIR
+    datastore_config_dir: Path = BASE_CONFIG_DIR
+    datastore_data_dir: Path = BASE_DATA_DIR
+    datastore_database_url: str
     """数据库连接字符串
 
     默认使用 SQLite
@@ -24,14 +25,16 @@ class Config(BaseModel, extra=Extra.ignore):
 
     @root_validator(pre=True, allow_reuse=True)
     def set_database_url(cls, values: Dict):
-        database_url = values.get("database_url")
-        data_dir = values.get("data_dir")
+        database_url = values.get("datastore_database_url")
+        data_dir = values.get("datastore_data_dir")
         if database_url is None:
             if data_dir is None:
                 data_dir = BASE_DATA_DIR
             else:
                 data_dir = Path(data_dir)
-            values["database_url"] = f"sqlite+aiosqlite:///{data_dir / 'data.db'}"
+            values[
+                "datastore_database_url"
+            ] = f"sqlite+aiosqlite:///{data_dir / 'data.db'}"
         return values
 
 

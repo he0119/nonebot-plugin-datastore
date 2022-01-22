@@ -38,25 +38,25 @@ DATA = store.PluginData("plugin_name")
 
 配置方式：直接在 `NoneBot` 全局配置文件中添加以下配置项即可。
 
-### cache_dir
+### datastore_cache_dir
 
 - 类型: `str`
 - 默认: [nonebot_plugin_localstore](https://github.com/nonebot/plugin-localstore) 插件提供的缓存目录
 - 说明: 缓存目录
 
-### config_dir
+### datastore_config_dir
 
 - 类型: `str`
 - 默认: [nonebot_plugin_localstore](https://github.com/nonebot/plugin-localstore) 插件提供的配置目录
 - 说明: 配置目录
 
-### data_dir
+### datastore_data_dir
 
 - 类型: `str`
 - 默认: [nonebot_plugin_localstore](https://github.com/nonebot/plugin-localstore) 插件提供的数据目录
 - 说明: 数据目录
 
-### database_url
+### datastore_database_url
 
 - 类型: `str`
 - 默认: `sqlite+aiosqlite:///data_dir/data.db`
