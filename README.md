@@ -24,14 +24,18 @@ _✨ NoneBot 数据存储插件 ✨_
 
 ## 使用方式
 
-加载插件后使用 `require` 获取导出方法
+加载插件后直接导出方法
 
 ```python
-from nonebot import require
+from nonebot.params import Depends
+from nonebot_plugin_localstore import PluginData, get_session
+from sqlmodel.ext.asyncio.session import AsyncSession
 
-store = require("nonebot_plugin_localstore")
+DATA = PluginData("plugin_name")
 
-DATA = store.PluginData("plugin_name")
+@matcher.handle()
+def handle(session: AsyncSession = Depends(get_session)):
+    await session.exec()
 ```
 
 ## 配置项
