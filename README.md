@@ -64,4 +64,12 @@ def handle(session: AsyncSession = Depends(get_session)):
 
 - 类型: `str`
 - 默认: `sqlite+aiosqlite:///data_dir/data.db`
-- 说明: 数据库连接字符串
+- 说明: 数据库连接字符串，默认使用 SQLite 数据库
+
+## 计划
+
+- [ ] 调整配置为 K-V 存储
+- [ ] 调整配置存放位置至专门的配置目录
+- [ ] 数据库为可选项
+- [ ] 支持将配置存放至数据库中
+- [ ] 支持 Alembic
