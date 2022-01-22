@@ -72,7 +72,7 @@ class NetworkFile:
         url: str,
         filename: str,
         plugin_data: "PluginData",
-        process_data: Callable[[Dict], Dict] = None,
+        process_data: Callable[[Any], Any] = None,
         cache: bool = False,
     ) -> None:
         self._url = url
@@ -83,7 +83,7 @@ class NetworkFile:
 
         self._data = None
 
-    async def load_from_network(self) -> Optional[Dict]:
+    async def load_from_network(self) -> Optional[Any]:
         """从网络加载文件"""
         logger.info("正在从网络获取数据")
         async with httpx.AsyncClient() as client:
@@ -98,11 +98,9 @@ class NetworkFile:
             ) as f:
                 json.dump(rjson, f, ensure_ascii=False, indent=2)
             logger.info("已保存数据至本地")
-            if self._process_data:
-                rjson = self._process_data(rjson)
             return rjson
 
-    def load_from_local(self) -> Optional[Dict]:
+    def load_from_local(self) -> Optional[Any]:
         """从本地获取数据"""
         logger.info("正在加载本地数据")
         if self._plugin_data.exists(self._filename):
@@ -112,12 +110,10 @@ class NetworkFile:
                 cache=self._cache,
             ) as f:
                 data = json.load(f)
-                if self._process_data:
-                    data = self._process_data(data)
                 return data
 
     @property
-    async def data(self) -> Optional[Dict]:
+    async def data(self) -> Optional[Any]:
         """数据
 
         先从本地加载，如果失败则从仓库加载
@@ -126,6 +122,9 @@ class NetworkFile:
             self._data = self.load_from_local()
         if not self._data:
             self._data = await self.load_from_network()
+        # 对数据进行处理
+        if self._data and self._process_data:
+            self._data = self._process_data(self._data)
         return self._data
 
     async def update(self) -> None:
