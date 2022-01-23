@@ -1,5 +1,4 @@
 """ 插件数据 """
-import configparser
 import json
 import os
 import pickle
@@ -17,7 +16,7 @@ class ConfigData:
 
     def __init__(self, path: Path) -> None:
         self._path = path
-        self._config = configparser.ConfigParser()
+        self._data = {}
         if self._path.exists():
             self._load_config()
         else:
@@ -25,39 +24,36 @@ class ConfigData:
 
     def _load_config(self) -> None:
         """读取配置"""
-        self._config.read(self._path, encoding="utf8")
+        with self._path.open("r", encoding="utf8") as f:
+            self._data = json.load(f)
 
     def _save_config(self) -> None:
         """保存配置"""
-        with open(self._path, "w", encoding="utf8") as conf:
-            self._config.write(conf)
+        with self._path.open("w", encoding="utf8") as f:
+            json.dump(self._data, f, ensure_ascii=False, indent=2)
 
-    def get(self, section: str, option: str, fallback: str = "") -> str:
+    def _get(self, key: str) -> str:
+        """获取配置键值"""
+        # TODO: 支持从数据库读取数据
+        return self._data[key]
+
+    def get(self, key: str, *, default: Any = "") -> Any:
         """获得配置
 
-        如果配置不存在则使用 `fallback` 并保存
-        如果不提供 `fallback` 默认返回空字符串
+        如果配置不存在则使用 `default` 并保存
+        如果不提供 `default` 默认返回空字符串
         """
         try:
-            value = self._config.get(section, option)
-        except (configparser.NoSectionError, configparser.NoOptionError):
-            value = fallback
+            value = self._get(key)
+        except:
+            value = default
             # 保存默认配置
-            if section not in self._config.sections():
-                self._config[section] = {}
-            self._config.set(section, option, fallback)
-            self._save_config()
+            self.set(key, value)
         return value
 
-    def getint(self, section: str, option: str, fallback: int = 0) -> int:
-        """默认为 0"""
-        return int(self.get(section, option, str(fallback)))
-
-    def set(self, section: str, option: str, value: str) -> None:
+    def set(self, key: str, value: Any) -> None:
         """设置配置"""
-        if section not in self._config.sections():
-            self._config[section] = {}
-        self._config.set(section, option, value)
+        self._data[key] = value
         self._save_config()
 
 
@@ -177,10 +173,10 @@ class PluginData:
     def config(self) -> ConfigData:
         """获取配置管理"""
         if not self._config:
-            self._config = ConfigData(self.config_dir / f"{self._name}.ini")
+            self._config = ConfigData(self.config_dir / f"{self._name}.json")
         return self._config
 
-    def save_pkl(self, data: object, filename: str, cache: bool = False) -> None:
+    def save_pkl(self, data: Any, filename: str, cache: bool = False) -> None:
         with self.open(f"{filename}.pkl", "wb", cache=cache) as f:
             pickle.dump(data, f)
 
@@ -189,21 +185,16 @@ class PluginData:
             data = pickle.load(f)
         return data
 
-    def open(
-        self,
-        filename: str,
-        open_mode: str = "r",
-        encoding: Optional[str] = None,
-        cache: bool = False,
-    ) -> IO:
+    def open(self, filename: str, mode: str = "r", cache: bool = False, **kwargs) -> IO:
+        """打开文件，默认打开数据文件夹下的文件"""
         if cache:
             path = self.cache_dir / filename
         else:
             path = self.data_dir / filename
-        return open(path, open_mode, encoding=encoding)
+        return open(path, mode, **kwargs)
 
     def exists(self, filename: str, cache: bool = False) -> bool:
-        """判断文件是否存在"""
+        """判断文件是否存在，默认判断数据文件夹下的文件"""
         if cache:
             path = self.cache_dir / filename
         else:
