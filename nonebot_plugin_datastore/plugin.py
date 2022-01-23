@@ -88,7 +88,7 @@ class NetworkFile:
             # 同时保存一份文件在本地，以后就不用从网络获取
             with self._plugin_data.open(
                 self._filename,
-                open_mode="w",
+                "w",
                 encoding="utf8",
                 cache=self._cache,
             ) as f:
