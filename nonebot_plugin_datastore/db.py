@@ -8,18 +8,22 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from .config import plugin_config
 
-engine = create_async_engine(
-    plugin_config.datastore_database_url,
-    echo=plugin_config.datastore_database_echo,
-)
+if plugin_config.datastore_enable_database:
+    engine = create_async_engine(
+        plugin_config.datastore_database_url,
+        echo=plugin_config.datastore_database_echo,
+    )
 
+    async def init_db():
+        async with engine.begin() as conn:
+            await conn.run_sync(SQLModel.metadata.create_all)
 
-@get_driver().on_startup
-async def init_db():
-    async with engine.begin() as conn:
-        await conn.run_sync(SQLModel.metadata.create_all)
+    get_driver().on_startup(init_db)
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
+    if not plugin_config.datastore_enable_database:
+        raise ValueError("Database is not enabled.")
+
     async with AsyncSession(engine) as session:
         yield session

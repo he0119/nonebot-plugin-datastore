@@ -17,6 +17,7 @@ class Config(BaseModel, extra=Extra.ignore):
     datastore_cache_dir: Path = BASE_CACHE_DIR
     datastore_config_dir: Path = BASE_CONFIG_DIR
     datastore_data_dir: Path = BASE_DATA_DIR
+    datastore_enable_database: bool = False
     datastore_database_url: str
     """数据库连接字符串
 

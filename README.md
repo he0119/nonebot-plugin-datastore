@@ -60,6 +60,12 @@ def handle(session: AsyncSession = Depends(get_session)):
 - 默认: [nonebot_plugin_localstore](https://github.com/nonebot/plugin-localstore) 插件提供的数据目录
 - 说明: 数据目录
 
+### datastore_enable_database
+
+- 类型: `bool`
+- 默认: `False`
+- 说明: 是否启动数据库
+
 ### datastore_database_url
 
 - 类型: `str`
@@ -76,6 +82,6 @@ def handle(session: AsyncSession = Depends(get_session)):
 
 - [ ] 调整配置为 K-V 存储
 - [x] 调整配置存放位置至专门的配置目录
-- [ ] 数据库为可选项
+- [x] 数据库为可选项
 - [ ] 支持将配置存放至数据库中
 - [ ] 支持 Alembic
