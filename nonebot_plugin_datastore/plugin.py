@@ -146,12 +146,18 @@ class PluginData:
         # 插件配置
         self._config = None
 
+        self.init_dir()
+
+    def init_dir(self) -> None:
+        """初始化目录"""
+        os.makedirs(self.data_dir, exist_ok=True)
+        os.makedirs(self.cache_dir, exist_ok=True)
+        os.makedirs(self.config_dir, exist_ok=True)
+
     @property
     def cache_dir(self) -> Path:
         """缓存目录"""
         path = plugin_config.datastore_cache_dir / self._name
-        # 如果文件夹不存在则自动新建
-        os.makedirs(path, exist_ok=True)
         return path
 
     @property
@@ -159,16 +165,12 @@ class PluginData:
         """配置目录"""
         # 配置都放置在统一的目录下
         path = plugin_config.datastore_config_dir
-        # 如果文件夹不存在则自动新建
-        os.makedirs(path, exist_ok=True)
         return path
 
     @property
     def data_dir(self) -> Path:
         """数据目录"""
         path = plugin_config.datastore_data_dir / self._name
-        # 如果文件夹不存在则自动新建
-        os.makedirs(path, exist_ok=True)
         return path
 
     @property
