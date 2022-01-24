@@ -20,11 +20,15 @@ aiosqlite = "^0.17.0"
 black = "^21.12b0"
 isort = "^5.10.1"
 nonebug = "^0.2.0"
+pytest-cov = "^3.0.0"
 
 [[tool.poetry.source]]
 default = true
 name = "tuna"
 url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+
+[tool.pytest.ini_options]
+addopts = "--cov=nonebot_plugin_datastore --cov-report=term-missing"
 
 [tool.black]
 line-length = 88
