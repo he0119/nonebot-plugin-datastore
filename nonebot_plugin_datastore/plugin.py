@@ -3,15 +3,17 @@ import json
 import os
 import pickle
 from pathlib import Path
-from typing import IO, Any, Callable, Dict, Optional
+from typing import IO, Any, Callable, Dict, Optional, TypeVar, Union, overload
 
 import httpx
 from nonebot.log import logger
 
 from .config import plugin_config
 
+_T = TypeVar("_T")
 
-class ConfigData:
+
+class Config:
     """插件配置管理"""
 
     def __init__(self, path: Path) -> None:
@@ -32,16 +34,24 @@ class ConfigData:
         with self._path.open("w", encoding="utf8") as f:
             json.dump(self._data, f, ensure_ascii=False, indent=2)
 
-    def _get(self, key: str) -> str:
+    def _get(self, key: str) -> Any:
         """获取配置键值"""
         # TODO: 支持从数据库读取数据
         return self._data[key]
 
-    def get(self, key: str, *, default: Any = "") -> Any:
+    @overload
+    def get(self, __key: str) -> Union[Any, None]:
+        ...
+
+    @overload
+    def get(self, __key: str, __default: _T) -> _T:
+        ...
+
+    def get(self, key, default=None):
         """获得配置
 
-        如果配置不存在则使用 `default` 并保存
-        如果不提供 `default` 默认返回空字符串
+        如果配置获取失败则使用 `default` 值并保存
+        如果不提供 `default` 默认返回 None
         """
         try:
             value = self._get(key)
@@ -171,10 +181,10 @@ class PluginData:
         return path
 
     @property
-    def config(self) -> ConfigData:
+    def config(self) -> Config:
         """获取配置管理"""
         if not self._config:
-            self._config = ConfigData(self.config_dir / f"{self._name}.json")
+            self._config = Config(self.config_dir / f"{self._name}.json")
         return self._config
 
     def save_pkl(self, data: Any, filename: str, cache: bool = False) -> None:
