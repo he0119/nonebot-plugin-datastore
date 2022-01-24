@@ -3,11 +3,30 @@ import os
 from typing import AsyncGenerator
 
 from nonebot import get_driver
+from nonebot.log import logger
 from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio.engine import AsyncEngine
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from .config import plugin_config
+
+engine = None
+
+
+def get_engine() -> AsyncEngine:
+    global engine
+
+    if engine is None:
+        raise ValueError("数据库未启用")
+    return engine
+
+
+async def init_db():
+    async with get_engine().begin() as conn:
+        await conn.run_sync(SQLModel.metadata.create_all)
+    logger.info("数据库初始化完成")
+
 
 if plugin_config.datastore_enable_database:
     # 创建数据文件夹
@@ -18,16 +37,9 @@ if plugin_config.datastore_enable_database:
         echo=plugin_config.datastore_database_echo,
     )
 
-    async def init_db():
-        async with engine.begin() as conn:
-            await conn.run_sync(SQLModel.metadata.create_all)
-
     get_driver().on_startup(init_db)
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
-    if not plugin_config.datastore_enable_database:
-        raise ValueError("Database is not enabled.")
-
-    async with AsyncSession(engine) as session:
+    async with AsyncSession(get_engine()) as session:
         yield session
