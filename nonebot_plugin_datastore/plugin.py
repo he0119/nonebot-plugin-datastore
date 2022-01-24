@@ -139,7 +139,21 @@ class NetworkFile:
         self._data = await self.load_from_network()
 
 
-class PluginData:
+class Singleton(type):
+    """单例
+
+    每个相同名称的插件数据只需要一个实例
+    """
+
+    _instances = {}
+
+    def __call__(cls, name: str):
+        if not cls._instances.get(name):
+            cls._instances[name] = super().__call__(name)
+        return cls._instances[name]
+
+
+class PluginData(metaclass=Singleton):
     """插件数据管理
 
     将插件数据保存在 `data` 文件夹对应的目录下。

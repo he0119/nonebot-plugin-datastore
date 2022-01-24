@@ -57,6 +57,55 @@ url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 reference = "tuna"
 
 [[package]]
+name = "async-asgi-testclient"
+version = "1.4.9"
+description = "Async client for testing ASGI web applications"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+multidict = ">=4.0,<6.0"
+requests = ">=2.21,<3.0"
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "tuna"
+
+[[package]]
+name = "atomicwrites"
+version = "1.4.0"
+description = "Atomic file writes."
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "tuna"
+
+[[package]]
+name = "attrs"
+version = "21.4.0"
+description = "Classes Without Boilerplate"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[package.extras]
+dev = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "furo", "sphinx", "sphinx-notfound-page", "pre-commit", "cloudpickle"]
+docs = ["furo", "sphinx", "zope.interface", "sphinx-notfound-page"]
+tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "cloudpickle"]
+tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "cloudpickle"]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "tuna"
+
+[[package]]
 name = "black"
 version = "21.12b0"
 description = "The uncompromising code formatter."
@@ -343,6 +392,19 @@ url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 reference = "tuna"
 
 [[package]]
+name = "iniconfig"
+version = "1.1.1"
+description = "iniconfig: brain-dead simple config-ini parsing"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "tuna"
+
+[[package]]
 name = "isort"
 version = "5.10.1"
 description = "A Python utility / library to sort Python imports."
@@ -455,6 +517,41 @@ url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 reference = "tuna"
 
 [[package]]
+name = "nonebug"
+version = "0.2.0"
+description = "nonebot2 test framework"
+category = "dev"
+optional = false
+python-versions = ">=3.7.3,<4.0.0"
+
+[package.dependencies]
+async-asgi-testclient = ">=1.4.8,<2.0.0"
+nonebot2 = ">=2.0.0-beta.1,<3.0.0"
+pytest = ">=6.2.5,<7.0.0"
+pytest-asyncio = ">=0.16.0,<0.17.0"
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "tuna"
+
+[[package]]
+name = "packaging"
+version = "21.3"
+description = "Core utilities for Python packages"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+pyparsing = ">=2.0.2,<3.0.5 || >3.0.5"
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "tuna"
+
+[[package]]
 name = "pathspec"
 version = "0.9.0"
 description = "Utility library for gitignore style pattern matching of file paths."
@@ -478,6 +575,39 @@ python-versions = ">=3.7"
 [package.extras]
 docs = ["Sphinx (>=4)", "furo (>=2021.7.5b38)", "proselint (>=0.10.2)", "sphinx-autodoc-typehints (>=1.12)"]
 test = ["appdirs (==1.4.4)", "pytest (>=6)", "pytest-cov (>=2.7)", "pytest-mock (>=3.6)"]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "tuna"
+
+[[package]]
+name = "pluggy"
+version = "1.0.0"
+description = "plugin and hook calling mechanisms for python"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+importlib-metadata = {version = ">=0.12", markers = "python_version < \"3.8\""}
+
+[package.extras]
+dev = ["pre-commit", "tox"]
+testing = ["pytest", "pytest-benchmark"]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "tuna"
+
+[[package]]
+name = "py"
+version = "1.11.0"
+description = "library with cross-python path, ini-parsing, io, code, log facilities"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [package.source]
 type = "legacy"
@@ -519,6 +649,68 @@ url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 reference = "tuna"
 
 [[package]]
+name = "pyparsing"
+version = "3.0.7"
+description = "Python parsing module"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+diagrams = ["jinja2", "railroad-diagrams"]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "tuna"
+
+[[package]]
+name = "pytest"
+version = "6.2.5"
+description = "pytest: simple powerful testing with Python"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+atomicwrites = {version = ">=1.0", markers = "sys_platform == \"win32\""}
+attrs = ">=19.2.0"
+colorama = {version = "*", markers = "sys_platform == \"win32\""}
+importlib-metadata = {version = ">=0.12", markers = "python_version < \"3.8\""}
+iniconfig = "*"
+packaging = "*"
+pluggy = ">=0.12,<2.0"
+py = ">=1.8.2"
+toml = "*"
+
+[package.extras]
+testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "tuna"
+
+[[package]]
+name = "pytest-asyncio"
+version = "0.16.0"
+description = "Pytest support for asyncio."
+category = "dev"
+optional = false
+python-versions = ">= 3.6"
+
+[package.dependencies]
+pytest = ">=5.4.0"
+
+[package.extras]
+testing = ["coverage", "hypothesis (>=5.7.1)"]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "tuna"
+
+[[package]]
 name = "python-dotenv"
 version = "0.19.2"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -541,6 +733,29 @@ description = "YAML parser and emitter for Python"
 category = "main"
 optional = false
 python-versions = ">=3.6"
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "tuna"
+
+[[package]]
+name = "requests"
+version = "2.27.1"
+description = "Python HTTP for Humans."
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
+
+[package.dependencies]
+certifi = ">=2017.4.17"
+charset-normalizer = {version = ">=2.0.0,<2.1.0", markers = "python_version >= \"3\""}
+idna = {version = ">=2.5,<4", markers = "python_version >= \"3\""}
+urllib3 = ">=1.21.1,<1.27"
+
+[package.extras]
+socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
+use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 
 [package.source]
 type = "legacy"
@@ -672,6 +887,19 @@ url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 reference = "tuna"
 
 [[package]]
+name = "toml"
+version = "0.10.2"
+description = "Python Library for Tom's Obvious, Minimal Language"
+category = "dev"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "tuna"
+
+[[package]]
 name = "tomli"
 version = "1.2.3"
 description = "A lil' TOML parser"
@@ -717,6 +945,24 @@ description = "Backported and Experimental Type Hints for Python 3.6+"
 category = "main"
 optional = false
 python-versions = ">=3.6"
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "tuna"
+
+[[package]]
+name = "urllib3"
+version = "1.26.8"
+description = "HTTP library with thread-safe connection pooling, file post, and more."
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
+
+[package.extras]
+brotli = ["brotlipy (>=0.6.0)"]
+secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
+socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [package.source]
 type = "legacy"
@@ -850,7 +1096,7 @@ reference = "tuna"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7.3"
-content-hash = "be01bff69800d875321a053a22c1818b88c69ceb96aee145e4ed6d043d63f262"
+content-hash = "cbd4cca57e789c2c6285291f8ae694a91224e0e68d2ae62bf2c26ad74c4539f2"
 
 [metadata.files]
 aiosqlite = [
@@ -864,6 +1110,17 @@ anyio = [
 asgiref = [
     {file = "asgiref-3.4.1-py3-none-any.whl", hash = "sha256:ffc141aa908e6f175673e7b1b3b7af4fdb0ecb738fc5c8b88f69f055c2415214"},
     {file = "asgiref-3.4.1.tar.gz", hash = "sha256:4ef1ab46b484e3c706329cedeff284a5d40824200638503f5768edb6de7d58e9"},
+]
+async-asgi-testclient = [
+    {file = "async-asgi-testclient-1.4.9.tar.gz", hash = "sha256:ae507f44a53699611cff81ad548090dad24055fba02cce398e1ca9b84d1e1288"},
+]
+atomicwrites = [
+    {file = "atomicwrites-1.4.0-py2.py3-none-any.whl", hash = "sha256:6d1784dea7c0c8d4a5172b6c620f40b6e4cbfdf96d783691f2e1302a7b88e197"},
+    {file = "atomicwrites-1.4.0.tar.gz", hash = "sha256:ae70396ad1a434f9c7046fd2dd196fc04b12f9e91ffb859164193be8b6168a7a"},
+]
+attrs = [
+    {file = "attrs-21.4.0-py2.py3-none-any.whl", hash = "sha256:2d27e3784d7a565d36ab851fe94887c5eccd6a463168875832a1be79c82828b4"},
+    {file = "attrs-21.4.0.tar.gz", hash = "sha256:626ba8234211db98e869df76230a137c4c40a12d72445c45d5f5b716f076e2fd"},
 ]
 black = [
     {file = "black-21.12b0-py3-none-any.whl", hash = "sha256:a615e69ae185e08fdd73e4715e260e2479c861b5740057fde6e8b4e3b7dd589f"},
@@ -995,6 +1252,10 @@ importlib-metadata = [
     {file = "importlib_metadata-4.10.1-py3-none-any.whl", hash = "sha256:899e2a40a8c4a1aec681feef45733de8a6c58f3f6a0dbed2eb6574b4387a77b6"},
     {file = "importlib_metadata-4.10.1.tar.gz", hash = "sha256:951f0d8a5b7260e9db5e41d429285b5f451e928479f19d80818878527d36e95e"},
 ]
+iniconfig = [
+    {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
+    {file = "iniconfig-1.1.1.tar.gz", hash = "sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32"},
+]
 isort = [
     {file = "isort-5.10.1-py3-none-any.whl", hash = "sha256:6f62d78e2f89b4500b080fe3a81690850cd254227f27f75c3a0c491a1f351ba7"},
     {file = "isort-5.10.1.tar.gz", hash = "sha256:e8443a5e7a020e9d7f97f1d7d9cd17c88bcb3bc7e218bf9cf5095fe550be2951"},
@@ -1089,6 +1350,14 @@ nonebot2 = [
     {file = "nonebot2-2.0.0b1-py3-none-any.whl", hash = "sha256:76ee4271a0ba9b1fbdcb34c50a23df391bed00d5d32d63b7fd018685de8130a4"},
     {file = "nonebot2-2.0.0b1.tar.gz", hash = "sha256:e23b6656943738a9f8559e20ac51a8c3af799a2eea01e3e2188be01959f36455"},
 ]
+nonebug = [
+    {file = "nonebug-0.2.0-py3-none-any.whl", hash = "sha256:aa0f639f3fc039803640a952b1c12088e8b1ec5a30d1632e43301f215f96de22"},
+    {file = "nonebug-0.2.0.tar.gz", hash = "sha256:2b1dd24a68cff940037f847dab8ca710e305cd183cf7104019d34a935eceb31c"},
+]
+packaging = [
+    {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},
+    {file = "packaging-21.3.tar.gz", hash = "sha256:dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb"},
+]
 pathspec = [
     {file = "pathspec-0.9.0-py2.py3-none-any.whl", hash = "sha256:7d15c4ddb0b5c802d161efc417ec1a2558ea2653c2e8ad9c19098201dc1c993a"},
     {file = "pathspec-0.9.0.tar.gz", hash = "sha256:e564499435a2673d586f6b2130bb5b95f04a3ba06f81b8f895b651a3c76aabb1"},
@@ -1096,6 +1365,14 @@ pathspec = [
 platformdirs = [
     {file = "platformdirs-2.4.1-py3-none-any.whl", hash = "sha256:1d7385c7db91728b83efd0ca99a5afb296cab9d0ed8313a45ed8ba17967ecfca"},
     {file = "platformdirs-2.4.1.tar.gz", hash = "sha256:440633ddfebcc36264232365d7840a970e75e1018d15b4327d11f91909045fda"},
+]
+pluggy = [
+    {file = "pluggy-1.0.0-py2.py3-none-any.whl", hash = "sha256:74134bbf457f031a36d68416e1509f34bd5ccc019f0bcc952c7b909d06b37bd3"},
+    {file = "pluggy-1.0.0.tar.gz", hash = "sha256:4224373bacce55f955a878bf9cfa763c1e360858e330072059e10bad68531159"},
+]
+py = [
+    {file = "py-1.11.0-py2.py3-none-any.whl", hash = "sha256:607c53218732647dff4acdfcd50cb62615cedf612e72d1724fb1a0cc6405b378"},
+    {file = "py-1.11.0.tar.gz", hash = "sha256:51c75c4126074b472f746a24399ad32f6053d1b34b68d2fa41e558e6f4a98719"},
 ]
 pydantic = [
     {file = "pydantic-1.9.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:cb23bcc093697cdea2708baae4f9ba0e972960a835af22560f6ae4e7e47d33f5"},
@@ -1137,6 +1414,18 @@ pydantic = [
 pygtrie = [
     {file = "pygtrie-2.4.2.tar.gz", hash = "sha256:43205559d28863358dbbf25045029f58e2ab357317a59b11f11ade278ac64692"},
 ]
+pyparsing = [
+    {file = "pyparsing-3.0.7-py3-none-any.whl", hash = "sha256:a6c06a88f252e6c322f65faf8f418b16213b51bdfaece0524c1c1bc30c63c484"},
+    {file = "pyparsing-3.0.7.tar.gz", hash = "sha256:18ee9022775d270c55187733956460083db60b37d0d0fb357445f3094eed3eea"},
+]
+pytest = [
+    {file = "pytest-6.2.5-py3-none-any.whl", hash = "sha256:7310f8d27bc79ced999e760ca304d69f6ba6c6649c0b60fb0e04a4a77cacc134"},
+    {file = "pytest-6.2.5.tar.gz", hash = "sha256:131b36680866a76e6781d13f101efb86cf674ebb9762eb70d3082b6f29889e89"},
+]
+pytest-asyncio = [
+    {file = "pytest-asyncio-0.16.0.tar.gz", hash = "sha256:7496c5977ce88c34379df64a66459fe395cd05543f0a2f837016e7144391fcfb"},
+    {file = "pytest_asyncio-0.16.0-py3-none-any.whl", hash = "sha256:5f2a21273c47b331ae6aa5b36087047b4899e40f03f18397c0e65fa5cca54e9b"},
+]
 python-dotenv = [
     {file = "python-dotenv-0.19.2.tar.gz", hash = "sha256:a5de49a31e953b45ff2d2fd434bbc2670e8db5273606c1e737cc6b93eff3655f"},
     {file = "python_dotenv-0.19.2-py2.py3-none-any.whl", hash = "sha256:32b2bdc1873fd3a3c346da1c6db83d0053c3c62f28f1f38516070c4c8971b1d3"},
@@ -1175,6 +1464,10 @@ pyyaml = [
     {file = "PyYAML-6.0-cp39-cp39-win32.whl", hash = "sha256:b5b9eccad747aabaaffbc6064800670f0c297e52c12754eb1d976c57e4f74dcb"},
     {file = "PyYAML-6.0-cp39-cp39-win_amd64.whl", hash = "sha256:b3d267842bf12586ba6c734f89d1f5b871df0273157918b0ccefa29deb05c21c"},
     {file = "PyYAML-6.0.tar.gz", hash = "sha256:68fb519c14306fec9720a2a5b45bc9f0c8d1b9c72adf45c37baedfcd949c35a2"},
+]
+requests = [
+    {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},
+    {file = "requests-2.27.1.tar.gz", hash = "sha256:68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61"},
 ]
 rfc3986 = [
     {file = "rfc3986-1.5.0-py2.py3-none-any.whl", hash = "sha256:a86d6e1f5b1dc238b218b012df0aa79409667bb209e58da56d0b94704e712a97"},
@@ -1234,6 +1527,10 @@ starlette = [
     {file = "starlette-0.16.0-py3-none-any.whl", hash = "sha256:38eb24bf705a2c317e15868e384c1b8a12ca396e5a3c3a003db7e667c43f939f"},
     {file = "starlette-0.16.0.tar.gz", hash = "sha256:e1904b5d0007aee24bdd3c43994be9b3b729f4f58e740200de1d623f8c3a8870"},
 ]
+toml = [
+    {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
+    {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
+]
 tomli = [
     {file = "tomli-1.2.3-py3-none-any.whl", hash = "sha256:e3069e4be3ead9668e21cb9b074cd948f7b3113fd9c8bba083f48247aab8b11c"},
     {file = "tomli-1.2.3.tar.gz", hash = "sha256:05b6166bff487dc068d322585c7ea4ef78deed501cc124060e0f238e89a9231f"},
@@ -1266,6 +1563,10 @@ typed-ast = [
 typing-extensions = [
     {file = "typing_extensions-4.0.1-py3-none-any.whl", hash = "sha256:7f001e5ac290a0c0401508864c7ec868be4e701886d5b573a9528ed3973d9d3b"},
     {file = "typing_extensions-4.0.1.tar.gz", hash = "sha256:4ca091dea149f945ec56afb48dae714f21e8692ef22a395223bcd328961b6a0e"},
+]
+urllib3 = [
+    {file = "urllib3-1.26.8-py2.py3-none-any.whl", hash = "sha256:000ca7f471a233c2251c6c7023ee85305721bfdf18621ebff4fd17a8653427ed"},
+    {file = "urllib3-1.26.8.tar.gz", hash = "sha256:0e7c33d9a63e7ddfcb86780aac87befc2fbddf46c58dbb487e0855f7ceec283c"},
 ]
 uvicorn = [
     {file = "uvicorn-0.15.0-py3-none-any.whl", hash = "sha256:17f898c64c71a2640514d4089da2689e5db1ce5d4086c2d53699bf99513421c1"},

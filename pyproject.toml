@@ -19,6 +19,7 @@ aiosqlite = "^0.17.0"
 [tool.poetry.dev-dependencies]
 black = "^21.12b0"
 isort = "^5.10.1"
+nonebug = "^0.2.0"
 
 [[tool.poetry.source]]
 default = true
