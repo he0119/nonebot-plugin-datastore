@@ -202,11 +202,11 @@ class PluginData(metaclass=Singleton):
         return self._config
 
     def save_pkl(self, data: Any, filename: str, cache: bool = False) -> None:
-        with self.open(f"{filename}.pkl", "wb", cache=cache) as f:
+        with self.open(filename, "wb", cache=cache) as f:
             pickle.dump(data, f)
 
     def load_pkl(self, filename: str, cache: bool = False) -> Any:
-        with self.open(f"{filename}.pkl", "rb", cache=cache) as f:
+        with self.open(filename, "rb", cache=cache) as f:
             data = pickle.load(f)
         return data
 
