@@ -201,22 +201,24 @@ class PluginData(metaclass=Singleton):
             self._config = Config(self.config_dir / f"{self._name}.json")
         return self._config
 
-    def dump_pkl(self, data: Any, filename: str, cache: bool = False) -> None:
+    def dump_pkl(self, data: Any, filename: str, cache: bool = False, **kwargs) -> None:
         with self.open(filename, "wb", cache=cache) as f:
-            pickle.dump(data, f)
+            pickle.dump(data, f, **kwargs)
 
-    def load_pkl(self, filename: str, cache: bool = False) -> Any:
+    def load_pkl(self, filename: str, cache: bool = False, **kwargs) -> Any:
         with self.open(filename, "rb", cache=cache) as f:
-            data = pickle.load(f)
+            data = pickle.load(f, **kwargs)
         return data
 
-    def dump_json(self, data: Any, filename: str, cache: bool = False) -> None:
+    def dump_json(
+        self, data: Any, filename: str, cache: bool = False, **kwargs
+    ) -> None:
         with self.open(filename, "w", cache=cache) as f:
-            json.dump(data, f)
+            json.dump(data, f, **kwargs)
 
-    def load_json(self, filename: str, cache: bool = False) -> Any:
+    def load_json(self, filename: str, cache: bool = False, **kwargs) -> Any:
         with self.open(filename, "r", cache=cache) as f:
-            data = json.load(f)
+            data = json.load(f, **kwargs)
         return data
 
     def open(self, filename: str, mode: str = "r", cache: bool = False, **kwargs) -> IO:
