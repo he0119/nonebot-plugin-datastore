@@ -201,7 +201,7 @@ class PluginData(metaclass=Singleton):
             self._config = Config(self.config_dir / f"{self._name}.json")
         return self._config
 
-    def save_pkl(self, data: Any, filename: str, cache: bool = False) -> None:
+    def dump_pkl(self, data: Any, filename: str, cache: bool = False) -> None:
         with self.open(filename, "wb", cache=cache) as f:
             pickle.dump(data, f)
 
