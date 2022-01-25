@@ -210,6 +210,15 @@ class PluginData(metaclass=Singleton):
             data = pickle.load(f)
         return data
 
+    def dump_json(self, data: Any, filename: str, cache: bool = False) -> None:
+        with self.open(filename, "w", cache=cache) as f:
+            json.dump(data, f)
+
+    def load_json(self, filename: str, cache: bool = False) -> Any:
+        with self.open(filename, "r", cache=cache) as f:
+            data = json.load(f)
+        return data
+
     def open(self, filename: str, mode: str = "r", cache: bool = False, **kwargs) -> IO:
         """打开文件，默认打开数据文件夹下的文件"""
         if cache:
