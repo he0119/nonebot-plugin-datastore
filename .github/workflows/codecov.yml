@@ -20,30 +20,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: he0119/setup-python@main
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install poetry
-        uses: Gr1N/setup-poetry@v7
-      - name: Cache Windows dependencies
-        uses: actions/cache@v2
-        if: ${{ matrix.os == 'windows-latest' }}
-        with:
-          path: ~/AppData/Local/pypoetry/Cache/virtualenvs
-          key: ${{ runner.os }}-poetry-2-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
-      - name: Cache Linux dependencies
-        uses: actions/cache@v2
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        with:
-          path: ~/.cache/pypoetry/virtualenvs
-          key: ${{ runner.os }}-poetry-2-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
-      - name: Cache macOS dependencies
-        uses: actions/cache@v2
-        if: ${{ matrix.os == 'macos-latest' }}
-        with:
-          path: ~/Library/Caches/pypoetry/virtualenvs
-          key: ${{ runner.os }}-poetry-1-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
-      - name: Install prerequisites
+      - name: Install dependencies
         run: poetry install
       - name: Run tests
         run: poetry run pytest -n auto --cov-report xml
