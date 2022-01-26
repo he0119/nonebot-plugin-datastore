@@ -23,6 +23,7 @@ def get_engine() -> AsyncEngine:
 
 
 async def init_db():
+    """初始化数据库"""
     async with get_engine().begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
     logger.info("数据库初始化完成")
@@ -41,5 +42,14 @@ if plugin_config.datastore_enable_database:
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
+    """需配合 `Depends` 使用
+
+    例: `session: AsyncSession = Depends(get_session)`
+    """
     async with AsyncSession(get_engine()) as session:
         yield session
+
+
+def create_session() -> AsyncSession:
+    """创建一个新的 session"""
+    return AsyncSession(get_engine())
