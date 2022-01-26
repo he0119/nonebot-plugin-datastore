@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [0.2.0] - 2022-01-26
+
+### Added
+
+- 增加 `load_json` 与 `dump_json` 方法
+- 添加 `create_session` 函数
+
+### Changed
+
+- 统一方法名称为 `dump`
+- `dump_pkl` 和 `load_pkl` 不再自动添加 pkl 后缀
+
 ## [0.1.1] - 2022-01-24
 
 ### Changed
@@ -18,3 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 ### Added
 
 - 可以使用的版本。
+
+[Unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.1.1...v0.2.0
+[0.1.1]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/he0119/nonebot-plugin-datastore/releases/tag/v0.1.0
