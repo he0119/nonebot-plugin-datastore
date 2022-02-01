@@ -63,7 +63,7 @@ def handle(session: AsyncSession = Depends(get_session)):
 ### datastore_enable_database
 
 - 类型: `bool`
-- 默认: `False`
+- 默认: `True`
 - 说明: 是否启动数据库
 
 ### datastore_database_url
