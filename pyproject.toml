@@ -22,14 +22,12 @@ isort = "^5.10.1"
 nonebug = "^0.2.1"
 pytest-cov = "^3.0.0"
 pytest-xdist = "^2.5.0"
+pytest-mock = "^3.7.0"
 
 # [[tool.poetry.source]]
 # default = true
 # name = "tencent"
 # url = "https://mirrors.cloud.tencent.com/pypi/simple/"
-
-[tool.pytest.ini_options]
-addopts = "--cov=nonebot_plugin_datastore --cov-report=term-missing"
 
 [tool.black]
 line-length = 88
