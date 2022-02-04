@@ -42,5 +42,24 @@ async def test_cache_network_file(app: App, mocker: MockerFixture):
     data = await file.data
     assert data == {"key": "value"}
 
-    # 访问两次数据，但不会请求网络两次
+    # 访问两次数据，因为缓存，所以不会请求网络两次
     get.assert_called_once_with("http://example.com", timeout=30)
+
+
+@pytest.mark.asyncio
+async def test_load_local_file(app: App, mocker: MockerFixture):
+    """测试读取本地文件"""
+    from nonebot_plugin_datastore import PluginData
+
+    get = mocker.patch("httpx.AsyncClient.get", side_effect=mocked_get)
+
+    plugin_data = PluginData("test")
+    plugin_data.dump_json({"key": "value"}, "test")
+
+    file = plugin_data.network_file("http://example.com", "test")
+
+    data = await file.data
+    assert data == {"key": "value"}
+
+    # 访问数据，因为会读取本地文件，所以不会请求网络
+    get.assert_not_called()
