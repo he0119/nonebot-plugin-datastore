@@ -3,7 +3,7 @@ import json
 import os
 import pickle
 from pathlib import Path
-from typing import IO, Any, Callable, Dict, Optional, TypeVar, Union, overload
+from typing import IO, Any, Callable, Generic, TypeVar, Union, overload
 
 import httpx
 from nonebot.log import logger
@@ -67,7 +67,10 @@ class Config:
         self._save_config()
 
 
-class NetworkFile:
+R = TypeVar("R")
+
+
+class NetworkFile(Generic[R]):
     """从网络获取文件
 
     暂时只支持 json 格式
@@ -78,7 +81,7 @@ class NetworkFile:
         url: str,
         filename: str,
         plugin_data: "PluginData",
-        process_data: Callable[[Dict], Dict] = None,
+        process_data: Callable[[R], R] = None,
         cache: bool = False,
     ) -> None:
         self._url = url
@@ -89,7 +92,7 @@ class NetworkFile:
 
         self._data = None
 
-    async def load_from_network(self) -> Optional[Dict]:
+    async def load_from_network(self) -> R:
         """从网络加载文件"""
         logger.info("正在从网络获取数据")
         async with httpx.AsyncClient() as client:
@@ -98,29 +101,27 @@ class NetworkFile:
             # 同时保存一份文件在本地，以后就不用从网络获取
             self._plugin_data.dump_json(rjson, self._filename, indent=2)
             logger.info("已保存数据至本地")
-            if self._process_data:
-                rjson = self._process_data(rjson)
-            return rjson
+            return rjson  # type: ignore
 
-    def load_from_local(self) -> Optional[Dict]:
+    def load_from_local(self) -> R:
         """从本地获取数据"""
         logger.info("正在加载本地数据")
-        if self._plugin_data.exists(self._filename):
-            data = self._plugin_data.load_json(self._filename)
-            if self._process_data:
-                data = self._process_data(data)
-            return data
+        data = self._plugin_data.load_json(self._filename)
+        return data  # type: ignore
 
     @property
-    async def data(self) -> Optional[Dict]:
+    async def data(self) -> R:
         """数据
 
-        先从本地加载，如果失败则从仓库加载
+        先从本地加载，如果本地文件不存在则从网络加载
         """
-        if not self._data:
-            self._data = self.load_from_local()
-        if not self._data:
-            self._data = await self.load_from_network()
+        if self._data is None:
+            if self._plugin_data.exists(self._filename):
+                self._data = self.load_from_local()
+            else:
+                self._data = await self.load_from_network()
+            if self._process_data:
+                self._data = self._process_data(self._data)
         return self._data
 
     async def update(self) -> None:
@@ -235,12 +236,12 @@ class PluginData(metaclass=Singleton):
         self,
         url: str,
         filename: str,
-        process_data: Callable[[Dict], Dict] = None,
+        process_data: Callable[[Any], Any] = None,
         cache: bool = False,
-    ):
+    ) -> NetworkFile[Any]:
         """网络文件
 
         从网络上获取数据，并缓存至本地，仅支持 json 格式
         且可以在获取数据之后同时处理数据
         """
-        return NetworkFile(url, filename, self, process_data, cache)
+        return NetworkFile[Any](url, filename, self, process_data, cache)
