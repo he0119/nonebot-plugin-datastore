@@ -96,13 +96,7 @@ class NetworkFile:
             r = await client.get(self._url, timeout=30)
             rjson = r.json()
             # 同时保存一份文件在本地，以后就不用从网络获取
-            with self._plugin_data.open(
-                self._filename,
-                "w",
-                encoding="utf8",
-                cache=self._cache,
-            ) as f:
-                json.dump(rjson, f, ensure_ascii=False, indent=2)
+            self._plugin_data.dump_json(rjson, self._filename, indent=2)
             logger.info("已保存数据至本地")
             if self._process_data:
                 rjson = self._process_data(rjson)
@@ -112,15 +106,10 @@ class NetworkFile:
         """从本地获取数据"""
         logger.info("正在加载本地数据")
         if self._plugin_data.exists(self._filename):
-            with self._plugin_data.open(
-                self._filename,
-                encoding="utf8",
-                cache=self._cache,
-            ) as f:
-                data = json.load(f)
-                if self._process_data:
-                    data = self._process_data(data)
-                return data
+            data = self._plugin_data.load_json(self._filename)
+            if self._process_data:
+                data = self._process_data(data)
+            return data
 
     @property
     async def data(self) -> Optional[Dict]:
@@ -211,13 +200,18 @@ class PluginData(metaclass=Singleton):
         return data
 
     def dump_json(
-        self, data: Any, filename: str, cache: bool = False, **kwargs
+        self,
+        data: Any,
+        filename: str,
+        cache: bool = False,
+        ensure_ascii: bool = False,
+        **kwargs,
     ) -> None:
-        with self.open(filename, "w", cache=cache) as f:
-            json.dump(data, f, **kwargs)
+        with self.open(filename, "w", cache=cache, encoding="utf8") as f:
+            json.dump(data, f, ensure_ascii=ensure_ascii, **kwargs)
 
     def load_json(self, filename: str, cache: bool = False, **kwargs) -> Any:
-        with self.open(filename, "r", cache=cache) as f:
+        with self.open(filename, "r", cache=cache, encoding="utf8") as f:
             data = json.load(f, **kwargs)
         return data
 
