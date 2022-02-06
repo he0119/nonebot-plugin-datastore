@@ -95,19 +95,17 @@ class NetworkFile(Generic[R]):
     async def load_from_network(self) -> R:
         """从网络加载文件"""
         logger.info("正在从网络获取数据")
-        async with httpx.AsyncClient() as client:
-            r = await client.get(self._url, timeout=30)
-            rjson = r.json()
-            # 同时保存一份文件在本地，以后就不用从网络获取
-            self._plugin_data.dump_json(rjson, self._filename, indent=2)
-            logger.info("已保存数据至本地")
-            return rjson  # type: ignore
+        content = await self._plugin_data.download_file(
+            self._url, self._filename, self._cache
+        )
+        rjson = json.loads(content)
+        return rjson
 
     def load_from_local(self) -> R:
         """从本地获取数据"""
         logger.info("正在加载本地数据")
         data = self._plugin_data.load_json(self._filename)
-        return data  # type: ignore
+        return data
 
     @property
     async def data(self) -> R:
@@ -231,6 +229,18 @@ class PluginData(metaclass=Singleton):
         else:
             path = self.data_dir / filename
         return path.exists()
+
+    async def download_file(
+        self, url: str, filename: str, cache: bool = False, **kwargs
+    ) -> bytes:
+        """下载文件"""
+        async with httpx.AsyncClient() as client:
+            r = await client.get(url, **kwargs)
+            content = r.content
+            with self.open(filename, "wb", cache=cache) as f:
+                f.write(content)
+            logger.info(f"已下载文件 {url} -> {filename}")
+            return content
 
     def network_file(
         self,
