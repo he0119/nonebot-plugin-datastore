@@ -5,7 +5,7 @@ from nonebug import App
 from pytest_mock import MockerFixture
 
 
-def mocked_get(url: str, **kwargs):
+async def mocked_get(url: str, **kwargs):
     class MockResponse:
         def __init__(self, json: dict = None):
             self._json = json
