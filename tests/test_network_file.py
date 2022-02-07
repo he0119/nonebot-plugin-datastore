@@ -97,6 +97,31 @@ async def test_process_data(app: App, mocker: MockerFixture):
 
 
 @pytest.mark.asyncio
+async def test_update_data(app: App, mocker: MockerFixture):
+    """测试更新数据"""
+    from nonebot_plugin_datastore import PluginData
+
+    get = mocker.patch("httpx.AsyncClient.get", side_effect=mocked_get)
+
+    plugin_data = PluginData("test")
+    plugin_data.dump_json({"key": "old"}, "test")
+
+    file = plugin_data.network_file("http://example.com", "test")
+
+    # 读取的本地文件
+    data = await file.data
+    assert data == {"key": "old"}
+
+    await file.update()
+
+    # 更新之后，就是从服务器获取的最新数据
+    data = await file.data
+    assert data == {"key": "值"}
+
+    get.assert_called_once_with("http://example.com")
+
+
+@pytest.mark.asyncio
 async def test_download_file(app: App, mocker: MockerFixture):
     """测试下载文件"""
     from nonebot_plugin_datastore import PluginData
@@ -124,11 +149,9 @@ async def test_download_file_with_kwargs(app: App, mocker: MockerFixture):
 
     plugin_data = PluginData("test")
 
-    file = await plugin_data.download_file("http://example.com", "test", timeout=30)
+    data = await plugin_data.download_file("http://example.com", "test", timeout=30)
 
     with plugin_data.open("test", "rb") as f:
-        data = f.read()
-
-    assert file == data
+        assert data == f.read()
 
     get.assert_called_once_with("http://example.com", timeout=30)
