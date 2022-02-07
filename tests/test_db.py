@@ -1,8 +1,11 @@
 from pathlib import Path
+from typing import List
 
 import nonebot
 import pytest
 from nonebug import App
+
+from .utils import make_fake_event, make_fake_message
 
 
 @pytest.mark.asyncio
@@ -12,7 +15,7 @@ async def test_db(app: App):
 
     from nonebot_plugin_datastore.db import create_session, init_db
 
-    from .example import Example
+    from .example import Example, test
 
     nonebot.load_plugin("tests.example")
 
@@ -24,8 +27,23 @@ async def test_db(app: App):
 
     async with create_session() as session:
         statement = select(Example)
-        example: Example = (await session.exec(statement)).first()  # type: ignore
-        assert example.message == "test"
+        examples: List[Example] = (await session.exec(statement)).all()  # type: ignore
+        assert len(examples) == 1
+        assert examples[0].message == "test"
+
+    message = make_fake_message()("/test")
+    event = make_fake_event(_message=message)()
+
+    async with app.test_matcher(test) as ctx:
+        bot = ctx.create_bot()
+
+        ctx.receive_event(bot, event)
+
+    async with create_session() as session:
+        statement = select(Example)
+        examples: List[Example] = (await session.exec(statement)).all()  # type: ignore
+        assert len(examples) == 2
+        assert examples[1].message == "matcher"
 
 
 @pytest.mark.asyncio
