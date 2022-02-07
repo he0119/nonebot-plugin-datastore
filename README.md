@@ -13,7 +13,7 @@ _✨ NoneBot 数据存储插件 ✨_
 </div>
 
 <p align="center">
-  <a href="https://raw.githubusercontent.com/he0119/nonebot-plugin-datastore/master/LICENSE">
+  <a href="https://raw.githubusercontent.com/he0119/nonebot-plugin-datastore/main/LICENSE">
     <img src="https://img.shields.io/github/license/he0119/nonebot-plugin-datastore.svg" alt="license">
   </a>
   <a href="https://pypi.python.org/pypi/nonebot-plugin-datastore">
@@ -21,7 +21,7 @@ _✨ NoneBot 数据存储插件 ✨_
   </a>
   <img src="https://img.shields.io/badge/python-3.7.3+-blue.svg" alt="python">
   <a href="https://codecov.io/gh/he0119/nonebot-plugin-datastore">
-    <img src="https://codecov.io/gh/he0119/nonebot-plugin-datastore/branch/master/graph/badge.svg?token=jd5ufc1alv"/>
+    <img src="https://codecov.io/gh/he0119/nonebot-plugin-datastore/branch/main/graph/badge.svg?token=jd5ufc1alv"/>
   </a>
 </p>
 
