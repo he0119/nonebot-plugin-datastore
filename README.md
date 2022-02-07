@@ -20,6 +20,9 @@ _✨ NoneBot 数据存储插件 ✨_
     <img src="https://img.shields.io/pypi/v/nonebot-plugin-datastore.svg" alt="pypi">
   </a>
   <img src="https://img.shields.io/badge/python-3.7.3+-blue.svg" alt="python">
+  <a href="https://codecov.io/gh/he0119/nonebot-plugin-datastore">
+    <img src="https://codecov.io/gh/he0119/nonebot-plugin-datastore/branch/master/graph/badge.svg?token=jd5ufc1alv"/>
+  </a>
 </p>
 
 ## 使用方式
