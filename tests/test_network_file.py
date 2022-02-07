@@ -94,3 +94,41 @@ async def test_process_data(app: App, mocker: MockerFixture):
 
     # 访问数据，因为会读取本地文件，所以不会请求网络
     get.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_download_file(app: App, mocker: MockerFixture):
+    """测试下载文件"""
+    from nonebot_plugin_datastore import PluginData
+
+    get = mocker.patch("httpx.AsyncClient.get", side_effect=mocked_get)
+
+    plugin_data = PluginData("test")
+
+    file = await plugin_data.download_file("http://example.com", "test")
+
+    with plugin_data.open("test", "rb") as f:
+        data = f.read()
+
+    assert file == data
+
+    get.assert_called_once_with("http://example.com")
+
+
+@pytest.mark.asyncio
+async def test_download_file_with_kwargs(app: App, mocker: MockerFixture):
+    """测试下载文件，附带参数"""
+    from nonebot_plugin_datastore import PluginData
+
+    get = mocker.patch("httpx.AsyncClient.get", side_effect=mocked_get)
+
+    plugin_data = PluginData("test")
+
+    file = await plugin_data.download_file("http://example.com", "test", timeout=30)
+
+    with plugin_data.open("test", "rb") as f:
+        data = f.read()
+
+    assert file == data
+
+    get.assert_called_once_with("http://example.com", timeout=30)
