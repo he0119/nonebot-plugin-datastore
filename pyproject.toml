@@ -26,6 +26,9 @@ pytest-xdist = "^2.5.0"
 pytest-mock = "^3.7.0"
 pre-commit = "^2.17.0"
 
+[tool.poetry.scripts]
+datastore = "nonebot_plugin_datastore.__main__:main"
+
 [tool.black]
 line-length = 88
 

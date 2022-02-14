@@ -36,9 +36,10 @@ def run_migrations_offline():
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    from nonebot_plugin_datastore.config import plugin_config
+
     context.configure(
-        url=url,
+        url=plugin_config.datastore_database_url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
