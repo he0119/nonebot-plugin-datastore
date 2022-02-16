@@ -1,3 +1,10 @@
+try:
+    import bot  # type: ignore
+except ImportError:
+    import nonebot
+
+    nonebot.init()
+
 from nonebot.plugin import export
 
 from .db import create_session as create_session
