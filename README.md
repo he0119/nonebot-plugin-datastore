@@ -31,7 +31,7 @@ _✨ NoneBot 数据存储插件 ✨_
 
 ```python
 from nonebot.params import Depends
-from nonebot_plugin_localstore import PluginData, get_session
+from nonebot_plugin_datastore import PluginData, get_session
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 DATA = PluginData("plugin_name")
