@@ -5,12 +5,13 @@ from typing import Dict
 from nonebot import get_driver, require
 from pydantic import BaseModel, Extra, root_validator
 
-store = require("nonebot_plugin_localstore")
+require("nonebot_plugin_localstore")
+from nonebot_plugin_localstore import get_cache_dir, get_config_dir, get_data_dir
 
 # 默认目录
-BASE_CACHE_DIR: Path = Path(store.get_cache_dir(""))
-BASE_CONFIG_DIR: Path = Path(store.get_config_dir(""))
-BASE_DATA_DIR: Path = Path(store.get_data_dir(""))
+BASE_CACHE_DIR: Path = Path(get_cache_dir(""))
+BASE_CONFIG_DIR: Path = Path(get_config_dir(""))
+BASE_DATA_DIR: Path = Path(get_data_dir(""))
 
 
 class Config(BaseModel, extra=Extra.ignore):
