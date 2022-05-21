@@ -27,9 +27,13 @@ _✨ NoneBot 数据存储插件 ✨_
 
 ## 使用方式
 
-加载插件后直接导出方法
+加载插件后直接导入
 
 ```python
+# 先声明依赖
+from nonebot import require
+require("nonebot_plugin_datastore")
+# 接着直接导入
 from nonebot.params import Depends
 from nonebot_plugin_datastore import PluginData, get_session
 from sqlmodel.ext.asyncio.session import AsyncSession
