@@ -126,6 +126,8 @@ class NetworkFile(Generic[T, R]):
     async def update(self) -> None:
         """从网络更新数据"""
         self._data = await self.load_from_network()
+        if self._process_data:
+            self._data = self._process_data(self._data)
 
 
 class Singleton(type):

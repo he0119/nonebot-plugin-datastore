@@ -107,17 +107,21 @@ async def test_update_data(app: App, mocker: MockerFixture):
     plugin_data = PluginData("test")
     plugin_data.dump_json({"key": "old"}, "test")
 
-    file = plugin_data.network_file("http://example.com", "test")
+    def test_process(data: dict):
+        data["key2"] = "值2"
+        return data
+
+    file = plugin_data.network_file("http://example.com", "test", test_process)
 
     # 读取的本地文件
     data = await file.data
-    assert data == {"key": "old"}
+    assert data == {"key": "old", "key2": "值2"}
 
     await file.update()
 
     # 更新之后，就是从服务器获取的最新数据
     data = await file.data
-    assert data == {"key": "值"}
+    assert data == {"key": "值", "key2": "值2"}
 
     get.assert_called_once_with("http://example.com")
 
