@@ -3,7 +3,7 @@ import json
 import os
 import pickle
 from pathlib import Path
-from typing import IO, Any, Callable, Generic, TypeVar, Union, overload
+from typing import IO, Any, Callable, Generic, Optional, TypeVar, Union, overload
 
 import httpx
 from nonebot.log import logger
@@ -67,10 +67,10 @@ class Config:
         self._save_config()
 
 
-R = TypeVar("R")
+T = TypeVar("T")
 
 
-class NetworkFile(Generic[R]):
+class NetworkFile(Generic[T]):
     """从网络获取文件
 
     暂时只支持 json 格式
@@ -81,7 +81,7 @@ class NetworkFile(Generic[R]):
         url: str,
         filename: str,
         plugin_data: "PluginData",
-        process_data: Callable[[R], R] = None,
+        process_data: Optional[Callable[[T], T]] = None,
         cache: bool = False,
     ) -> None:
         self._url = url
@@ -92,7 +92,7 @@ class NetworkFile(Generic[R]):
 
         self._data = None
 
-    async def load_from_network(self) -> R:
+    async def load_from_network(self) -> T:
         """从网络加载文件"""
         logger.info("正在从网络获取数据")
         content = await self._plugin_data.download_file(
@@ -101,14 +101,14 @@ class NetworkFile(Generic[R]):
         rjson = json.loads(content)
         return rjson
 
-    def load_from_local(self) -> R:
+    def load_from_local(self) -> T:
         """从本地获取数据"""
         logger.info("正在加载本地数据")
         data = self._plugin_data.load_json(self._filename)
         return data
 
     @property
-    async def data(self) -> R:
+    async def data(self) -> T:
         """数据
 
         先从本地加载，如果本地文件不存在则从网络加载
@@ -246,12 +246,12 @@ class PluginData(metaclass=Singleton):
         self,
         url: str,
         filename: str,
-        process_data: Callable[[Any], Any] = None,
+        process_data: Optional[Callable[[T], T]] = None,
         cache: bool = False,
-    ) -> NetworkFile[Any]:
+    ) -> NetworkFile[T]:
         """网络文件
 
         从网络上获取数据，并缓存至本地，仅支持 json 格式
         且可以在获取数据之后同时处理数据
         """
-        return NetworkFile[Any](url, filename, self, process_data, cache)
+        return NetworkFile[T](url, filename, self, process_data, cache)
