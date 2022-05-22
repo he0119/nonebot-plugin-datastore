@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 
 import pytest
 from nonebug import App
@@ -7,7 +8,7 @@ from pytest_mock import MockerFixture
 
 async def mocked_get(url: str, **kwargs):
     class MockResponse:
-        def __init__(self, json: dict = None):
+        def __init__(self, json: Optional[dict] = None):
             self._json = json
 
         def json(self):
