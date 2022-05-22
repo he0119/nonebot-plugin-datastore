@@ -7,9 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [0.3.1] - 2022-05-23
+
 ### Added
 
 - 支持下载文件至本地
+
+### Changed
+
+- 使用 require 确保插件加载再 import
+- 优化类型提示
+
+### Fixed
+
+- 锁定 SQLAlchemy 版本以避免错误
 
 ## [0.3.0] - 2022-02-01
 
@@ -41,7 +52,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.0...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.1.0...v0.1.1
