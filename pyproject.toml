@@ -15,7 +15,7 @@ nonebot2 = {extras = ["httpx"], version = "^2.0.0-beta.1"}
 nonebot-plugin-localstore = "^0.1.0"
 sqlmodel = "^0.0.6"
 aiosqlite = "^0.17.0"
-SQLAlchemy = ">=1.4,<1.4.36" # https://github.com/tiangolo/sqlmodel/issues/315
+SQLAlchemy = ">=1.4,<1.4.37" # https://github.com/tiangolo/sqlmodel/issues/315
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
