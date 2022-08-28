@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Fixed
+
+- 修复 SQLModel 与 SQLAlchemy 不兼容的问题
+
 ## [0.3.1] - 2022-05-23
 
 ### Added
