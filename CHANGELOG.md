@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [0.3.3] - 2022-09-07
+
+### Fixed
+
+- 再次升级 SQLModel 版本，修复问题
+
 ## [0.3.2] - 2022-08-28
 
 ### Fixed
@@ -58,7 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.2...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.3...HEAD
+[0.3.3]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.2.0...v0.3.0
