@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [0.4.0] - 2022-10-05
+
 ### Removed
 
 - 移除 Export 功能
@@ -75,7 +77,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.4...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.4...v0.4.0
 [0.3.4]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.1...v0.3.2
