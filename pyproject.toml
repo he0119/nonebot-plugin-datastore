@@ -10,9 +10,9 @@ repository = "https://github.com/he0119/nonebot-plugin-datastore"
 documentation = "https://github.com/he0119/nonebot-plugin-datastore#readme"
 
 [tool.poetry.dependencies]
-python = "^3.7.3"
-nonebot2 = {extras = ["httpx"], version = ">=2.0.0-beta.1, <2.0.0-rc.1"}
-nonebot-plugin-localstore = "^0.1.0"
+python = "^3.8"
+nonebot2 = {extras = ["httpx"], version = "^2.0.0-rc.1"}
+nonebot-plugin-localstore = "^0.2.0"
 sqlmodel = ">=0.0.8,<0.1.0"
 aiosqlite = "^0.17.0"
 

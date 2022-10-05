@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Removed
+
+- 移除 Export 功能
+- 对照 NoneBot2 移除 Python 3.7 支持
+
 ## [0.3.4] - 2022-10-05
 
 ### Changed
