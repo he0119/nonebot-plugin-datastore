@@ -1,6 +1,5 @@
 import json
 
-import pytest
 from nonebug import App
 
 
@@ -30,6 +29,6 @@ async def test_write_config(app: App):
     data = PluginData("test")
     data.config.set("test", 1)
 
-    with open(config_file, "r", encoding="utf8") as f:
+    with open(config_file, encoding="utf8") as f:
         data = json.load(f)
         assert data["test"] == 1
