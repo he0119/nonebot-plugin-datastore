@@ -4,7 +4,6 @@ import pytest
 from nonebug import App
 
 
-@pytest.mark.asyncio
 async def test_read_config(app: App):
     """测试读取配置"""
     from nonebot_plugin_datastore import PluginData
@@ -20,7 +19,6 @@ async def test_read_config(app: App):
     assert data.config.get("test") == 1
 
 
-@pytest.mark.asyncio
 async def test_write_config(app: App):
     """测试写入配置"""
     from nonebot_plugin_datastore import PluginData

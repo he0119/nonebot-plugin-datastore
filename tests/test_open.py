@@ -2,7 +2,6 @@ import pytest
 from nonebug import App
 
 
-@pytest.mark.asyncio
 async def test_exists(app: App):
     """测试文件是否存在"""
     from nonebot_plugin_datastore import PluginData
@@ -25,7 +24,6 @@ async def test_exists(app: App):
     assert data.exists("cache", cache=True) is True
 
 
-@pytest.mark.asyncio
 async def test_open_file(app: App):
     """测试打开文件"""
     from nonebot_plugin_datastore import PluginData
@@ -48,7 +46,6 @@ async def test_open_file(app: App):
         assert f.read() == "test"
 
 
-@pytest.mark.asyncio
 async def test_dump_load_data(app: App):
     """测试 dump 和 load 数据"""
     from nonebot_plugin_datastore import PluginData

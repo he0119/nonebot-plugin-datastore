@@ -8,7 +8,6 @@ from nonebug import App
 from .utils import make_fake_event, make_fake_message
 
 
-@pytest.mark.asyncio
 async def test_db(app: App):
     """测试数据库"""
     from sqlmodel import select
@@ -46,7 +45,6 @@ async def test_db(app: App):
         assert examples[1].message == "matcher"
 
 
-@pytest.mark.asyncio
 async def test_disable_db(nonebug_init: None, tmp_path: Path):
     """测试禁用数据库"""
     import nonebot
@@ -72,7 +70,6 @@ async def test_disable_db(nonebug_init: None, tmp_path: Path):
     assert str(e.value) == "数据库未启用"
 
 
-@pytest.mark.asyncio
 async def test_default_db_url(nonebug_init: None):
     """测试默认数据库地址"""
     import nonebot

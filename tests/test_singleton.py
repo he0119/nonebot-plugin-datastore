@@ -2,7 +2,6 @@ import pytest
 from nonebug import App
 
 
-@pytest.mark.asyncio
 async def test_singleton(app: App):
     """测试单例"""
     from nonebot_plugin_datastore import PluginData
@@ -14,7 +13,6 @@ async def test_singleton(app: App):
     assert data2.config.get("test") == 1
 
 
-@pytest.mark.asyncio
 async def test_singleton_keyword(app: App):
     """测试单例
 
@@ -29,7 +27,6 @@ async def test_singleton_keyword(app: App):
     assert data2.config.get("test") == 1
 
 
-@pytest.mark.asyncio
 async def test_singleton_different(app: App):
     """测试单例
 

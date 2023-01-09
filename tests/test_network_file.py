@@ -25,7 +25,6 @@ async def mocked_get(url: str, **kwargs):
     return MockResponse({})
 
 
-@pytest.mark.asyncio
 async def test_cache_network_file(app: App, mocker: MockerFixture):
     """测试缓存网络文件至本地"""
     from nonebot_plugin_datastore import PluginData
@@ -50,7 +49,6 @@ async def test_cache_network_file(app: App, mocker: MockerFixture):
     get.assert_called_once_with("http://example.com")
 
 
-@pytest.mark.asyncio
 async def test_load_local_file(app: App, mocker: MockerFixture):
     """测试读取本地文件"""
     from nonebot_plugin_datastore import PluginData
@@ -69,7 +67,6 @@ async def test_load_local_file(app: App, mocker: MockerFixture):
     get.assert_not_called()
 
 
-@pytest.mark.asyncio
 async def test_process_data(app: App, mocker: MockerFixture):
     """测试处理数据"""
     from nonebot_plugin_datastore import PluginData
@@ -97,7 +94,6 @@ async def test_process_data(app: App, mocker: MockerFixture):
     get.assert_not_called()
 
 
-@pytest.mark.asyncio
 async def test_update_data(app: App, mocker: MockerFixture):
     """测试更新数据"""
     from nonebot_plugin_datastore import PluginData
@@ -126,7 +122,6 @@ async def test_update_data(app: App, mocker: MockerFixture):
     get.assert_called_once_with("http://example.com")
 
 
-@pytest.mark.asyncio
 async def test_download_file(app: App, mocker: MockerFixture):
     """测试下载文件"""
     from nonebot_plugin_datastore import PluginData
@@ -145,7 +140,6 @@ async def test_download_file(app: App, mocker: MockerFixture):
     get.assert_called_once_with("http://example.com")
 
 
-@pytest.mark.asyncio
 async def test_download_file_with_kwargs(app: App, mocker: MockerFixture):
     """测试下载文件，附带参数"""
     from nonebot_plugin_datastore import PluginData
