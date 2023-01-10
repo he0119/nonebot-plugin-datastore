@@ -1,5 +1,20 @@
-from .migrate import get_plugin_dir
+import click
+
+from .migrate import revision as _revision
+from .migrate import upgrade as _upgrade
+
+
+@click.group()
+def cli():
+    pass
+
+
+@cli.command()
+def revision():
+    click.echo("Initialized the database")
 
 
 def main():
-    print(get_plugin_dir("example"))
+    # cli()
+    # _upgrade()
+    _revision(message="test", autogenerate=True)
