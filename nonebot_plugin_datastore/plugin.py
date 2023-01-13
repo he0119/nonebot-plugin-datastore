@@ -160,7 +160,7 @@ class PluginData(metaclass=Singleton):
         self._config = None
 
         # 数据库
-        self._metadata = MetaData()
+        self._metadata = None
         self._model = None
 
         self.init_dir()
@@ -268,6 +268,7 @@ class PluginData(metaclass=Singleton):
     def Model(self) -> Type[SQLModel]:
         """数据库模型"""
         if not self._model:
+            self._metadata = MetaData()
 
             class _SQLModel(SQLModel):
                 metadata = self._metadata
@@ -276,6 +277,6 @@ class PluginData(metaclass=Singleton):
         return self._model
 
     @property
-    def metadata(self) -> MetaData:
+    def metadata(self) -> Optional[MetaData]:
         """获取数据库元数据"""
         return self._metadata

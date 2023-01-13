@@ -5,6 +5,8 @@ from alembic import command
 from alembic.config import Config as AlembicConfig
 from nonebot.plugin import get_loaded_plugins
 
+from nonebot_plugin_datastore import PluginData
+
 PACKAGE_DIR = Path(__file__).parent
 
 
@@ -21,11 +23,15 @@ def get_plugins(name: Optional[str] = None) -> List[PluginInfo]:
         return [
             PluginInfo(name=plugin.name, path=Path(plugin.module.__file__).parent)
             for plugin in plugins
-            if plugin.module.__file__
+            if plugin.module.__file__ and PluginData(plugin.name).metadata
         ]
 
     for plugin in plugins:
-        if name == plugin.name and plugin.module.__file__:
+        if (
+            name == plugin.name
+            and plugin.module.__file__
+            and PluginData(plugin.name).metadata
+        ):
             package_dir = Path(plugin.module.__file__).parent
             return [PluginInfo(name=plugin.name, path=package_dir)]
     return []
