@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional, TypedDict
 
 from alembic import command
 from alembic.config import Config as AlembicConfig
@@ -8,13 +8,27 @@ from nonebot.plugin import get_loaded_plugins
 PACKAGE_DIR = Path(__file__).parent
 
 
-def get_plugin_dir(name: Optional[str] = None) -> Optional[Path]:
+class PluginInfo(TypedDict):
+    name: str
+    path: Path
+
+
+def get_plugins(name: Optional[str] = None) -> List[PluginInfo]:
     """通过插件名称获取插件目录"""
     plugins = get_loaded_plugins()
+
+    if name is None:
+        return [
+            PluginInfo(name=plugin.name, path=Path(plugin.module.__file__).parent)
+            for plugin in plugins
+            if plugin.module.__file__
+        ]
+
     for plugin in plugins:
         if name == plugin.name and plugin.module.__file__:
             package_dir = Path(plugin.module.__file__).parent
-            return package_dir
+            return [PluginInfo(name=plugin.name, path=package_dir)]
+    return []
 
 
 class Config(AlembicConfig):
@@ -30,21 +44,22 @@ class Config(AlembicConfig):
 
 
 def revision(
+    name=None,
     message=None,
     autogenerate=False,
     sql=False,
     head="head",
     splice=False,
-    branch_label=None,
-    version_path=None,
     rev_id=None,
 ):
     """Create a new revision file."""
     config = Config()
     config.set_main_option("script_location", str(PACKAGE_DIR / "migration"))
-    directory = get_plugin_dir("example")
-    if directory:
-        config.set_main_option("version_locations", str(directory / "versions"))
+    plugins = get_plugins(name)
+    for plugin in plugins:
+        config.set_main_option("version_locations", str(plugin["path"] / "versions"))
+        branch_label = plugin["name"]
+        version_path = str(plugin["path"] / "versions")
         command.revision(
             config,
             message,
@@ -58,11 +73,11 @@ def revision(
         )
 
 
-def upgrade(revision="head", sql=False, tag=None):
+def upgrade(name=None, revision="head", sql=False, tag=None):
     """Upgrade to a later version."""
     config = Config()
     config.set_main_option("script_location", str(PACKAGE_DIR / "migration"))
-    directory = get_plugin_dir("example")
-    if directory:
-        config.set_main_option("version_locations", str(directory / "versions"))
+    plugins = get_plugins(name)
+    for plugin in plugins:
+        config.set_main_option("version_locations", str(plugin["path"] / "versions"))
         command.upgrade(config, revision, sql=sql, tag=tag)
