@@ -3,10 +3,11 @@ import json
 import os
 import pickle
 from pathlib import Path
-from typing import IO, Any, Callable, Generic, Optional, TypeVar, Union, overload
+from typing import IO, Any, Callable, Generic, Optional, Type, TypeVar, Union, overload
 
 import httpx
 from nonebot.log import logger
+from sqlmodel import MetaData, SQLModel
 
 from .config import plugin_config
 
@@ -158,6 +159,10 @@ class PluginData(metaclass=Singleton):
         # 插件配置
         self._config = None
 
+        # 数据库
+        self._metadata = MetaData(schema=self._name)
+        self._model = None
+
         self.init_dir()
 
     def init_dir(self) -> None:
@@ -258,3 +263,19 @@ class PluginData(metaclass=Singleton):
         且可以在获取数据之后同时处理数据
         """
         return NetworkFile[T, R](url, filename, self, process_data, cache)
+
+    @property
+    def Model(self) -> Type[SQLModel]:
+        """数据库模型"""
+        if not self._model:
+
+            class _SQLModel(SQLModel):
+                metadata = self._metadata
+
+            self._model = _SQLModel
+        return self._model
+
+    @property
+    def metadata(self) -> MetaData:
+        """获取数据库元数据"""
+        return self._metadata
