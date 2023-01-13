@@ -25,6 +25,13 @@ target_metadata = data.metadata if data else SQLModel.metadata
 version_table = f"{plugin_name}_alembic_version" if plugin_name else "alembic_version"
 
 
+def include_object(object, name, type_, reflected, compare_to):
+    if type_ == "table" and object.metadata.info.get("name") != plugin_name:
+        return False
+    else:
+        return True
+
+
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
 
@@ -44,6 +51,7 @@ def run_migrations_offline() -> None:
         version_table=version_table,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        include_object=include_object,
     )
 
     with context.begin_transaction():
@@ -55,6 +63,7 @@ def do_run_migrations(connection):
         connection=connection,
         target_metadata=target_metadata,
         version_table=version_table,
+        include_object=include_object,
     )
 
     with context.begin_transaction():

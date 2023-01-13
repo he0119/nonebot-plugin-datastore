@@ -268,7 +268,7 @@ class PluginData(metaclass=Singleton):
     def Model(self) -> Type[SQLModel]:
         """数据库模型"""
         if not self._model:
-            self._metadata = MetaData()
+            self._metadata = MetaData(info={"name": self._name})
 
             class _SQLModel(SQLModel):
                 metadata = self._metadata
