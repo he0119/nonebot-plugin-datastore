@@ -44,7 +44,14 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection):
-    context.configure(connection=connection, target_metadata=target_metadata)
+    plugin_name = config.get_main_option("plugin_name")
+    context.configure(
+        connection=connection,
+        target_metadata=target_metadata,
+        version_table=f"{plugin_name}_alembic_version"
+        if plugin_name
+        else "alembic_version",
+    )
 
     with context.begin_transaction():
         context.run_migrations()

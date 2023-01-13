@@ -11,12 +11,27 @@
       "module": "pytest"
     },
     {
-      "name": "NoneBot CLI",
+      "name": "upgrade",
       "type": "python",
       "request": "launch",
       "module": "nb_cli",
       "args": [
-        "datastore"
+        "datastore",
+        "upgrade",
+        "-n",
+        "example"
+      ],
+      "justMyCode": false
+    },
+    {
+      "name": "revision",
+      "type": "python",
+      "request": "launch",
+      "module": "nb_cli",
+      "args": [
+        "datastore",
+        "revision",
+        "--autogenerate",
       ],
       "justMyCode": false
     },

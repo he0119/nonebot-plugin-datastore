@@ -50,6 +50,8 @@ def revision(
     sql=False,
     head="head",
     splice=False,
+    branch_label=None,
+    version_path=None,
     rev_id=None,
 ):
     """Create a new revision file."""
@@ -58,8 +60,7 @@ def revision(
     plugins = get_plugins(name)
     for plugin in plugins:
         config.set_main_option("version_locations", str(plugin["path"] / "versions"))
-        branch_label = plugin["name"]
-        version_path = str(plugin["path"] / "versions")
+        config.set_main_option("plugin_name", plugin["name"])
         command.revision(
             config,
             message,
@@ -80,4 +81,5 @@ def upgrade(name=None, revision="head", sql=False, tag=None):
     plugins = get_plugins(name)
     for plugin in plugins:
         config.set_main_option("version_locations", str(plugin["path"] / "versions"))
+        config.set_main_option("plugin_name", plugin["name"])
         command.upgrade(config, revision, sql=sql, tag=tag)
