@@ -160,7 +160,7 @@ class PluginData(metaclass=Singleton):
         self._config = None
 
         # 数据库
-        self._metadata = MetaData(schema=self._name)
+        self._metadata = MetaData()
         self._model = None
 
         self.init_dir()

@@ -1,9 +1,13 @@
 from typing import Optional
 
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field
+
+from nonebot_plugin_datastore import PluginData
+
+Model = PluginData("example").Model
 
 
-class Example(SQLModel, table=True):
+class Example(Model, table=True):
     """测试一下"""
 
     __table_args__ = {"extend_existing": True}
