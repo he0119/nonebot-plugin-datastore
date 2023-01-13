@@ -1,5 +1,6 @@
 import asyncio
 
+import click
 from alembic import context
 from sqlmodel import SQLModel
 
@@ -59,11 +60,21 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection):
+    # 不生成空的迁移文件
+    # https://alembic.sqlalchemy.org/en/latest/cookbook.html#don-t-generate-empty-migrations-with-autogenerate
+    def process_revision_directives(context, revision, directives):
+        if config.cmd_opts and config.cmd_opts.autogenerate:
+            script = directives[0]
+            if script.upgrade_ops.is_empty():
+                click.echo("没有检测到变更，跳过生成迁移文件")
+                directives[:] = []
+
     context.configure(
         connection=connection,
         target_metadata=target_metadata,
         version_table=version_table,
         include_object=include_object,
+        process_revision_directives=process_revision_directives,
     )
 
     with context.begin_transaction():

@@ -13,20 +13,27 @@ def cli():
 
 
 @cli.command()
-@click.option("--name", "-n", help="Plugin name")
-@click.option("--autogenerate", is_flag=True, help="Autogenerate")
-def revision(name: Optional[str], autogenerate: bool):
+@click.option("--name", "-n", default=None, help="Plugin name")
+@click.option("-m", "--message", default=None, help="Revision message")
+@click.option(
+    "--autogenerate",
+    is_flag=True,
+    help=(
+        "Populate revision script with candidate migration "
+        "operations, based on comparison of database to model"
+    ),
+)
+def revision(name: Optional[str], message: Optional[str], autogenerate: bool):
     """revision"""
-    click.echo(f"revision {name=}, {autogenerate=}")
-    _revision(name=name, autogenerate=autogenerate)
+    _revision(name=name, message=message, autogenerate=autogenerate)
 
 
 @cli.command()
-@click.option("--name", "-n", help="Plugin name")
-def upgrade(name: Optional[str]):
+@click.option("--name", "-n", default=None, help="Plugin name")
+@click.argument("revision", default="head")
+def upgrade(name: Optional[str], revision: str):
     """upgrade"""
-    click.echo(f"upgrade {name=}")
-    _upgrade(name=name)
+    _upgrade(name=name, revision=revision)
 
 
 def main():

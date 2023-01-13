@@ -1,6 +1,8 @@
+from argparse import Namespace
 from pathlib import Path
 from typing import List, Optional, TypedDict
 
+import click
 from alembic import command
 from alembic.config import Config as AlembicConfig
 from nonebot.plugin import get_loaded_plugins
@@ -49,43 +51,25 @@ class Config(AlembicConfig):
         return str(package_dir / "migration")
 
 
-def revision(
-    name=None,
-    message=None,
-    autogenerate=False,
-    sql=False,
-    head="head",
-    splice=False,
-    branch_label=None,
-    version_path=None,
-    rev_id=None,
-):
+def revision(name=None, message=None, autogenerate=False):
     """Create a new revision file."""
-    config = Config()
+    config = Config(cmd_opts=Namespace(autogenerate=autogenerate))
     config.set_main_option("script_location", str(PACKAGE_DIR / "migration"))
     plugins = get_plugins(name)
     for plugin in plugins:
+        click.echo(f"尝试生成 {plugin['name']} 的迁移文件")
         config.set_main_option("version_locations", str(plugin["path"] / "versions"))
         config.set_main_option("plugin_name", plugin["name"])
-        command.revision(
-            config,
-            message,
-            autogenerate=autogenerate,
-            sql=sql,
-            head=head,
-            splice=splice,
-            branch_label=branch_label,
-            version_path=version_path,
-            rev_id=rev_id,
-        )
+        command.revision(config, message, autogenerate=autogenerate)
 
 
-def upgrade(name=None, revision="head", sql=False, tag=None):
+def upgrade(name=None, revision="head"):
     """Upgrade to a later version."""
     config = Config()
     config.set_main_option("script_location", str(PACKAGE_DIR / "migration"))
     plugins = get_plugins(name)
     for plugin in plugins:
+        click.echo(f"升级 {plugin['name']} 的数据库")
         config.set_main_option("version_locations", str(plugin["path"] / "versions"))
         config.set_main_option("plugin_name", plugin["name"])
-        command.upgrade(config, revision, sql=sql, tag=tag)
+        command.upgrade(config, revision)
