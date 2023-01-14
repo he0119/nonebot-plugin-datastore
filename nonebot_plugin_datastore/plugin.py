@@ -8,6 +8,7 @@ from typing import IO, Any, Callable, Generic, Optional, Type, TypeVar, Union, o
 import httpx
 from nonebot import get_plugin
 from nonebot.log import logger
+from sqlalchemy.orm import declared_attr
 from sqlmodel import MetaData, SQLModel
 
 from .config import plugin_config
@@ -274,6 +275,10 @@ class PluginData(metaclass=Singleton):
 
             class _SQLModel(SQLModel):
                 metadata = self._metadata
+
+                @declared_attr
+                def __tablename__(cls) -> str:
+                    return f"{self._name}_{cls.__name__.lower()}"
 
             self._model = _SQLModel
         return self._model
