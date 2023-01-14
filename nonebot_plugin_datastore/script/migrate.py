@@ -67,8 +67,7 @@ class Config(AlembicConfig):
     def get_template_directory(self):
         if self.template_directory:
             return self.template_directory
-        package_dir = Path(__file__).parent
-        return str(package_dir / "migration")
+        return str(SCRIPT_LOCATION)
 
 
 def revision(name=None, message=None, autogenerate=False):
