@@ -2,6 +2,7 @@ from typing import Optional
 
 import click
 
+from .migrate import downgrade as _downgrade
 from .migrate import revision as _revision
 from .migrate import upgrade as _upgrade
 
@@ -13,7 +14,7 @@ def cli():
 
 
 @cli.command()
-@click.option("--name", "-n", default=None, help="Plugin name")
+@click.option("--name", "-n", default=None, help="插件名")
 @click.option("-m", "--message", default=None, help="Revision message")
 @click.option(
     "--autogenerate",
@@ -29,11 +30,19 @@ def revision(name: Optional[str], message: Optional[str], autogenerate: bool):
 
 
 @cli.command()
-@click.option("--name", "-n", default=None, help="Plugin name")
+@click.option("--name", "-n", default=None, help="插件名")
 @click.argument("revision", default="head")
 def upgrade(name: Optional[str], revision: str):
     """upgrade"""
     _upgrade(name=name, revision=revision)
+
+
+@cli.command()
+@click.option("--name", "-n", default=None, help="插件名")
+@click.argument("revision", default="-1")
+def downgrade(name: Optional[str], revision: str):
+    """downgrade"""
+    _downgrade(name=name, revision=revision)
 
 
 def main():

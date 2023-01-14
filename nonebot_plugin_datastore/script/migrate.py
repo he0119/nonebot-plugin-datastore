@@ -1,6 +1,6 @@
 from argparse import Namespace
 from pathlib import Path
-from typing import List, Optional, TypedDict
+from typing import List, Optional
 
 import click
 from alembic import command
@@ -12,18 +12,13 @@ from nonebot_plugin_datastore import PluginData
 PACKAGE_DIR = Path(__file__).parent
 
 
-class PluginInfo(TypedDict):
-    name: str
-    path: Path
-
-
-def get_plugins(name: Optional[str] = None) -> List[PluginInfo]:
-    """通过插件名称获取插件目录"""
+def get_plugins(name: Optional[str] = None) -> List[str]:
+    """获取使用了数据库的插件名"""
     plugins = get_loaded_plugins()
 
     if name is None:
         return [
-            PluginInfo(name=plugin.name, path=Path(plugin.module.__file__).parent)
+            plugin.name
             for plugin in plugins
             if plugin.module.__file__ and PluginData(plugin.name).metadata
         ]
@@ -34,8 +29,7 @@ def get_plugins(name: Optional[str] = None) -> List[PluginInfo]:
             and plugin.module.__file__
             and PluginData(plugin.name).metadata
         ):
-            package_dir = Path(plugin.module.__file__).parent
-            return [PluginInfo(name=plugin.name, path=package_dir)]
+            return [plugin.name]
     return []
 
 
@@ -57,9 +51,11 @@ def revision(name=None, message=None, autogenerate=False):
     config.set_main_option("script_location", str(PACKAGE_DIR / "migration"))
     plugins = get_plugins(name)
     for plugin in plugins:
-        click.echo(f"尝试生成 {plugin['name']} 的迁移文件")
-        config.set_main_option("version_locations", str(plugin["path"] / "versions"))
-        config.set_main_option("plugin_name", plugin["name"])
+        click.echo(f"尝试生成 {plugin} 的迁移文件")
+        config.set_main_option(
+            "version_locations", str(PluginData(plugin).migration_path)
+        )
+        config.set_main_option("plugin_name", plugin)
         command.revision(config, message, autogenerate=autogenerate)
 
 
@@ -69,7 +65,23 @@ def upgrade(name=None, revision="head"):
     config.set_main_option("script_location", str(PACKAGE_DIR / "migration"))
     plugins = get_plugins(name)
     for plugin in plugins:
-        click.echo(f"升级 {plugin['name']} 的数据库")
-        config.set_main_option("version_locations", str(plugin["path"] / "versions"))
-        config.set_main_option("plugin_name", plugin["name"])
+        click.echo(f"升级 {plugin} 数据库")
+        config.set_main_option(
+            "version_locations", str(PluginData(plugin).migration_path)
+        )
+        config.set_main_option("plugin_name", plugin)
         command.upgrade(config, revision)
+
+
+def downgrade(name=None, revision="-1"):
+    """Revert to a previous version."""
+    config = Config()
+    config.set_main_option("script_location", str(PACKAGE_DIR / "migration"))
+    plugins = get_plugins(name)
+    for plugin in plugins:
+        click.echo(f"降级 {plugin} 数据库")
+        config.set_main_option(
+            "version_locations", str(PluginData(plugin).migration_path)
+        )
+        config.set_main_option("plugin_name", plugin)
+        command.downgrade(config, revision)

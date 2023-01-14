@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import IO, Any, Callable, Generic, Optional, Type, TypeVar, Union, overload
 
 import httpx
+from nonebot import get_plugin
 from nonebot.log import logger
 from sqlmodel import MetaData, SQLModel
 
@@ -121,12 +122,12 @@ class NetworkFile(Generic[T, R]):
             if self._process_data:
                 self._data = self._process_data(data)
             else:
-                self._data = data
+                self._data = data  # type: ignore
         return self._data  # type: ignore
 
     async def update(self) -> None:
         """从网络更新数据"""
-        self._data = await self.load_from_network()
+        self._data = await self.load_from_network()  # type: ignore
         if self._process_data:
             self._data = self._process_data(self._data)
 
@@ -162,6 +163,7 @@ class PluginData(metaclass=Singleton):
         # 数据库
         self._metadata = None
         self._model = None
+        self._migration_path = None
 
         self.init_dir()
 
@@ -280,3 +282,16 @@ class PluginData(metaclass=Singleton):
     def metadata(self) -> Optional[MetaData]:
         """获取数据库元数据"""
         return self._metadata
+
+    @property
+    def migration_path(self) -> Optional[Path]:
+        """数据库迁移文件夹"""
+        if not self._migration_path:
+            plugin = get_plugin(self._name)
+            if plugin and plugin.module.__file__ and PluginData(plugin.name).metadata:
+                self._migration_path = Path(plugin.module.__file__).parent / "migration"
+        return self._migration_path
+
+    def set_migration_path(self, path: Path) -> None:
+        """设置数据库迁移文件夹"""
+        self._migration_path = path

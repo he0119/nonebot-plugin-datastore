@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Optional
 
 from sqlmodel import Field
@@ -5,6 +6,8 @@ from sqlmodel import Field
 from nonebot_plugin_datastore import PluginData
 
 DATA = PluginData("example2")
+
+DATA.set_migration_path(Path(__file__).parent / "test-migration")
 
 
 class Example2(DATA.Model, table=True):
