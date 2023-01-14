@@ -73,6 +73,15 @@ def handle(session: AsyncSession = Depends(get_session)):
     example = Example(message="matcher")
     session.add(example)
     await session.commit()
+
+# 因为 driver.on_startup 无法保证函数运行顺序
+# 如需在 NoneBot 启动时且数据库初始化后运行的函数
+# 请使用 post_db_init 而不是 Nonebot 的 on_startup
+from nonebot_plugin_datastore.db import post_db_init
+
+@post_db_init
+async def do_something():
+  pass
 ```
 
 CLI 功能（需要安装 nb-cli）
