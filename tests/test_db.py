@@ -10,13 +10,13 @@ from .utils import make_fake_event, make_fake_message
 
 async def test_db(app: App):
     """测试数据库"""
+    from nonebot import require
     from sqlmodel import select
 
     from nonebot_plugin_datastore.db import create_session, init_db
 
+    require("tests.example")
     from .example import Example, test
-
-    nonebot.load_plugin("tests.example")
 
     await init_db()
 
