@@ -59,10 +59,14 @@ def get_plugins(name: Optional[str] = None, exclude_others: bool = False) -> Lis
 
 
 class Config(AlembicConfig):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, plugin_name, *args, **kwargs):
         self.template_directory = kwargs.pop("template_directory", None)
         super().__init__(*args, **kwargs)
         self.set_main_option("script_location", str(SCRIPT_LOCATION))
+        self.set_main_option("plugin_name", plugin_name)
+        self.set_main_option(
+            "version_locations", str(PluginData(plugin_name).migration_dir)
+        )
 
     def get_template_directory(self):
         if self.template_directory:
@@ -72,38 +76,26 @@ class Config(AlembicConfig):
 
 def revision(name=None, message=None, autogenerate=False):
     """Create a new revision file."""
-    config = Config(cmd_opts=Namespace(autogenerate=autogenerate))
     plugins = get_plugins(name, True)
     for plugin in plugins:
         logger.info(f"尝试生成插件 {plugin} 的迁移文件")
-        config.set_main_option(
-            "version_locations", str(PluginData(plugin).migration_dir)
-        )
-        config.set_main_option("plugin_name", plugin)
+        config = Config(plugin, cmd_opts=Namespace(autogenerate=autogenerate))
         command.revision(config, message, autogenerate=autogenerate)
 
 
 def upgrade(name=None, revision="head"):
     """Upgrade to a later version."""
-    config = Config()
     plugins = get_plugins(name)
     for plugin in plugins:
         logger.info(f"升级插件 {plugin} 的数据库")
-        config.set_main_option(
-            "version_locations", str(PluginData(plugin).migration_dir)
-        )
-        config.set_main_option("plugin_name", plugin)
+        config = Config(plugin)
         command.upgrade(config, revision)
 
 
 def downgrade(name=None, revision="-1"):
     """Revert to a previous version."""
-    config = Config()
     plugins = get_plugins(name)
     for plugin in plugins:
         logger.info(f"降级插件 {plugin} 的数据库")
-        config.set_main_option(
-            "version_locations", str(PluginData(plugin).migration_dir)
-        )
-        config.set_main_option("plugin_name", plugin)
+        config = Config(plugin)
         command.downgrade(config, revision)

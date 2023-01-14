@@ -56,10 +56,8 @@ async def run_upgrade():
     plugins = get_plugins()
     for plugin in plugins:
         logger.info(f"初始化插件 {plugin} 的数据库")
-        config = Config()
-        config.set_main_option(
-            "version_locations", str(PluginData(plugin).migration_dir)
-        )
+
+        config = Config(plugin)
         script = ScriptDirectory.from_config(config)
 
         def upgrade(rev, context):
