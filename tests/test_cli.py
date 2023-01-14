@@ -1,5 +1,6 @@
 import asyncio
 from pathlib import Path
+from typing import cast
 
 from click.testing import CliRunner
 from nonebug import App
@@ -83,3 +84,22 @@ def test_downgrade(app: App):
     result = runner.invoke(cli, ["downgrade"])
     assert result.exit_code == 0
     assert "" in result.output
+
+
+async def test_post_db_init(app: App):
+    from nonebot import require
+
+    from nonebot_plugin_datastore.db import create_session, init_db
+
+    require("tests.example")
+    await init_db()
+
+    from sqlmodel import select
+
+    from tests.example.models import Example
+
+    async with create_session() as session:
+        statement = select(Example)
+        result = await session.exec(statement)  # type: ignore
+        example = cast(Example, result.first())
+        assert example.message == "init"
