@@ -166,32 +166,37 @@ class PluginData(metaclass=Singleton):
         self._model = None
         self._migration_path = None
 
-        self.init_dir()
-
-    def init_dir(self) -> None:
-        """初始化目录"""
-        os.makedirs(self.data_dir, exist_ok=True)
-        os.makedirs(self.cache_dir, exist_ok=True)
-        os.makedirs(self.config_dir, exist_ok=True)
+        # 插件目录
+        self._cache_dir = None
+        self._config_dir = None
+        self._data_dir = None
 
     @property
     def cache_dir(self) -> Path:
         """缓存目录"""
-        path = plugin_config.datastore_cache_dir / self._name
-        return path
+        if self._cache_dir is None:
+            self._cache_dir = plugin_config.datastore_cache_dir / self._name
+            os.makedirs(self.cache_dir, exist_ok=True)
+        return self._cache_dir
 
     @property
     def config_dir(self) -> Path:
-        """配置目录"""
-        # 配置都放置在统一的目录下
-        path = plugin_config.datastore_config_dir
-        return path
+        """配置目录
+
+        配置都放置在统一的目录下
+        """
+        if self._config_dir is None:
+            self._config_dir = plugin_config.datastore_config_dir
+            os.makedirs(self._config_dir, exist_ok=True)
+        return self._config_dir
 
     @property
     def data_dir(self) -> Path:
         """数据目录"""
-        path = plugin_config.datastore_data_dir / self._name
-        return path
+        if self._data_dir is None:
+            self._data_dir = plugin_config.datastore_data_dir / self._name
+            os.makedirs(self._data_dir, exist_ok=True)
+        return self._data_dir
 
     @property
     def config(self) -> Config:
