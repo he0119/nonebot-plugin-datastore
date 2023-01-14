@@ -5,6 +5,7 @@ from typing import List, Optional
 import click
 from alembic import command
 from alembic.config import Config as AlembicConfig
+from nonebot import load_plugin
 from nonebot.plugin import get_loaded_plugins
 
 from nonebot_plugin_datastore import PluginData
@@ -30,6 +31,13 @@ def get_plugins(name: Optional[str] = None) -> List[str]:
             and PluginData(plugin.name).metadata
         ):
             return [plugin.name]
+
+    # 如果插件没有在已加载的插件中找到，尝试加载插件
+    plugin = load_plugin(name)
+    if not plugin:
+        click.echo(f"插件 {name} 不存在")
+    elif plugin.module.__file__ and PluginData(plugin.name).metadata:
+        return [plugin.name]
     return []
 
 
