@@ -39,12 +39,20 @@ def test_revision(app: App, tmp_path: Path):
     from nonebot_plugin_datastore.db import init_db
     from nonebot_plugin_datastore.script.cli import cli
 
+    require("tests.example")
     require("tests.example2")
     asyncio.run(init_db())
 
     runner = CliRunner()
+
+    result = runner.invoke(cli, ["revision", "--autogenerate", "--name", "example"])
+    assert result.exit_code == 0
+    assert "" in result.output
+
     with runner.isolated_filesystem(temp_dir=tmp_path) as td:
-        result = runner.invoke(cli, ["revision", "--autogenerate", "--message", "test"])
+        result = runner.invoke(
+            cli, ["revision", "--autogenerate", "--name", "example2"]
+        )
         assert result.exit_code == 0
         assert "" in result.output
 

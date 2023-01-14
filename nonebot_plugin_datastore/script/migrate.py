@@ -49,12 +49,6 @@ def get_plugins(name: Optional[str] = None, exclude_others: bool = False) -> Lis
         if name == plugin.name and _should_include(plugin):
             return [plugin.name]
 
-    # 如果插件没有在已加载的插件中找到，尝试加载插件
-    plugin = load_plugin(name)
-    if not plugin:
-        logger.info(f"插件 {name} 不存在")
-    elif _should_include(plugin):
-        return [plugin.name]
     return []
 
 
