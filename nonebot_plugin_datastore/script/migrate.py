@@ -2,10 +2,10 @@ from argparse import Namespace
 from pathlib import Path
 from typing import TYPE_CHECKING, List, Optional
 
-import click
 from alembic import command
 from alembic.config import Config as AlembicConfig
 from nonebot import load_plugin
+from nonebot.log import logger
 from nonebot.plugin import get_loaded_plugins
 
 from nonebot_plugin_datastore import PluginData
@@ -52,7 +52,7 @@ def get_plugins(name: Optional[str] = None, exclude_others: bool = False) -> Lis
     # 如果插件没有在已加载的插件中找到，尝试加载插件
     plugin = load_plugin(name)
     if not plugin:
-        click.echo(f"插件 {name} 不存在")
+        logger.info(f"插件 {name} 不存在")
     elif _should_include(plugin):
         return [plugin.name]
     return []
@@ -76,7 +76,7 @@ def revision(name=None, message=None, autogenerate=False):
     config = Config(cmd_opts=Namespace(autogenerate=autogenerate))
     plugins = get_plugins(name, True)
     for plugin in plugins:
-        click.echo(f"尝试生成 {plugin} 的迁移文件")
+        logger.info(f"尝试生成插件 {plugin} 的迁移文件")
         config.set_main_option(
             "version_locations", str(PluginData(plugin).migration_dir)
         )
@@ -89,7 +89,7 @@ def upgrade(name=None, revision="head"):
     config = Config()
     plugins = get_plugins(name)
     for plugin in plugins:
-        click.echo(f"升级 {plugin} 数据库")
+        logger.info(f"升级插件 {plugin} 的数据库")
         config.set_main_option(
             "version_locations", str(PluginData(plugin).migration_dir)
         )
@@ -102,7 +102,7 @@ def downgrade(name=None, revision="-1"):
     config = Config()
     plugins = get_plugins(name)
     for plugin in plugins:
-        click.echo(f"降级 {plugin} 数据库")
+        logger.info(f"降级插件 {plugin} 的数据库")
         config.set_main_option(
             "version_locations", str(PluginData(plugin).migration_dir)
         )

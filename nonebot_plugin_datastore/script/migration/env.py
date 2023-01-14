@@ -1,7 +1,7 @@
 import asyncio
 
-import click
 from alembic import context
+from nonebot.log import logger
 from sqlmodel import SQLModel
 
 from nonebot_plugin_datastore import PluginData
@@ -66,7 +66,7 @@ def do_run_migrations(connection):
         if config.cmd_opts and config.cmd_opts.autogenerate:
             script = directives[0]
             if script.upgrade_ops.is_empty():
-                click.echo("没有检测到变更，跳过生成迁移文件")
+                logger.info("没有检测到变更，跳过生成迁移文件")
                 directives[:] = []
 
     context.configure(
