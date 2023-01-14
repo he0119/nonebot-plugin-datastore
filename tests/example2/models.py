@@ -7,7 +7,7 @@ from nonebot_plugin_datastore import PluginData
 
 DATA = PluginData("example2")
 
-DATA.set_migration_path(Path(__file__).parent / "test-migration")
+DATA.set_migration_dir(Path(__file__).parent / "test-migration")
 
 
 class Example2(DATA.Model, table=True):

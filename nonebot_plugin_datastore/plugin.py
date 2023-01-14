@@ -284,7 +284,7 @@ class PluginData(metaclass=Singleton):
         return self._metadata
 
     @property
-    def migration_path(self) -> Optional[Path]:
+    def migration_dir(self) -> Optional[Path]:
         """数据库迁移文件夹"""
         if not self._migration_path:
             plugin = get_plugin(self._name)
@@ -292,6 +292,6 @@ class PluginData(metaclass=Singleton):
                 self._migration_path = Path(plugin.module.__file__).parent / "migration"
         return self._migration_path
 
-    def set_migration_path(self, path: Path) -> None:
+    def set_migration_dir(self, path: Path) -> None:
         """设置数据库迁移文件夹"""
         self._migration_path = path

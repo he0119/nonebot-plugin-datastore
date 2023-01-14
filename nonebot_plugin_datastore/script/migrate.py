@@ -53,7 +53,7 @@ def revision(name=None, message=None, autogenerate=False):
     for plugin in plugins:
         click.echo(f"尝试生成 {plugin} 的迁移文件")
         config.set_main_option(
-            "version_locations", str(PluginData(plugin).migration_path)
+            "version_locations", str(PluginData(plugin).migration_dir)
         )
         config.set_main_option("plugin_name", plugin)
         command.revision(config, message, autogenerate=autogenerate)
@@ -67,7 +67,7 @@ def upgrade(name=None, revision="head"):
     for plugin in plugins:
         click.echo(f"升级 {plugin} 数据库")
         config.set_main_option(
-            "version_locations", str(PluginData(plugin).migration_path)
+            "version_locations", str(PluginData(plugin).migration_dir)
         )
         config.set_main_option("plugin_name", plugin)
         command.upgrade(config, revision)
@@ -81,7 +81,7 @@ def downgrade(name=None, revision="-1"):
     for plugin in plugins:
         click.echo(f"降级 {plugin} 数据库")
         config.set_main_option(
-            "version_locations", str(PluginData(plugin).migration_path)
+            "version_locations", str(PluginData(plugin).migration_dir)
         )
         config.set_main_option("plugin_name", plugin)
         command.downgrade(config, revision)
