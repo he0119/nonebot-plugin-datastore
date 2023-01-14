@@ -1,6 +1,6 @@
 import asyncio
+import shutil
 from pathlib import Path
-from typing import cast
 
 from click.testing import CliRunner
 from nonebug import App
@@ -37,6 +37,7 @@ def test_cli_help(app: App):
 def test_revision(app: App, tmp_path: Path):
     from nonebot import require
 
+    from nonebot_plugin_datastore import PluginData
     from nonebot_plugin_datastore.db import init_db
     from nonebot_plugin_datastore.script.cli import cli
 
@@ -50,12 +51,19 @@ def test_revision(app: App, tmp_path: Path):
     assert result.exit_code == 0
     assert "" in result.output
 
-    with runner.isolated_filesystem(temp_dir=tmp_path) as td:
-        result = runner.invoke(
-            cli, ["revision", "--autogenerate", "--name", "example2"]
-        )
-        assert result.exit_code == 0
-        assert "" in result.output
+    migration_dir = PluginData("example2").migration_dir
+    assert migration_dir
+    assert not migration_dir.exists()
+
+    result = runner.invoke(
+        cli, ["revision", "--autogenerate", "--name", "example2", "-m", "test"]
+    )
+    assert result.exit_code == 0
+    assert "Generating" in result.output
+    assert "test.py" in result.output
+
+    assert migration_dir.exists()
+    shutil.rmtree(migration_dir)
 
 
 def test_upgrade(app: App):
@@ -84,22 +92,3 @@ def test_downgrade(app: App):
     result = runner.invoke(cli, ["downgrade"])
     assert result.exit_code == 0
     assert "" in result.output
-
-
-async def test_post_db_init(app: App):
-    from nonebot import require
-
-    from nonebot_plugin_datastore.db import create_session, init_db
-
-    require("tests.example")
-    await init_db()
-
-    from sqlmodel import select
-
-    from tests.example.models import Example
-
-    async with create_session() as session:
-        statement = select(Example)
-        result = await session.exec(statement)  # type: ignore
-        example = cast(Example, result.first())
-        assert example.message == "init"

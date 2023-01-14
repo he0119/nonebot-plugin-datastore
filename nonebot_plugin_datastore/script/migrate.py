@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING, List, Optional
 
 from alembic import command
 from alembic.config import Config as AlembicConfig
-from nonebot import load_plugin
 from nonebot.log import logger
 from nonebot.plugin import get_loaded_plugins
 

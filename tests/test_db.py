@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List
+from typing import List, cast
 
 import nonebot
 import pytest
@@ -21,14 +21,20 @@ async def test_db(app: App):
     await init_db()
 
     async with create_session() as session:
+        statement = select(Example)
+        result = await session.exec(statement)  # type: ignore
+        example = cast(Example, result.first())
+        assert example.message == "init"
+
+    async with create_session() as session:
         session.add(Example(message="test"))
         await session.commit()
 
     async with create_session() as session:
         statement = select(Example)
         examples: List[Example] = (await session.exec(statement)).all()  # type: ignore
-        assert len(examples) == 1
-        assert examples[0].message == "test"
+        assert len(examples) == 2
+        assert examples[1].message == "test"
 
     message = make_fake_message()("/test")
     event = make_fake_event(_message=message)()
@@ -41,8 +47,8 @@ async def test_db(app: App):
     async with create_session() as session:
         statement = select(Example)
         examples: List[Example] = (await session.exec(statement)).all()  # type: ignore
-        assert len(examples) == 2
-        assert examples[1].message == "matcher"
+        assert len(examples) == 3
+        assert examples[2].message == "matcher"
 
 
 async def test_disable_db(nonebug_init: None, tmp_path: Path):
