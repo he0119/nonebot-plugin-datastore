@@ -14,22 +14,31 @@ if TYPE_CHECKING:
     from nonebot.plugin import Plugin
 
 PACKAGE_DIR = Path(__file__).parent
+SCRIPT_LOCATION = PACKAGE_DIR / "migration"
 
 
-def get_plugins(
-    name: Optional[str] = None, exclude_site_packages: bool = False
-) -> List[str]:
+def get_plugins(name: Optional[str] = None, exclude_others: bool = False) -> List[str]:
     """获取使用了数据库的插件名"""
 
     def _should_include(plugin: "Plugin") -> bool:
-        return bool(
-            PluginData(plugin.name).metadata  # 是否使用了数据库
-            and plugin.module.__file__
-            and (
-                "site-packages" not in plugin.module.__file__
-                or not exclude_site_packages
-            )  # 看情况排除 site-packages 中的插件
-        )
+        # 使用了数据库
+        if not PluginData(plugin.name).metadata:
+            return False
+
+        # 有文件
+        if not plugin.module.__file__:
+            return False
+
+        # 是否排除当前项目外的插件
+        if exclude_others:
+            # 排除 site-packages 中的插件
+            if "site-packages" in plugin.module.__file__:
+                return False
+            # 在当前项目目录中
+            if Path.cwd() not in Path(plugin.module.__file__).parents:
+                return False
+
+        return True
 
     plugins = get_loaded_plugins()
 
@@ -53,6 +62,7 @@ class Config(AlembicConfig):
     def __init__(self, *args, **kwargs):
         self.template_directory = kwargs.pop("template_directory", None)
         super().__init__(*args, **kwargs)
+        self.set_main_option("script_location", str(SCRIPT_LOCATION))
 
     def get_template_directory(self):
         if self.template_directory:
@@ -64,7 +74,6 @@ class Config(AlembicConfig):
 def revision(name=None, message=None, autogenerate=False):
     """Create a new revision file."""
     config = Config(cmd_opts=Namespace(autogenerate=autogenerate))
-    config.set_main_option("script_location", str(PACKAGE_DIR / "migration"))
     plugins = get_plugins(name, True)
     for plugin in plugins:
         click.echo(f"尝试生成 {plugin} 的迁移文件")
@@ -78,7 +87,6 @@ def revision(name=None, message=None, autogenerate=False):
 def upgrade(name=None, revision="head"):
     """Upgrade to a later version."""
     config = Config()
-    config.set_main_option("script_location", str(PACKAGE_DIR / "migration"))
     plugins = get_plugins(name)
     for plugin in plugins:
         click.echo(f"升级 {plugin} 数据库")
@@ -92,7 +100,6 @@ def upgrade(name=None, revision="head"):
 def downgrade(name=None, revision="-1"):
     """Revert to a previous version."""
     config = Config()
-    config.set_main_option("script_location", str(PACKAGE_DIR / "migration"))
     plugins = get_plugins(name)
     for plugin in plugins:
         click.echo(f"降级 {plugin} 数据库")
