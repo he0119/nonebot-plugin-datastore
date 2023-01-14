@@ -1,6 +1,6 @@
 from argparse import Namespace
 from pathlib import Path
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 import click
 from alembic import command
@@ -10,33 +10,41 @@ from nonebot.plugin import get_loaded_plugins
 
 from nonebot_plugin_datastore import PluginData
 
+if TYPE_CHECKING:
+    from nonebot.plugin import Plugin
+
 PACKAGE_DIR = Path(__file__).parent
 
 
-def get_plugins(name: Optional[str] = None) -> List[str]:
+def get_plugins(
+    name: Optional[str] = None, exclude_site_packages: bool = False
+) -> List[str]:
     """获取使用了数据库的插件名"""
+
+    def _should_include(plugin: "Plugin") -> bool:
+        return bool(
+            PluginData(plugin.name).metadata  # 是否使用了数据库
+            and plugin.module.__file__
+            and (
+                "site-packages" not in plugin.module.__file__
+                or not exclude_site_packages
+            )  # 看情况排除 site-packages 中的插件
+        )
+
     plugins = get_loaded_plugins()
 
     if name is None:
-        return [
-            plugin.name
-            for plugin in plugins
-            if plugin.module.__file__ and PluginData(plugin.name).metadata
-        ]
+        return [plugin.name for plugin in plugins if _should_include(plugin)]
 
     for plugin in plugins:
-        if (
-            name == plugin.name
-            and plugin.module.__file__
-            and PluginData(plugin.name).metadata
-        ):
+        if name == plugin.name and _should_include(plugin):
             return [plugin.name]
 
     # 如果插件没有在已加载的插件中找到，尝试加载插件
     plugin = load_plugin(name)
     if not plugin:
         click.echo(f"插件 {name} 不存在")
-    elif plugin.module.__file__ and PluginData(plugin.name).metadata:
+    elif _should_include(plugin):
         return [plugin.name]
     return []
 
@@ -57,7 +65,7 @@ def revision(name=None, message=None, autogenerate=False):
     """Create a new revision file."""
     config = Config(cmd_opts=Namespace(autogenerate=autogenerate))
     config.set_main_option("script_location", str(PACKAGE_DIR / "migration"))
-    plugins = get_plugins(name)
+    plugins = get_plugins(name, True)
     for plugin in plugins:
         click.echo(f"尝试生成 {plugin} 的迁移文件")
         config.set_main_option(
