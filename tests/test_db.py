@@ -88,3 +88,19 @@ async def test_default_db_url(nonebug_init: None):
         plugin_config.datastore_database_url
         == f"sqlite+aiosqlite:///{BASE_DATA_DIR / 'data.db'}"
     )
+
+
+async def test_post_db_init_error(nonebug_init: None):
+    """数据库初始化后执行函数错误"""
+    import nonebot
+
+    # 加载插件
+    nonebot.load_plugin("nonebot_plugin_datastore")
+
+    from nonebot_plugin_datastore.db import init_db, post_db_init
+
+    @post_db_init
+    async def _():
+        raise Exception("test")
+
+    await init_db()

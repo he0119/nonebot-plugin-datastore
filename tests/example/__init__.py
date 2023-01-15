@@ -6,8 +6,6 @@ from nonebot_plugin_datastore.db import AsyncSession, create_session, post_db_in
 
 from .models import Example
 
-test = on_command("test")
-
 
 @post_db_init
 async def _():
@@ -15,6 +13,9 @@ async def _():
         example = Example(message="init")
         session.add(example)
         await session.commit()
+
+
+test = on_command("test")
 
 
 @test.handle()
