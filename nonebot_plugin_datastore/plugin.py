@@ -317,7 +317,9 @@ class PluginData(metaclass=Singleton):
         if not self._migration_path:
             plugin = get_plugin(self._name)
             if plugin and plugin.module.__file__ and PluginData(plugin.name).metadata:
-                self._migration_path = Path(plugin.module.__file__).parent / "migration"
+                self._migration_path = (
+                    Path(plugin.module.__file__).parent / "migrations"
+                )
         return self._migration_path
 
     def set_migration_dir(self, path: Path) -> None:
