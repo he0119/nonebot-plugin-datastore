@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Added
+
+- 支持 Alembic
+
 ## [0.4.0] - 2022-10-05
 
 ### Removed

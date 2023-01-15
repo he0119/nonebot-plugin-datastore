@@ -1,14 +1,35 @@
 """ 插件数据 """
+import inspect
 import json
 import os
 import pickle
+from functools import lru_cache
 from pathlib import Path
-from typing import IO, Any, Callable, Generic, Optional, TypeVar, Union, overload
+from typing import (
+    IO,
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Generic,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+    overload,
+)
 
 import httpx
+import pygtrie
+from nonebot import get_loaded_plugins, get_plugin
 from nonebot.log import logger
+from sqlalchemy.orm import declared_attr
+from sqlmodel import MetaData, SQLModel
 
 from .config import plugin_config
+
+if TYPE_CHECKING:
+    from nonebot.plugin import Plugin
 
 T = TypeVar("T")
 R = TypeVar("R")
@@ -120,12 +141,12 @@ class NetworkFile(Generic[T, R]):
             if self._process_data:
                 self._data = self._process_data(data)
             else:
-                self._data = data
+                self._data = data  # type: ignore
         return self._data  # type: ignore
 
     async def update(self) -> None:
         """从网络更新数据"""
-        self._data = await self.load_from_network()
+        self._data = await self.load_from_network()  # type: ignore
         if self._process_data:
             self._data = self._process_data(self._data)
 
@@ -158,32 +179,42 @@ class PluginData(metaclass=Singleton):
         # 插件配置
         self._config = None
 
-        self.init_dir()
+        # 数据库
+        self._metadata = None
+        self._model = None
+        self._migration_path = None
 
-    def init_dir(self) -> None:
-        """初始化目录"""
-        os.makedirs(self.data_dir, exist_ok=True)
-        os.makedirs(self.cache_dir, exist_ok=True)
-        os.makedirs(self.config_dir, exist_ok=True)
+        # 插件目录
+        self._cache_dir = None
+        self._config_dir = None
+        self._data_dir = None
 
     @property
     def cache_dir(self) -> Path:
         """缓存目录"""
-        path = plugin_config.datastore_cache_dir / self._name
-        return path
+        if self._cache_dir is None:
+            self._cache_dir = plugin_config.datastore_cache_dir / self._name
+            os.makedirs(self.cache_dir, exist_ok=True)
+        return self._cache_dir
 
     @property
     def config_dir(self) -> Path:
-        """配置目录"""
-        # 配置都放置在统一的目录下
-        path = plugin_config.datastore_config_dir
-        return path
+        """配置目录
+
+        配置都放置在统一的目录下
+        """
+        if self._config_dir is None:
+            self._config_dir = plugin_config.datastore_config_dir
+            os.makedirs(self._config_dir, exist_ok=True)
+        return self._config_dir
 
     @property
     def data_dir(self) -> Path:
         """数据目录"""
-        path = plugin_config.datastore_data_dir / self._name
-        return path
+        if self._data_dir is None:
+            self._data_dir = plugin_config.datastore_data_dir / self._name
+            os.makedirs(self._data_dir, exist_ok=True)
+        return self._data_dir
 
     @property
     def config(self) -> Config:
@@ -258,3 +289,70 @@ class PluginData(metaclass=Singleton):
         且可以在获取数据之后同时处理数据
         """
         return NetworkFile[T, R](url, filename, self, process_data, cache)
+
+    @property
+    def Model(self) -> Type[SQLModel]:
+        """数据库模型"""
+        if not self._model:
+            self._metadata = MetaData(info={"name": self._name})
+
+            class _SQLModel(SQLModel):
+                metadata = self._metadata
+
+                @declared_attr
+                def __tablename__(cls) -> str:
+                    return f"{self._name}_{cls.__name__.lower()}"
+
+            self._model = _SQLModel
+        return self._model
+
+    @property
+    def metadata(self) -> Optional[MetaData]:
+        """获取数据库元数据"""
+        return self._metadata
+
+    @property
+    def migration_dir(self) -> Optional[Path]:
+        """数据库迁移文件夹"""
+        if not self._migration_path:
+            plugin = get_plugin(self._name)
+            if plugin and plugin.module.__file__ and PluginData(plugin.name).metadata:
+                self._migration_path = Path(plugin.module.__file__).parent / "migration"
+        return self._migration_path
+
+    def set_migration_dir(self, path: Path) -> None:
+        """设置数据库迁移文件夹"""
+        self._migration_path = path
+
+
+def get_plugin_data(name: Optional[str] = None) -> PluginData:
+    """获取插件数据
+
+    如果名称为空，则尝试自动获取调用者所在的插件名
+    """
+    if not name and (frame := inspect.currentframe()):
+        frame = frame.f_back
+        if not frame:
+            raise ValueError("无法找到调用者")  # pragma: no cover
+
+        module_name = frame.f_locals["__name__"]
+        plugin = _get_plugin_by_module_name(module_name)
+        if plugin:
+            name = plugin.name
+
+    if not name:
+        raise ValueError("插件名称为空，且自动获取失败")  # pragma: no cover
+
+    return PluginData(name)
+
+
+@lru_cache
+def _get_plugin_by_module_name(module_name: str) -> Optional["Plugin"]:
+    """通过模块名获取插件"""
+    t = pygtrie.StringTrie(separator=".")
+    for plugin in get_loaded_plugins():
+        t[plugin.module_name] = plugin
+    plugin = t.longest_prefix(module_name).value
+    if plugin:
+        plugin = cast("Plugin", plugin)
+    return plugin

@@ -30,14 +30,14 @@ async def test_open_file(app: App):
 
     data = PluginData("test")
 
-    test_file = plugin_config.datastore_data_dir / "test" / "test.txt"
+    test_file = data.data_dir / "test.txt"
     assert test_file.exists() is False
     test_file.write_text("test")
 
     with data.open("test.txt", "r") as f:
         assert f.read() == "test"
 
-    test_file = plugin_config.datastore_cache_dir / "test" / "test.txt"
+    test_file = data.cache_dir / "test.txt"
     assert test_file.exists() is False
     test_file.write_text("test")
 

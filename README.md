@@ -27,22 +27,72 @@ _✨ NoneBot 数据存储插件 ✨_
 
 ## 使用方式
 
-加载插件后直接导入
+先在插件代码最前面声明依赖
 
 ```python
-# 先声明依赖
 from nonebot import require
 require("nonebot_plugin_datastore")
-# 接着直接导入
+```
+
+插件数据相关功能
+
+```python
+from nonebot_plugin_datastore import get_plugin_data
+
+DATA = get_plugin_data()
+
+# 缓存目录
+DATA.cache_dir
+# 配置目录
+DATA.config_dir
+# 数据目录
+DATA.data_dir
+```
+
+数据库相关功能
+
+```python
 from nonebot.params import Depends
-from nonebot_plugin_datastore import PluginData, get_session
+from nonebot_plugin_datastore import get_plugin_data, get_session
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-DATA = PluginData("plugin_name")
+# 定义模型
+Model = get_plugin_data().Model
 
+class Example(Model, table=True):
+    """示例模型"""
+
+    __table_args__ = {"extend_existing": True}
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    message: str
+
+# 数据库相关操作
 @matcher.handle()
 def handle(session: AsyncSession = Depends(get_session)):
-    await session.exec()
+    example = Example(message="matcher")
+    session.add(example)
+    await session.commit()
+
+# 因为 driver.on_startup 无法保证函数运行顺序
+# 如需在 NoneBot 启动时且数据库初始化后运行的函数
+# 请使用 post_db_init 而不是 Nonebot 的 on_startup
+from nonebot_plugin_datastore.db import post_db_init
+
+@post_db_init
+async def do_something():
+  pass
+```
+
+CLI 功能（需要安装 nb-cli）
+
+```shell
+# 自动生成迁移文件
+nb datastore revision --autogenerate --name plugin_name -m example
+# 升级数据库
+nb datastore upgrade --name plugin_name
+# 降级数据库
+nb datastore downgrade --name plugin_name
 ```
 
 ## 配置项
@@ -91,4 +141,4 @@ def handle(session: AsyncSession = Depends(get_session)):
 - [x] 调整配置存放位置至专门的配置目录
 - [x] 数据库为可选项
 - [ ] 支持将配置存放至数据库中
-- [ ] 支持 Alembic
+- [x] 支持 Alembic

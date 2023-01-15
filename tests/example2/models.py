@@ -1,16 +1,19 @@
+from pathlib import Path
 from typing import Optional
 
 from sqlmodel import Field
 
 from nonebot_plugin_datastore import get_plugin_data
 
-Model = get_plugin_data().Model
+DATA = get_plugin_data("example2")
+
+DATA.set_migration_dir(Path(__file__).parent / "test-migration")
 
 
-class Example(Model, table=True):
+class Example2(DATA.Model, table=True):
     """测试一下"""
 
     __table_args__ = {"extend_existing": True}
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    message: str
+    message2: str

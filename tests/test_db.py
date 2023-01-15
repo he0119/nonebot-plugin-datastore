@@ -1,7 +1,6 @@
 from pathlib import Path
-from typing import List
+from typing import List, cast
 
-import nonebot
 import pytest
 from nonebug import App
 
@@ -10,15 +9,21 @@ from .utils import make_fake_event, make_fake_message
 
 async def test_db(app: App):
     """测试数据库"""
+    from nonebot import require
     from sqlmodel import select
 
     from nonebot_plugin_datastore.db import create_session, init_db
 
+    require("tests.example")
     from .example import Example, test
 
-    nonebot.load_plugin("tests.example")
-
     await init_db()
+
+    async with create_session() as session:
+        statement = select(Example)
+        result = await session.exec(statement)  # type: ignore
+        example = cast(Example, result.first())
+        assert example.message == "init"
 
     async with create_session() as session:
         session.add(Example(message="test"))
@@ -27,8 +32,8 @@ async def test_db(app: App):
     async with create_session() as session:
         statement = select(Example)
         examples: List[Example] = (await session.exec(statement)).all()  # type: ignore
-        assert len(examples) == 1
-        assert examples[0].message == "test"
+        assert len(examples) == 2
+        assert examples[1].message == "test"
 
     message = make_fake_message()("/test")
     event = make_fake_event(_message=message)()
@@ -41,8 +46,8 @@ async def test_db(app: App):
     async with create_session() as session:
         statement = select(Example)
         examples: List[Example] = (await session.exec(statement)).all()  # type: ignore
-        assert len(examples) == 2
-        assert examples[1].message == "matcher"
+        assert len(examples) == 3
+        assert examples[2].message == "matcher"
 
 
 async def test_disable_db(nonebug_init: None, tmp_path: Path):
@@ -83,3 +88,19 @@ async def test_default_db_url(nonebug_init: None):
         plugin_config.datastore_database_url
         == f"sqlite+aiosqlite:///{BASE_DATA_DIR / 'data.db'}"
     )
+
+
+async def test_post_db_init_error(nonebug_init: None):
+    """数据库初始化后执行函数错误"""
+    import nonebot
+
+    # 加载插件
+    nonebot.load_plugin("nonebot_plugin_datastore")
+
+    from nonebot_plugin_datastore.db import init_db, post_db_init
+
+    @post_db_init
+    async def _():
+        raise Exception("test")
+
+    await init_db()
