@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [0.5.2] - 2023-01-15
+
 ### Added
 
 - 添加 pre_db_init 钩子
@@ -94,7 +96,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.1...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.2...HEAD
+[0.5.2]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.4...v0.4.0
