@@ -14,6 +14,7 @@ from .config import plugin_config
 
 _engine = None
 
+_pre_db_init_funcs = []
 _post_db_init_funcs = []
 
 
@@ -21,6 +22,12 @@ def get_engine() -> AsyncEngine:
     if _engine is None:
         raise ValueError("数据库未启用")
     return _engine
+
+
+def pre_db_init(func: Callable) -> Callable:
+    """数据库初始化前执行的函数"""
+    _pre_db_init_funcs.append(func)
+    return func
 
 
 def post_db_init(func: Callable) -> Callable:
@@ -32,6 +39,17 @@ def post_db_init(func: Callable) -> Callable:
 async def init_db():
     """初始化数据库"""
     from .script.utils import run_upgrade
+
+    # 执行数据库初始化前执行的函数
+    cors = [
+        func() if is_coroutine_callable(func) else run_sync(func)()
+        for func in _pre_db_init_funcs
+    ]
+    if cors:
+        try:
+            await asyncio.gather(*cors)
+        except Exception as e:
+            logger.error(f"数据库初始化前执行的函数出错: {e}")
 
     await run_upgrade()
 

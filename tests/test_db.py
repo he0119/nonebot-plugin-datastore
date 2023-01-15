@@ -23,7 +23,7 @@ async def test_db(app: App):
         statement = select(Example)
         result = await session.exec(statement)  # type: ignore
         example = cast(Example, result.first())
-        assert example.message == "init"
+        assert example.message == "post"
 
     async with create_session() as session:
         session.add(Example(message="test"))
@@ -102,5 +102,16 @@ async def test_post_db_init_error(nonebug_init: None):
     @post_db_init
     async def _():
         raise Exception("test")
+
+    await init_db()
+
+
+async def test_pre_db_init_error(nonebug_init: None):
+    """数据库初始化前执行函数错误"""
+    from nonebot import require
+
+    from nonebot_plugin_datastore.db import init_db
+
+    require("tests.example2")
 
     await init_db()
