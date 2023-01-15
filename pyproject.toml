@@ -14,7 +14,7 @@ python = "^3.8"
 nonebot2 = { extras = ["httpx"], version = "^2.0.0-rc.1" }
 nonebot-plugin-localstore = "^0.2.0"
 sqlmodel = ">=0.0.8,<0.1.0"
-aiosqlite = "^0.17.0"
+aiosqlite = ">=0.17,<0.19"
 alembic = "^1.9.1"
 
 [tool.poetry.group.dev.dependencies]
