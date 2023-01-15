@@ -82,7 +82,7 @@ class NetworkFile(Generic[T, R]):
         self,
         url: str,
         filename: str,
-        plugin_data: "_PluginData",
+        plugin_data: "PluginData",
         process_data: Optional[Callable[[T], R]] = None,
         cache: bool = False,
     ) -> None:
@@ -148,7 +148,7 @@ class Singleton(type):
         return cls._instances[name]
 
 
-class _PluginData(metaclass=Singleton):
+class PluginData(metaclass=Singleton):
     """插件数据管理
 
     将插件数据保存在 `data` 文件夹对应的目录下。
@@ -308,8 +308,11 @@ class _PluginData(metaclass=Singleton):
         self._migration_path = path
 
 
-def PluginData(name: Optional[str] = None) -> _PluginData:
-    """获取插件数据"""
+def get_plugin_data(name: Optional[str] = None) -> PluginData:
+    """获取插件数据
+
+    如果名称为空，则尝试自动获取调用者所在的插件名
+    """
     if not name and (frame := inspect.currentframe()):
         frame = frame.f_back
         if not frame:
@@ -321,4 +324,4 @@ def PluginData(name: Optional[str] = None) -> _PluginData:
     if not name:
         raise ValueError("插件名称为空，且自动获取失败")  # pragma: no cover
 
-    return _PluginData(name)
+    return PluginData(name)

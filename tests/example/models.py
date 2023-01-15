@@ -2,9 +2,9 @@ from typing import Optional
 
 from sqlmodel import Field
 
-from nonebot_plugin_datastore import PluginData
+from nonebot_plugin_datastore import get_plugin_data
 
-Model = PluginData().Model
+Model = get_plugin_data().Model
 
 
 class Example(Model, table=True):
