@@ -3,16 +3,33 @@ import inspect
 import json
 import os
 import pickle
+from functools import lru_cache
 from pathlib import Path
-from typing import IO, Any, Callable, Generic, Optional, Type, TypeVar, Union, overload
+from typing import (
+    IO,
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Generic,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+    overload,
+)
 
 import httpx
-from nonebot import get_plugin
+import pygtrie
+from nonebot import get_loaded_plugins, get_plugin
 from nonebot.log import logger
 from sqlalchemy.orm import declared_attr
 from sqlmodel import MetaData, SQLModel
 
 from .config import plugin_config
+
+if TYPE_CHECKING:
+    from nonebot.plugin import Plugin
 
 T = TypeVar("T")
 R = TypeVar("R")
@@ -318,10 +335,24 @@ def get_plugin_data(name: Optional[str] = None) -> PluginData:
         if not frame:
             raise ValueError("无法找到调用者")  # pragma: no cover
 
-        module_name = frame.f_locals["__package__"]
-        name = module_name.rsplit(".", 1)[-1]
+        module_name = frame.f_locals["__name__"]
+        plugin = _get_plugin_by_module_name(module_name)
+        if plugin:
+            name = plugin.name
 
     if not name:
         raise ValueError("插件名称为空，且自动获取失败")  # pragma: no cover
 
     return PluginData(name)
+
+
+@lru_cache
+def _get_plugin_by_module_name(module_name: str) -> Optional["Plugin"]:
+    """通过模块名获取插件"""
+    t = pygtrie.StringTrie(separator=".")
+    for plugin in get_loaded_plugins():
+        t[plugin.module_name] = plugin
+    plugin = t.longest_prefix(module_name).value
+    if plugin:
+        plugin = cast("Plugin", plugin)
+    return plugin

@@ -3,9 +3,9 @@ from typing import Optional
 
 from sqlmodel import Field
 
-from nonebot_plugin_datastore import PluginData
+from nonebot_plugin_datastore import get_plugin_data
 
-DATA = PluginData("example2")
+DATA = get_plugin_data("example2")
 
 DATA.set_migration_dir(Path(__file__).parent / "test-migration")
 

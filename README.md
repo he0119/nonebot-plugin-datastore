@@ -37,9 +37,9 @@ require("nonebot_plugin_datastore")
 插件数据相关功能
 
 ```python
-from nonebot_plugin_datastore import PluginData
+from nonebot_plugin_datastore import get_plugin_data
 
-DATA = PluginData("plugin_name")
+DATA = get_plugin_data()
 
 # 缓存目录
 DATA.cache_dir
@@ -53,11 +53,11 @@ DATA.data_dir
 
 ```python
 from nonebot.params import Depends
-from nonebot_plugin_datastore import PluginData, get_session
+from nonebot_plugin_datastore import get_plugin_data, get_session
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 # 定义模型
-Model = PluginData("plugin_name").Model
+Model = get_plugin_data().Model
 
 class Example(Model, table=True):
     """示例模型"""
