@@ -46,4 +46,4 @@ def downgrade(name: Optional[str], revision: str):
 
 
 def main():
-    cli()
+    cli()  # pragma: no cover

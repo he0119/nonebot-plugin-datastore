@@ -26,13 +26,13 @@ def get_plugins(name: Optional[str] = None, exclude_others: bool = False) -> Lis
 
         # 有文件
         if not plugin.module.__file__:
-            return False
+            return False  # pragma: no cover
 
         # 是否排除当前项目外的插件
         if exclude_others:
             # 排除 site-packages 中的插件
             if "site-packages" in plugin.module.__file__:
-                return False
+                return False  # pragma: no cover
             # 在当前项目目录中
             if Path.cwd() not in Path(plugin.module.__file__).parents:
                 return False
@@ -48,23 +48,17 @@ def get_plugins(name: Optional[str] = None, exclude_others: bool = False) -> Lis
         if name == plugin.name and _should_include(plugin):
             return [plugin.name]
 
-    return []
+    raise ValueError(f"未找到插件 {name}")
 
 
 class Config(AlembicConfig):
     def __init__(self, plugin_name, *args, **kwargs):
-        self.template_directory = kwargs.pop("template_directory", None)
         super().__init__(*args, **kwargs)
-        self.set_main_option("script_location", str(SCRIPT_LOCATION))
         self.set_main_option("plugin_name", plugin_name)
+        self.set_main_option("script_location", str(SCRIPT_LOCATION))
         self.set_main_option(
             "version_locations", str(PluginData(plugin_name).migration_dir)
         )
-
-    def get_template_directory(self):
-        if self.template_directory:
-            return self.template_directory
-        return str(SCRIPT_LOCATION)
 
 
 def revision(name=None, message=None, autogenerate=False):

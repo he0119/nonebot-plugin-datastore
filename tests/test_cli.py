@@ -1,5 +1,4 @@
 import asyncio
-import shutil
 from pathlib import Path
 
 from click.testing import CliRunner
@@ -47,11 +46,16 @@ def test_revision(app: App, tmp_path: Path):
 
     runner = CliRunner()
 
+    # 测试跳过生成迁移文件
     result = runner.invoke(cli, ["revision", "--autogenerate", "--name", "example"])
     assert result.exit_code == 0
     assert "" in result.output
 
-    migration_dir = PluginData("example2").migration_dir
+    # 手动设置迁移文件目录
+    PluginData("example2").set_migration_dir(tmp_path / "revision")
+
+    # 测试生成迁移文件
+    migration_dir = tmp_path / "revision"
     assert migration_dir
     assert not migration_dir.exists()
 
@@ -63,7 +67,11 @@ def test_revision(app: App, tmp_path: Path):
     assert "test.py" in result.output
 
     assert migration_dir.exists()
-    shutil.rmtree(migration_dir)
+
+    # 测试插件如果不在项目目录下，会报错
+    with runner.isolated_filesystem(temp_dir=tmp_path) as td:
+        result = runner.invoke(cli, ["revision", "--name", "example2"])
+        assert result.exit_code == 1
 
 
 def test_upgrade(app: App):

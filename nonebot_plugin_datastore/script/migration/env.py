@@ -11,7 +11,7 @@ config = context.config
 plugin_name = config.get_main_option("plugin_name")
 
 if not plugin_name:
-    raise RuntimeError("未指定插件名称")
+    raise RuntimeError("未指定插件名称")  # pragma: no cover
 
 if config.cmd_opts and config.cmd_opts.autogenerate:
     autogenerate = True

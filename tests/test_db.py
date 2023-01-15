@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import List, cast
 
-import nonebot
 import pytest
 from nonebug import App
 
