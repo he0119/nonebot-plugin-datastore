@@ -82,7 +82,7 @@ class NetworkFile(Generic[T, R]):
         self,
         url: str,
         filename: str,
-        plugin_data: "PluginData",
+        plugin_data: "_PluginData",
         process_data: Optional[Callable[[T], R]] = None,
         cache: bool = False,
     ) -> None:
@@ -313,12 +313,12 @@ def PluginData(name: Optional[str] = None) -> _PluginData:
     if not name and (frame := inspect.currentframe()):
         frame = frame.f_back
         if not frame:
-            raise ValueError("无法找到调用者")
+            raise ValueError("无法找到调用者")  # pragma: no cover
 
         module_name = frame.f_locals["__package__"]
         name = module_name.rsplit(".", 1)[-1]
 
     if not name:
-        raise ValueError("插件名称为空，且自动获取失败")
+        raise ValueError("插件名称为空，且自动获取失败")  # pragma: no cover
 
     return _PluginData(name)
