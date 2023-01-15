@@ -6,10 +6,10 @@ from nonebot_plugin_datastore.db import AsyncSession
 
 from .models import Example2
 
-test = on_command("test")
+test2 = on_command("test2")
 
 
-@test.handle()
+@test2.handle()
 async def test_handle(session: AsyncSession = Depends(get_session)):
     example = Example2(message2="matcher")
     session.add(example)

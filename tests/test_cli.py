@@ -71,7 +71,8 @@ def test_revision(app: App, tmp_path: Path):
     # 测试插件如果不在项目目录下，会报错
     with runner.isolated_filesystem(temp_dir=tmp_path) as td:
         result = runner.invoke(cli, ["revision", "--name", "example2"])
-        assert result.exit_code == 1
+        assert result.exit_code == 2
+        assert "未找到插件" in result.output
 
 
 def test_upgrade(app: App):
