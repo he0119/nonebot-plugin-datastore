@@ -5,6 +5,7 @@ from alembic import context
 from alembic.config import Config as AlembicConfig
 from alembic.runtime.environment import EnvironmentContext
 from alembic.script import ScriptDirectory
+from click import BadParameter
 from nonebot.log import logger
 from nonebot.plugin import get_loaded_plugins
 
@@ -51,7 +52,7 @@ def get_plugins(name: Optional[str] = None, exclude_others: bool = False) -> Lis
         if name == plugin.name and _should_include(plugin):
             return [plugin.name]
 
-    raise ValueError(f"未找到插件 {name}")
+    raise BadParameter(message="未找到插件", param_hint="name")
 
 
 class Config(AlembicConfig):
