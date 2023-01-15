@@ -31,7 +31,7 @@ def post_db_init(func: Callable) -> Callable:
 
 async def init_db():
     """初始化数据库"""
-    from .script.migration.utils import run_upgrade
+    from .script.utils import run_upgrade
 
     await run_upgrade()
 

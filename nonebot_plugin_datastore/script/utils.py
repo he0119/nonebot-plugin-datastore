@@ -1,11 +1,67 @@
+from pathlib import Path
+from typing import TYPE_CHECKING, List, Optional
+
 from alembic import context
+from alembic.config import Config as AlembicConfig
 from alembic.runtime.environment import EnvironmentContext
 from alembic.script import ScriptDirectory
 from nonebot.log import logger
+from nonebot.plugin import get_loaded_plugins
 
+from nonebot_plugin_datastore import PluginData
 from nonebot_plugin_datastore.db import get_engine
 from nonebot_plugin_datastore.plugin import PluginData
-from nonebot_plugin_datastore.script.migrate import Config, get_plugins
+
+if TYPE_CHECKING:
+    from nonebot.plugin import Plugin
+
+PACKAGE_DIR = Path(__file__).parent
+SCRIPT_LOCATION = PACKAGE_DIR / "migration"
+
+
+def get_plugins(name: Optional[str] = None, exclude_others: bool = False) -> List[str]:
+    """获取使用了数据库的插件名"""
+
+    def _should_include(plugin: "Plugin") -> bool:
+        # 使用了数据库
+        if not PluginData(plugin.name).metadata:
+            return False
+
+        # 有文件
+        if not plugin.module.__file__:
+            return False  # pragma: no cover
+
+        # 是否排除当前项目外的插件
+        if exclude_others:
+            # 排除 site-packages 中的插件
+            if "site-packages" in plugin.module.__file__:
+                return False  # pragma: no cover
+            # 在当前项目目录中
+            if Path.cwd() not in Path(plugin.module.__file__).parents:
+                return False
+
+        return True
+
+    plugins = get_loaded_plugins()
+
+    if name is None:
+        return [plugin.name for plugin in plugins if _should_include(plugin)]
+
+    for plugin in plugins:
+        if name == plugin.name and _should_include(plugin):
+            return [plugin.name]
+
+    raise ValueError(f"未找到插件 {name}")
+
+
+class Config(AlembicConfig):
+    def __init__(self, plugin_name, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.set_main_option("plugin_name", plugin_name)
+        self.set_main_option("script_location", str(SCRIPT_LOCATION))
+        self.set_main_option(
+            "version_locations", str(PluginData(plugin_name).migration_dir)
+        )
 
 
 def do_run_migrations(connection, plugin_name: str, autogenerate: bool):

@@ -2,7 +2,7 @@ import asyncio
 
 from alembic import context
 
-from nonebot_plugin_datastore.script.migration.utils import run_migration
+from nonebot_plugin_datastore.script.utils import run_migration
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

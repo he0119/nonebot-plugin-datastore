@@ -2,9 +2,7 @@ from typing import Optional
 
 import click
 
-from .migrate import downgrade as _downgrade
-from .migrate import revision as _revision
-from .migrate import upgrade as _upgrade
+from . import command
 
 
 @click.group()
@@ -26,7 +24,7 @@ def cli():
 )
 def revision(name: Optional[str], message: Optional[str], autogenerate: bool):
     """revision"""
-    _revision(name=name, message=message, autogenerate=autogenerate)
+    command.revision(name=name, message=message, autogenerate=autogenerate)
 
 
 @cli.command()
@@ -34,7 +32,7 @@ def revision(name: Optional[str], message: Optional[str], autogenerate: bool):
 @click.argument("revision", default="head")
 def upgrade(name: Optional[str], revision: str):
     """upgrade"""
-    _upgrade(name=name, revision=revision)
+    command.upgrade(name=name, revision=revision)
 
 
 @cli.command()
@@ -42,7 +40,7 @@ def upgrade(name: Optional[str], revision: str):
 @click.argument("revision", default="-1")
 def downgrade(name: Optional[str], revision: str):
     """downgrade"""
-    _downgrade(name=name, revision=revision)
+    command.downgrade(name=name, revision=revision)
 
 
 def main():
