@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [0.5.0] - 2023-01-15
+
 ### Added
 
 - 支持 Alembic
+- 添加 get_plugin_data 函数，在插件中调用会自动返回符合当前插件名的 PluginData 实例
 
 ## [0.4.0] - 2022-10-05
 
@@ -81,7 +84,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.4.0...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.4...v0.4.0
 [0.3.4]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.3.2...v0.3.3
