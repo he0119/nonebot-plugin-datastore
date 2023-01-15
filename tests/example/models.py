@@ -4,7 +4,7 @@ from sqlmodel import Field
 
 from nonebot_plugin_datastore import PluginData
 
-Model = PluginData("example").Model
+Model = PluginData().Model
 
 
 class Example(Model, table=True):
