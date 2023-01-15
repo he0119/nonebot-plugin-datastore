@@ -1,4 +1,5 @@
 """ 插件数据 """
+import inspect
 import json
 import os
 import pickle
@@ -147,7 +148,7 @@ class Singleton(type):
         return cls._instances[name]
 
 
-class PluginData(metaclass=Singleton):
+class _PluginData(metaclass=Singleton):
     """插件数据管理
 
     将插件数据保存在 `data` 文件夹对应的目录下。
@@ -305,3 +306,19 @@ class PluginData(metaclass=Singleton):
     def set_migration_dir(self, path: Path) -> None:
         """设置数据库迁移文件夹"""
         self._migration_path = path
+
+
+def PluginData(name: Optional[str] = None) -> _PluginData:
+    """获取插件数据"""
+    if not name and (frame := inspect.currentframe()):
+        frame = frame.f_back
+        if not frame:
+            raise ValueError("无法找到调用者")
+
+        module_name = frame.f_locals["__package__"]
+        name = module_name.rsplit(".", 1)[-1]
+
+    if not name:
+        raise ValueError("插件名称为空，且自动获取失败")
+
+    return _PluginData(name)
