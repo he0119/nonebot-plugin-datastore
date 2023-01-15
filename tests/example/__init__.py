@@ -10,7 +10,7 @@ from .models import Example
 @post_db_init
 async def _():
     async with create_session() as session:
-        example = Example(message="init")
+        example = Example(message="post")
         session.add(example)
         await session.commit()
 
