@@ -64,13 +64,21 @@ class Config(AlembicConfig):
         )
 
 
-def do_run_migrations(connection, plugin_name: str, autogenerate: bool):
+def do_run_migrations(connection, plugin_name: Optional[str] = None):
+    config = context.config
+
+    if plugin_name is None:
+        plugin_name = config.get_main_option("plugin_name")
+
+    if not plugin_name:
+        raise ValueError("未指定插件名称")  # pragma: no cover
+
     target_metadata = PluginData(plugin_name).metadata
 
     # 不生成空的迁移文件
     # https://alembic.sqlalchemy.org/en/latest/cookbook.html#don-t-generate-empty-migrations-with-autogenerate
     def process_revision_directives(context, revision, directives):
-        if autogenerate:
+        if config.cmd_opts and config.cmd_opts.autogenerate:
             script = directives[0]
             if script.upgrade_ops.is_empty():
                 logger.info("模型未发生变化，已跳过生成迁移文件")
@@ -94,17 +102,12 @@ def do_run_migrations(connection, plugin_name: str, autogenerate: bool):
         context.run_migrations()
 
 
-async def run_migration(plugin_name: str, autogenerate: bool = False):
-    """Run migrations in 'online' mode.
-
-    In this scenario we need to create an Engine
-    and associate a connection with the context.
-
-    """
+async def run_migration(plugin_name: Optional[str] = None):
+    """运行迁移"""
     connectable = get_engine()
 
     async with connectable.connect() as connection:
-        await connection.run_sync(do_run_migrations, plugin_name, autogenerate)
+        await connection.run_sync(do_run_migrations, plugin_name)
 
 
 async def run_upgrade():
