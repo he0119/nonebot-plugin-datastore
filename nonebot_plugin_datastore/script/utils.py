@@ -7,7 +7,7 @@ from alembic.runtime.environment import EnvironmentContext
 from alembic.script import ScriptDirectory
 from click import BadParameter
 from nonebot.log import logger
-from nonebot.plugin import get_loaded_plugins
+from nonebot.plugin import get_loaded_plugins, get_plugin
 
 from nonebot_plugin_datastore import PluginData
 from nonebot_plugin_datastore.db import get_engine
@@ -43,14 +43,13 @@ def get_plugins(name: Optional[str] = None, exclude_others: bool = False) -> Lis
 
         return True
 
-    plugins = get_loaded_plugins()
-
     if name is None:
-        return [plugin.name for plugin in plugins if _should_include(plugin)]
+        return [
+            plugin.name for plugin in get_loaded_plugins() if _should_include(plugin)
+        ]
 
-    for plugin in plugins:
-        if name == plugin.name and _should_include(plugin):
-            return [plugin.name]
+    if (plugin := get_plugin(name)) and _should_include(plugin):
+        return [plugin.name]
 
     raise BadParameter(message="未找到插件", param_hint="name")
 
