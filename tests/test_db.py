@@ -1,4 +1,4 @@
-from typing import List, cast
+from typing import List, Optional, cast
 
 import pytest
 from nonebug import App
@@ -100,3 +100,30 @@ async def test_pre_db_init_error(app: None):
     require("tests.example2")
 
     await init_db()
+
+
+async def test_compatibility(app: None):
+    """测试兼容不使用迁移的旧版本，且新旧版本共存"""
+    from nonebot import require
+    from sqlmodel import Field, SQLModel, select
+
+    from nonebot_plugin_datastore.db import create_session, init_db
+
+    require("tests.example")
+    from .example import Example
+
+    class Test(SQLModel, table=True):
+        id: Optional[int] = Field(default=None, primary_key=True)
+        message: str
+
+    await init_db()
+
+    async with create_session() as session:
+        session.add(Test(message="test"))
+        await session.commit()
+
+    async with create_session() as session:
+        statement = select(Example)
+        result = await session.exec(statement)  # type: ignore
+        example = cast(Example, result.first())
+        assert example.message == "post"
