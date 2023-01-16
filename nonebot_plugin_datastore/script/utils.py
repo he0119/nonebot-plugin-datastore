@@ -97,6 +97,7 @@ def do_run_migrations(connection, plugin_name: Optional[str] = None):
         include_object=include_object,
         process_revision_directives=process_revision_directives,
         render_as_batch=True,
+        compare_type=True,
     )
 
     with context.begin_transaction():
