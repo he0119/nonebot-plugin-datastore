@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Changed
+
+- 默认开启 render_as_batch
+
 ## [0.5.2] - 2023-01-15
 
 ### Added
