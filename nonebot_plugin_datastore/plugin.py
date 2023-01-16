@@ -15,7 +15,6 @@ from typing import (
     Type,
     TypeVar,
     Union,
-    cast,
     overload,
 )
 
@@ -343,7 +342,7 @@ def get_plugin_data(name: Optional[str] = None) -> PluginData:
             name = plugin.name
 
     if not name:
-        raise ValueError("插件名称为空，且自动获取失败")  # pragma: no cover
+        raise ValueError("插件名称为空，且自动获取失败")
 
     return PluginData(name)
 
@@ -355,6 +354,4 @@ def _get_plugin_by_module_name(module_name: str) -> Optional["Plugin"]:
     for plugin in get_loaded_plugins():
         t[plugin.module_name] = plugin
     plugin = t.longest_prefix(module_name).value
-    if plugin:
-        plugin = cast("Plugin", plugin)
     return plugin
