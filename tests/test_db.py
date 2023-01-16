@@ -102,11 +102,15 @@ async def test_pre_db_init_error(app: None):
     await init_db()
 
 
-async def test_without_migration(app: None):
-    """测试不使用迁移，兼容旧版本"""
-    from sqlmodel import Field, SQLModel
+async def test_compatibility(app: None):
+    """测试兼容不使用迁移的旧版本，且新旧版本共存"""
+    from nonebot import require
+    from sqlmodel import Field, SQLModel, select
 
     from nonebot_plugin_datastore.db import create_session, init_db
+
+    require("tests.example")
+    from .example import Example
 
     class Test(SQLModel, table=True):
         id: Optional[int] = Field(default=None, primary_key=True)
@@ -117,3 +121,9 @@ async def test_without_migration(app: None):
     async with create_session() as session:
         session.add(Test(message="test"))
         await session.commit()
+
+    async with create_session() as session:
+        statement = select(Example)
+        result = await session.exec(statement)  # type: ignore
+        example = cast(Example, result.first())
+        assert example.message == "post"
