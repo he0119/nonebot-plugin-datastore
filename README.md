@@ -34,22 +34,27 @@ from nonebot import require
 require("nonebot_plugin_datastore")
 ```
 
-插件数据相关功能
+### 插件数据相关功能
 
 ```python
 from nonebot_plugin_datastore import get_plugin_data
 
-DATA = get_plugin_data()
+plugin_data = get_plugin_data()
 
-# 缓存目录
-DATA.cache_dir
-# 配置目录
-DATA.config_dir
-# 数据目录
-DATA.data_dir
+# 获取插件缓存目录
+plugin_data.cache_dir
+# 获取插件配置目录
+plugin_data.config_dir
+# 获取插件数据目录
+plugin_data.data_dir
+
+# 读取配置
+plugin_data.config.get(key)
+# 存储配置
+plugin_data.config.set(key, value)
 ```
 
-数据库相关功能
+### 数据库相关功能，详细用法见 [SQLModel](https://sqlmodel.tiangolo.com/)
 
 ```python
 from nonebot.params import Depends
@@ -84,15 +89,35 @@ async def do_something():
   pass
 ```
 
-CLI 功能（需要安装 nb-cli）
+### 数据库管理功能（需安装 [nb-cli 1.0+](https://github.com/nonebot/nb-cli)）
+
+生成迁移文件
 
 ```shell
-# 自动生成迁移文件
+# 生成项目内所有启用数据库插件的迁移文件（不包括 site-packages 中的插件）
+nb datastore revision --autogenerate
+# 生成指定插件的迁移文件
 nb datastore revision --autogenerate --name plugin_name -m example
-# 升级数据库
+```
+
+升级插件数据库
+
+```shell
+# 升级所有启用数据库插件的数据库
+nb datastore upgrade
+# 升级指定插件的数据库
 nb datastore upgrade --name plugin_name
-# 降级数据库
+# 升级至指定版本
+nb datastore upgrade --name plugin_name revision
+```
+
+```shell
+# 降级所有启用数据库插件的数据库
+nb datastore downgrade
+# 降级指定插件的数据库
 nb datastore downgrade --name plugin_name
+# 降级至指定版本
+nb datastore downgrade --name plugin_name revision
 ```
 
 ## 配置项
