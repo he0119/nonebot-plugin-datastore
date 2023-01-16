@@ -65,13 +65,18 @@ async def test_disable_db(app: App):
     assert str(e.value) == "数据库未启用"
 
 
-async def test_default_db_url(app: None):
+async def test_default_db_url(nonebug_init: None):
     """测试默认数据库地址"""
-    from nonebot_plugin_datastore.config import plugin_config
+    import nonebot
+
+    # 加载插件
+    nonebot.load_plugin("nonebot_plugin_datastore")
+
+    from nonebot_plugin_datastore.config import BASE_DATA_DIR, plugin_config
 
     assert (
         plugin_config.datastore_database_url
-        == f"sqlite+aiosqlite:///{plugin_config.datastore_data_dir / 'data.db'}"
+        == f"sqlite+aiosqlite:///{BASE_DATA_DIR / 'data.db'}"
     )
 
 
