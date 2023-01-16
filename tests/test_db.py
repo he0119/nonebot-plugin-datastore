@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import List, cast
 
 import pytest
@@ -50,22 +49,13 @@ async def test_db(app: App):
         assert examples[2].message == "matcher"
 
 
-async def test_disable_db(nonebug_init: None, tmp_path: Path):
+@pytest.mark.parametrize(
+    "nonebug_init",
+    [pytest.param({"datastore_enable_database": "false"}, id="disable_db")],
+    indirect=True,
+)
+async def test_disable_db(app: App):
     """测试禁用数据库"""
-    import nonebot
-
-    config = nonebot.get_driver().config
-    # 插件数据目录
-    config.datastore_cache_dir = tmp_path / "cache"
-    config.datastore_config_dir = tmp_path / "config"
-    config.datastore_data_dir = tmp_path / "data"
-
-    # 禁用数据库
-    config.datastore_enable_database = False
-
-    # 加载插件
-    nonebot.load_plugin("nonebot_plugin_datastore")
-
     from nonebot_plugin_datastore import create_session
 
     with pytest.raises(ValueError) as e:
@@ -75,28 +65,18 @@ async def test_disable_db(nonebug_init: None, tmp_path: Path):
     assert str(e.value) == "数据库未启用"
 
 
-async def test_default_db_url(nonebug_init: None):
+async def test_default_db_url(app: None):
     """测试默认数据库地址"""
-    import nonebot
-
-    # 加载插件
-    nonebot.load_plugin("nonebot_plugin_datastore")
-
-    from nonebot_plugin_datastore.config import BASE_DATA_DIR, plugin_config
+    from nonebot_plugin_datastore.config import plugin_config
 
     assert (
         plugin_config.datastore_database_url
-        == f"sqlite+aiosqlite:///{BASE_DATA_DIR / 'data.db'}"
+        == f"sqlite+aiosqlite:///{plugin_config.datastore_data_dir / 'data.db'}"
     )
 
 
-async def test_post_db_init_error(nonebug_init: None):
+async def test_post_db_init_error(app: None):
     """数据库初始化后执行函数错误"""
-    import nonebot
-
-    # 加载插件
-    nonebot.load_plugin("nonebot_plugin_datastore")
-
     from nonebot_plugin_datastore.db import init_db, post_db_init
 
     @post_db_init
@@ -106,7 +86,7 @@ async def test_post_db_init_error(nonebug_init: None):
     await init_db()
 
 
-async def test_pre_db_init_error(nonebug_init: None):
+async def test_pre_db_init_error(app: None):
     """数据库初始化前执行函数错误"""
     from nonebot import require
 
