@@ -41,4 +41,4 @@ class Config(BaseModel, extra=Extra.ignore):
         return values
 
 
-plugin_config = Config.parse_obj(get_driver().config.dict())
+plugin_config = Config.parse_obj(get_driver().config)
