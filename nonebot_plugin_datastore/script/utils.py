@@ -96,6 +96,7 @@ def do_run_migrations(connection, plugin_name: Optional[str] = None):
         version_table=f"{plugin_name}_alembic_version",
         include_object=include_object,
         process_revision_directives=process_revision_directives,
+        render_as_batch=True,
     )
 
     with context.begin_transaction():
