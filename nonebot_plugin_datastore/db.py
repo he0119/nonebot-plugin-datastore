@@ -8,6 +8,7 @@ from nonebot.log import logger
 from nonebot.utils import is_coroutine_callable, run_sync
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio.engine import AsyncEngine
+from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from .config import plugin_config
@@ -50,6 +51,10 @@ async def init_db():
             await asyncio.gather(*cors)
         except Exception as e:
             logger.error(f"数据库初始化前执行的函数出错: {e}")
+
+    # 兼容以前不支持迁移的版本
+    async with get_engine().begin() as conn:
+        await conn.run_sync(SQLModel.metadata.create_all)
 
     await run_upgrade()
 

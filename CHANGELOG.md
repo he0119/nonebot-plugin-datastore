@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 ### Changed
 
 - 默认开启 compare_type
+- 兼容以前不支持迁移的版本
 
 ## [0.5.3] - 2023-01-16
 

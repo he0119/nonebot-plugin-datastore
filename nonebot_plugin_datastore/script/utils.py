@@ -116,7 +116,7 @@ async def run_upgrade():
     """初始化数据库"""
     plugins = get_plugins()
     for plugin in plugins:
-        logger.info(f"初始化插件 {plugin} 的数据库")
+        logger.debug(f"初始化插件 {plugin} 的数据库")
 
         config = Config(plugin)
         script = ScriptDirectory.from_config(config)
