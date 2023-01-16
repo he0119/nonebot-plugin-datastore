@@ -102,19 +102,30 @@ nb datastore downgrade --name plugin_name
 ### datastore_cache_dir
 
 - 类型: `str`
-- 默认: [nonebot_plugin_localstore](https://github.com/nonebot/plugin-localstore) 插件提供的缓存目录
+- 默认:
+  - macOS: ~/Library/Caches/nonebot2
+  - Unix: ~/.cache/nonebot2 (XDG default)
+  - Windows: C:\Users\<username>\AppData\Local\nonebot2\Cache
 - 说明: 缓存目录
 
 ### datastore_config_dir
 
 - 类型: `str`
-- 默认: [nonebot_plugin_localstore](https://github.com/nonebot/plugin-localstore) 插件提供的配置目录
+- 默认:
+  - macOS: same as user_data_dir
+  - Unix: ~/.config/nonebot2
+  - Win XP (roaming): C:\Documents and Settings\<username>\Local Settings\Application Data\nonebot2
+  - Win 7 (roaming): C:\Users\<username>\AppData\Roaming\nonebot2
 - 说明: 配置目录
 
 ### datastore_data_dir
 
 - 类型: `str`
-- 默认: [nonebot_plugin_localstore](https://github.com/nonebot/plugin-localstore) 插件提供的数据目录
+- 默认:
+  - macOS: ~/Library/Application Support/nonebot2
+  - Unix: ~/.local/share/nonebot2 or in $XDG_DATA_HOME, if defined
+  - Win XP (not roaming): C:\Documents and Settings\<username>\Application Data\nonebot2
+  - Win 7 (not roaming): C:\Users\<username>\AppData\Local\nonebot2
 - 说明: 数据目录
 
 ### datastore_enable_database
