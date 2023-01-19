@@ -1,17 +1,20 @@
 """ 数据库 """
 import asyncio
 import os
-from typing import AsyncGenerator, Callable
+from typing import TYPE_CHECKING, AsyncGenerator, Callable
 
 from nonebot import get_driver
 from nonebot.log import logger
 from nonebot.utils import is_coroutine_callable, run_sync
 from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.ext.asyncio.engine import AsyncEngine
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from .config import plugin_config
+
+if TYPE_CHECKING:
+    from sqlalchemy.ext.asyncio.engine import AsyncEngine
+
 
 _engine = None
 
@@ -19,7 +22,7 @@ _pre_db_init_funcs = []
 _post_db_init_funcs = []
 
 
-def get_engine() -> AsyncEngine:
+def get_engine() -> "AsyncEngine":
     if _engine is None:
         raise ValueError("数据库未启用")
     return _engine

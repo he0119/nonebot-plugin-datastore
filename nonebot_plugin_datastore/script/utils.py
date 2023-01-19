@@ -6,18 +6,16 @@ from alembic.config import Config as AlembicConfig
 from alembic.runtime.environment import EnvironmentContext
 from alembic.script import ScriptDirectory
 from click import BadParameter
+from nonebot import get_loaded_plugins, get_plugin
 from nonebot.log import logger
-from nonebot.plugin import get_loaded_plugins, get_plugin
 
 from nonebot_plugin_datastore import PluginData
 from nonebot_plugin_datastore.db import get_engine
-from nonebot_plugin_datastore.plugin import PluginData
 
 if TYPE_CHECKING:
     from nonebot.plugin import Plugin
 
-PACKAGE_DIR = Path(__file__).parent
-SCRIPT_LOCATION = PACKAGE_DIR / "migration"
+SCRIPT_LOCATION = Path(__file__).parent / "migration"
 
 
 def get_plugins(name: Optional[str] = None, exclude_others: bool = False) -> List[str]:
