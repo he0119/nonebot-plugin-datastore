@@ -75,6 +75,40 @@ def test_revision(app: App, tmp_path: Path):
         assert "未找到插件" in result.output
 
 
+def test_migrate(app: App, tmp_path: Path):
+    from nonebot import require
+
+    from nonebot_plugin_datastore import PluginData
+    from nonebot_plugin_datastore.db import init_db
+    from nonebot_plugin_datastore.script.cli import cli
+
+    require("tests.example")
+    require("tests.example2")
+    asyncio.run(init_db())
+
+    runner = CliRunner()
+
+    # 测试跳过生成迁移文件
+    result = runner.invoke(cli, ["migrate", "--name", "example"])
+    assert result.exit_code == 0
+    assert "" in result.output
+
+    # 手动设置迁移文件目录
+    PluginData("example2").set_migration_dir(tmp_path / "revision")
+
+    # 测试生成迁移文件
+    migration_dir = tmp_path / "revision"
+    assert migration_dir
+    assert not migration_dir.exists()
+
+    result = runner.invoke(cli, ["migrate", "--name", "example2", "-m", "test"])
+    assert result.exit_code == 0
+    assert "Generating" in result.output
+    assert "test.py" in result.output
+
+    assert migration_dir.exists()
+
+
 def test_upgrade(app: App):
     from nonebot import require
 
