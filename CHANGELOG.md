@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [0.5.5] - 2023-01-21
+
 ### Added
 
 - 添加 history, current, heads, check 命令
@@ -114,7 +116,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.4...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.5...HEAD
+[0.5.5]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.4...v0.5.5
 [0.5.4]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.3...v0.5.4
 [0.5.3]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.2...v0.5.3
 [0.5.2]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.1...v0.5.2
