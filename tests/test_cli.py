@@ -101,3 +101,36 @@ def test_downgrade(app: App):
     result = runner.invoke(cli, ["downgrade"])
     assert result.exit_code == 0
     assert "" in result.output
+
+
+def test_other_commands(app: App):
+    from nonebot import require
+
+    from nonebot_plugin_datastore.db import init_db
+    from nonebot_plugin_datastore.script.cli import cli
+
+    require("tests.example")
+    require("tests.example2")
+
+    runner = CliRunner()
+    result = runner.invoke(cli, ["history"])
+    assert result.exit_code == 0
+    assert "" in result.output
+
+    result = runner.invoke(cli, ["current"])
+    assert result.exit_code == 0
+    assert "" in result.output
+
+    result = runner.invoke(cli, ["heads"])
+    assert result.exit_code == 0
+    assert "" in result.output
+
+    result = runner.invoke(cli, ["check"])
+    assert result.exit_code == 1
+    assert "" in result.output
+
+    asyncio.run(init_db())
+
+    result = runner.invoke(cli, ["check", "--name", "example"])
+    assert result.exit_code == 0
+    assert "" in result.output
