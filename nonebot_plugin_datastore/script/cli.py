@@ -43,5 +43,52 @@ def downgrade(name: Optional[str], revision: str):
     command.downgrade(name=name, revision=revision)
 
 
+@cli.command()
+@click.option("--name", "-n", default=None, help="插件名")
+@click.option("--rev-range", "-r", default=None, help="Revision range")
+@click.option("--verbose", "-v", is_flag=True, help="显示详细信息")
+@click.option(
+    "--indicate-current",
+    is_flag=True,
+    help="Indicate current revisions with (head) and (current)",
+)
+def history(
+    name: Optional[str],
+    rev_range: Optional[str],
+    verbose: bool,
+    indicate_current: bool,
+):
+    """history"""
+    command.history(
+        name=name,
+        rev_range=rev_range,
+        verbose=verbose,
+        indicate_current=indicate_current,
+    )
+
+
+@cli.command()
+@click.option("--name", "-n", default=None, help="插件名")
+@click.option("--verbose", "-v", is_flag=True, help="显示详细信息")
+def current(name: Optional[str], verbose: bool):
+    """current"""
+    command.current(name=name, verbose=verbose)
+
+
+@cli.command()
+@click.option("--name", "-n", default=None, help="插件名")
+@click.option("--verbose", "-v", is_flag=True, help="显示详细信息")
+def heads(name: Optional[str], verbose: bool):
+    """heads"""
+    command.heads(name=name, verbose=verbose)
+
+
+@cli.command()
+@click.option("--name", "-n", default=None, help="插件名")
+def check(name: Optional[str]):
+    """check"""
+    command.check(name=name)
+
+
 def main():
     cli()  # pragma: no cover
