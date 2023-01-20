@@ -95,9 +95,9 @@ async def do_something():
 
 ```shell
 # 生成项目内所有启用数据库插件的迁移文件（不包括 site-packages 中的插件）
-nb datastore revision --autogenerate
+nb datastore migrate
 # 生成指定插件的迁移文件
-nb datastore revision --autogenerate --name plugin_name -m example
+nb datastore migrate --name plugin_name -m example
 ```
 
 升级插件数据库
@@ -110,6 +110,8 @@ nb datastore upgrade --name plugin_name
 # 升级至指定版本
 nb datastore upgrade --name plugin_name revision
 ```
+
+降级插件数据库
 
 ```shell
 # 降级所有启用数据库插件的数据库
