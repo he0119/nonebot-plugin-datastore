@@ -1072,14 +1072,14 @@ files = [
 
 [[package]]
 name = "nb-cli"
-version = "1.0.1"
+version = "1.0.2"
 description = "CLI for nonebot2"
 category = "dev"
 optional = false
 python-versions = ">=3.8, <4.0"
 files = [
-    {file = "nb-cli-1.0.1.tar.gz", hash = "sha256:b4fa8bb2f98c3b110b6625b44d53a8d9fb57cfd7fa1b2fd4c96aa2ddcdd4bca2"},
-    {file = "nb_cli-1.0.1-py3-none-any.whl", hash = "sha256:3f2d8ebc145204bb855083d7f21d0c2599064d8b2d699013eaeddd2b1a91036e"},
+    {file = "nb-cli-1.0.2.tar.gz", hash = "sha256:f0abfcac8158e921a9eb5646cc388283696648bfee2aa989a010f67a82ff528b"},
+    {file = "nb_cli-1.0.2-py3-none-any.whl", hash = "sha256:3188d714cacd4dd9d86a78685f5447313281838cd0f6e7cf59298f743e96f0b1"},
 ]
 
 [package.dependencies]
@@ -1088,7 +1088,7 @@ cashews = ">=5.0,<6.0"
 click = ">=8.0,<9.0"
 cookiecutter = ">=1.7.2,<1.8.0"
 httpx = ">=0.18,<1.0"
-importlib-metadata = ">=6.0,<7.0"
+importlib-metadata = {version = ">=4.6", markers = "python_version < \"3.10\""}
 jinja2 = ">=3.0,<4.0"
 noneprompt = ">=0.1.7,<1.0.0"
 pydantic = ">=1.9,<2.0"
@@ -1709,7 +1709,7 @@ greenlet = {version = "!=0.4.17", markers = "python_version >= \"3\" and (platfo
 
 [package.extras]
 aiomysql = ["aiomysql", "greenlet (!=0.4.17)"]
-aiosqlite = ["aiosqlite", "greenlet (!=0.4.17)", "typing_extensions (!=3.10.0.1)"]
+aiosqlite = ["aiosqlite", "greenlet (!=0.4.17)", "typing-extensions (!=3.10.0.1)"]
 asyncio = ["greenlet (!=0.4.17)"]
 asyncmy = ["asyncmy (>=0.2.3,!=0.2.4)", "greenlet (!=0.4.17)"]
 mariadb-connector = ["mariadb (>=1.0.1,!=1.1.2)"]
@@ -1719,14 +1719,14 @@ mssql-pyodbc = ["pyodbc"]
 mypy = ["mypy (>=0.910)", "sqlalchemy2-stubs"]
 mysql = ["mysqlclient (>=1.4.0)", "mysqlclient (>=1.4.0,<2)"]
 mysql-connector = ["mysql-connector-python"]
-oracle = ["cx_oracle (>=7)", "cx_oracle (>=7,<8)"]
+oracle = ["cx-oracle (>=7)", "cx-oracle (>=7,<8)"]
 postgresql = ["psycopg2 (>=2.7)"]
 postgresql-asyncpg = ["asyncpg", "greenlet (!=0.4.17)"]
 postgresql-pg8000 = ["pg8000 (>=1.16.6,!=1.29.0)"]
 postgresql-psycopg2binary = ["psycopg2-binary"]
 postgresql-psycopg2cffi = ["psycopg2cffi"]
 pymysql = ["pymysql", "pymysql (<1)"]
-sqlcipher = ["sqlcipher3_binary"]
+sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
 name = "sqlalchemy2-stubs"
@@ -1975,6 +1975,7 @@ category = "dev"
 optional = false
 python-versions = "*"
 files = [
+    {file = "wcwidth-0.2.6-py2.py3-none-any.whl", hash = "sha256:795b138f6875577cd91bba52baf9e445cd5118fd32723b460e30a0af30ea230e"},
     {file = "wcwidth-0.2.6.tar.gz", hash = "sha256:a5220780a404dbe3353789870978e472cfe477761f06ee55077256e509b156d0"},
 ]
 
