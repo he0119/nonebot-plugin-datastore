@@ -99,5 +99,12 @@ def check(name: Optional[str]):
     command.check(name=name)
 
 
+@cli.command()
+@click.option("--name", "-n", default=None, help="插件名")
+def dir(name: Optional[str]):
+    """数据存储路径"""
+    command.dir(name=name)
+
+
 def main():
     cli()  # pragma: no cover
