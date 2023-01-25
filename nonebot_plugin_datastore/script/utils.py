@@ -3,14 +3,12 @@ from typing import TYPE_CHECKING, List, Optional
 
 from alembic import context
 from alembic.config import Config as AlembicConfig
-from alembic.runtime.environment import EnvironmentContext
-from alembic.script import ScriptDirectory
 from click import BadParameter
 from nonebot import get_loaded_plugins, get_plugin
 from nonebot.log import logger
 
-from nonebot_plugin_datastore import PluginData
-from nonebot_plugin_datastore.db import get_engine
+from ..db import get_engine
+from ..plugin import PluginData
 
 if TYPE_CHECKING:
     from nonebot.plugin import Plugin
@@ -112,15 +110,11 @@ async def run_migration(plugin_name: Optional[str] = None):
 
 async def run_upgrade():
     """初始化数据库"""
+    from .command import upgrade
+
     plugins = get_plugins()
     for plugin in plugins:
         logger.debug(f"初始化插件 {plugin} 的数据库")
-
         config = Config(plugin)
-        script = ScriptDirectory.from_config(config)
-
-        def upgrade(rev, context):
-            return script._upgrade_revs("head", rev)
-
-        with EnvironmentContext(config, script, fn=upgrade):
-            await run_migration(plugin)
+        # 升级到最新版本
+        await upgrade(config, "head")

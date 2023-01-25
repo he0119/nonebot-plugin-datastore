@@ -1,3 +1,7 @@
+""" 直接将 Alembic 的代码抄过来，然后改成异步
+
+version: 1.9.2
+"""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
