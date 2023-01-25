@@ -12,7 +12,7 @@ documentation = "https://github.com/he0119/nonebot-plugin-datastore#readme"
 [tool.poetry.dependencies]
 python = "^3.8"
 nonebot2 = { extras = ["httpx"], version = "^2.0.0-rc.1" }
-nonebot-plugin-localstore = "^0.2.0"
+nonebot-plugin-localstore = ">=0.2.0,!=0.3.0,<0.4.0"
 sqlmodel = ">=0.0.8,<0.1.0"
 aiosqlite = ">=0.17,<0.19"
 alembic = "^1.9.1"
@@ -27,6 +27,8 @@ pytest-mock = "^3.10.0"
 pre-commit = "^2.17.0"
 pytest-asyncio = "^0.20.3"
 nb-cli = "^1.0.0"
+nonebot2 = { extras = ["httpx", "fastapi"], version = "^2.0.0-rc.1" }
+
 
 [tool.black]
 line-length = 88

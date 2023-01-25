@@ -1,9 +1,12 @@
 from argparse import Namespace
 from typing import Optional
 
+import click
 from alembic import command
 from nonebot.log import logger
 
+from ..config import plugin_config
+from ..plugin import PluginData
 from .utils import Config, get_plugins
 
 
@@ -77,3 +80,21 @@ def check(name: Optional[str] = None):
         logger.info(f"检查插件 {plugin} 的数据库是否需要新的迁移文件")
         config = Config(plugin)
         command.check(config)
+
+
+def dir(name: Optional[str] = None):
+    """数据存储路径"""
+    if name is None:
+        click.echo("当前存储路径:")
+        click.echo(f"缓存目录: {plugin_config.datastore_cache_dir}")
+        click.echo(f"配置目录: {plugin_config.datastore_config_dir}")
+        click.echo(f"数据目录: {plugin_config.datastore_data_dir}")
+        return
+
+    plugins = get_plugins(name)
+    for plugin in plugins:
+        plugin_data = PluginData(plugin)
+        click.echo(f"插件 {plugin} 的存储路径:")
+        click.echo(f"缓存目录: {plugin_data.cache_dir}")
+        click.echo(f"配置目录: {plugin_data.config_dir}")
+        click.echo(f"数据目录: {plugin_data.data_dir}")

@@ -49,7 +49,7 @@ def test_revision(app: App, tmp_path: Path):
     # 测试跳过生成迁移文件
     result = runner.invoke(cli, ["revision", "--autogenerate", "--name", "example"])
     assert result.exit_code == 0
-    assert "" in result.output
+    assert result.output == ""
 
     # 手动设置迁移文件目录
     PluginData("example2").set_migration_dir(tmp_path / "revision")
@@ -91,7 +91,7 @@ def test_migrate(app: App, tmp_path: Path):
     # 测试跳过生成迁移文件
     result = runner.invoke(cli, ["migrate", "--name", "example"])
     assert result.exit_code == 0
-    assert "" in result.output
+    assert result.output == ""
 
     # 手动设置迁移文件目录
     PluginData("example2").set_migration_dir(tmp_path / "revision")
@@ -119,7 +119,7 @@ def test_upgrade(app: App):
     runner = CliRunner()
     result = runner.invoke(cli, ["upgrade"])
     assert result.exit_code == 0
-    assert "" in result.output
+    assert result.output == ""
 
 
 def test_downgrade(app: App):
@@ -134,7 +134,7 @@ def test_downgrade(app: App):
     runner = CliRunner()
     result = runner.invoke(cli, ["downgrade"])
     assert result.exit_code == 0
-    assert "" in result.output
+    assert result.output == ""
 
 
 def test_other_commands(app: App):
@@ -149,22 +149,30 @@ def test_other_commands(app: App):
     runner = CliRunner()
     result = runner.invoke(cli, ["history"])
     assert result.exit_code == 0
-    assert "" in result.output
+    assert result.output == ""
 
     result = runner.invoke(cli, ["current"])
     assert result.exit_code == 0
-    assert "" in result.output
+    assert result.output == ""
 
     result = runner.invoke(cli, ["heads"])
     assert result.exit_code == 0
-    assert "" in result.output
+    assert result.output == ""
 
     result = runner.invoke(cli, ["check"])
     assert result.exit_code == 1
-    assert "" in result.output
+    assert result.output == ""
 
     asyncio.run(init_db())
 
     result = runner.invoke(cli, ["check", "--name", "example"])
     assert result.exit_code == 0
-    assert "" in result.output
+    assert result.output == ""
+
+    result = runner.invoke(cli, ["dir"])
+    assert result.exit_code == 0
+    assert "当前存储路径:" in result.output
+
+    result = runner.invoke(cli, ["dir", "--name", "example"])
+    assert result.exit_code == 0
+    assert "插件 example 的存储路径:" in result.output

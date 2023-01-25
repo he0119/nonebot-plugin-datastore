@@ -89,7 +89,18 @@ async def do_something():
   pass
 ```
 
-### 数据库管理功能（需安装 [nb-cli 1.0+](https://github.com/nonebot/nb-cli)）
+### 命令行支持（需安装 [nb-cli 1.0+](https://github.com/nonebot/nb-cli)）
+
+#### 数据存储路径
+
+```shell
+# 获取当前数据存储路径
+nb datastore dir
+# 获取指定插件的数据存储路径
+nb datastore dir --name plugin_name
+```
+
+#### 数据库管理
 
 生成迁移文件
 
