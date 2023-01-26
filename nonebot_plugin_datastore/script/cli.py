@@ -161,4 +161,4 @@ def dir(name: Optional[str] = None):
 
 
 def main():
-    anyio.run(run_sync(cli))
+    anyio.run(run_sync(cli))  # pragma: no cover
