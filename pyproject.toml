@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-datastore"
-version = "0.5.5"
+version = "0.5.6"
 description = "适用于 Nonebot2 的数据存储插件"
 authors = ["hemengyang <hmy0119@gmail.com>"]
 license = "MIT"
