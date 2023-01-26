@@ -1,7 +1,8 @@
-import asyncio
 from pathlib import Path
 
+import pytest
 from click.testing import CliRunner
+from nb_cli.cli import run_sync
 from nonebug import App
 
 
@@ -33,7 +34,8 @@ def test_cli_help(app: App):
     assert "[REVISION]" in result.output
 
 
-def test_revision(app: App, tmp_path: Path):
+@pytest.mark.anyio
+async def test_revision(app: App, tmp_path: Path):
     from nonebot import require
 
     from nonebot_plugin_datastore import PluginData
@@ -42,12 +44,14 @@ def test_revision(app: App, tmp_path: Path):
 
     require("tests.example")
     require("tests.example2")
-    asyncio.run(init_db())
+    await init_db()
 
     runner = CliRunner()
 
     # 测试跳过生成迁移文件
-    result = runner.invoke(cli, ["revision", "--autogenerate", "--name", "example"])
+    result = await run_sync(runner.invoke)(
+        cli, ["revision", "--autogenerate", "--name", "example"]
+    )
     assert result.exit_code == 0
     assert result.output == ""
 
@@ -59,7 +63,7 @@ def test_revision(app: App, tmp_path: Path):
     assert migration_dir
     assert not migration_dir.exists()
 
-    result = runner.invoke(
+    result = await run_sync(runner.invoke)(
         cli, ["revision", "--autogenerate", "--name", "example2", "-m", "test"]
     )
     assert result.exit_code == 0
@@ -70,12 +74,13 @@ def test_revision(app: App, tmp_path: Path):
 
     # 测试插件如果不在项目目录下，会报错
     with runner.isolated_filesystem(temp_dir=tmp_path) as td:
-        result = runner.invoke(cli, ["revision", "--name", "example2"])
+        result = await run_sync(runner.invoke)(cli, ["revision", "--name", "example2"])
         assert result.exit_code == 2
         assert "未找到插件" in result.output
 
 
-def test_migrate(app: App, tmp_path: Path):
+@pytest.mark.anyio
+async def test_migrate(app: App, tmp_path: Path):
     from nonebot import require
 
     from nonebot_plugin_datastore import PluginData
@@ -84,12 +89,12 @@ def test_migrate(app: App, tmp_path: Path):
 
     require("tests.example")
     require("tests.example2")
-    asyncio.run(init_db())
+    await init_db()
 
     runner = CliRunner()
 
     # 测试跳过生成迁移文件
-    result = runner.invoke(cli, ["migrate", "--name", "example"])
+    result = await run_sync(runner.invoke)(cli, ["migrate", "--name", "example"])
     assert result.exit_code == 0
     assert result.output == ""
 
@@ -101,7 +106,9 @@ def test_migrate(app: App, tmp_path: Path):
     assert migration_dir
     assert not migration_dir.exists()
 
-    result = runner.invoke(cli, ["migrate", "--name", "example2", "-m", "test"])
+    result = await run_sync(runner.invoke)(
+        cli, ["migrate", "--name", "example2", "-m", "test"]
+    )
     assert result.exit_code == 0
     assert "Generating" in result.output
     assert "test.py" in result.output
@@ -109,7 +116,8 @@ def test_migrate(app: App, tmp_path: Path):
     assert migration_dir.exists()
 
 
-def test_upgrade(app: App):
+@pytest.mark.anyio
+async def test_upgrade(app: App):
     from nonebot import require
 
     from nonebot_plugin_datastore.script.cli import cli
@@ -117,27 +125,29 @@ def test_upgrade(app: App):
     require("tests.example")
 
     runner = CliRunner()
-    result = runner.invoke(cli, ["upgrade"])
+    result = await run_sync(runner.invoke)(cli, ["upgrade"])
     assert result.exit_code == 0
     assert result.output == ""
 
 
-def test_downgrade(app: App):
+@pytest.mark.anyio
+async def test_downgrade(app: App):
     from nonebot import require
 
     from nonebot_plugin_datastore.db import init_db
     from nonebot_plugin_datastore.script.cli import cli
 
     require("tests.example")
-    asyncio.run(init_db())
+    await init_db()
 
     runner = CliRunner()
-    result = runner.invoke(cli, ["downgrade"])
+    result = await run_sync(runner.invoke)(cli, ["downgrade"])
     assert result.exit_code == 0
     assert result.output == ""
 
 
-def test_other_commands(app: App):
+@pytest.mark.anyio
+async def test_other_commands(app: App):
     from nonebot import require
 
     from nonebot_plugin_datastore.db import init_db
@@ -147,32 +157,32 @@ def test_other_commands(app: App):
     require("tests.example2")
 
     runner = CliRunner()
-    result = runner.invoke(cli, ["history"])
+    result = await run_sync(runner.invoke)(cli, ["history"])
     assert result.exit_code == 0
     assert result.output == ""
 
-    result = runner.invoke(cli, ["current"])
+    result = await run_sync(runner.invoke)(cli, ["current"])
     assert result.exit_code == 0
     assert result.output == ""
 
-    result = runner.invoke(cli, ["heads"])
+    result = await run_sync(runner.invoke)(cli, ["heads"])
     assert result.exit_code == 0
     assert result.output == ""
 
-    result = runner.invoke(cli, ["check"])
+    result = await run_sync(runner.invoke)(cli, ["check"])
     assert result.exit_code == 1
     assert result.output == ""
 
-    asyncio.run(init_db())
+    await init_db()
 
-    result = runner.invoke(cli, ["check", "--name", "example"])
+    result = await run_sync(runner.invoke)(cli, ["check", "--name", "example"])
     assert result.exit_code == 0
     assert result.output == ""
 
-    result = runner.invoke(cli, ["dir"])
+    result = await run_sync(runner.invoke)(cli, ["dir"])
     assert result.exit_code == 0
     assert "当前存储路径:" in result.output
 
-    result = runner.invoke(cli, ["dir", "--name", "example"])
+    result = await run_sync(runner.invoke)(cli, ["dir", "--name", "example"])
     assert result.exit_code == 0
     assert "插件 example 的存储路径:" in result.output
