@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 添加查看数据存储路径的命令
 
+### Fixed
+
+- 修复运行升级命令时同时升级多个插件报错的问题
+
 ## [0.5.5] - 2023-01-21
 
 ### Added
