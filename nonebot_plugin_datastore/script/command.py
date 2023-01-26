@@ -18,6 +18,7 @@ from .utils import run_migration
 if TYPE_CHECKING:
     from alembic.config import Config
     from alembic.runtime.environment import ProcessRevisionDirectiveFn
+    from alembic.script.base import Script
 
 
 async def revision(
@@ -32,7 +33,7 @@ async def revision(
     rev_id: str | None = None,
     depends_on: str | None = None,
     process_revision_directives: ProcessRevisionDirectiveFn | None = None,
-) -> None:
+) -> Script | None | list[Script | None]:
     """Create a new revision file.
 
     :param config: a :class:`.Config` object.
@@ -139,6 +140,12 @@ async def revision(
         # these could theoretically be further processed / rewritten *here*,
         # in addition to the hooks present within each run_migrations() call,
         # or at the end of env.py run_migrations_online().
+
+    scripts = [script for script in revision_context.generate_scripts()]
+    if len(scripts) == 1:
+        return scripts[0]
+    else:
+        return scripts
 
 
 async def check(
