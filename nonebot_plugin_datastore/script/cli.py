@@ -3,13 +3,12 @@ from typing import Optional
 
 import anyio
 import click
-from nb_cli.cli import run_async, run_sync
 from nonebot.log import logger
 
 from ..config import plugin_config
 from ..plugin import PluginData
 from . import command
-from .utils import Config, get_plugins
+from .utils import Config, get_plugins, run_async, run_sync
 
 
 @click.group()
