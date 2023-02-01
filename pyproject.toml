@@ -49,10 +49,6 @@ asyncio_mode = "auto"
 [tool.pyright]
 pythonVersion = "3.8"
 pythonPlatform = "All"
-executionEnvironments = [
-  { root = "./tests", extraPaths = ["./"] },
-  { root = "./" },
-]
 
 [tool.poetry.plugins.nb_scripts]
 datastore = "nonebot_plugin_datastore.script.cli:main"
