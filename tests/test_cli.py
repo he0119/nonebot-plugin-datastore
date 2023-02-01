@@ -2,7 +2,6 @@ from pathlib import Path
 
 import pytest
 from click.testing import CliRunner
-from nb_cli.cli import run_sync
 from nonebug import App
 
 
@@ -40,7 +39,7 @@ async def test_revision(app: App, tmp_path: Path):
 
     from nonebot_plugin_datastore import PluginData
     from nonebot_plugin_datastore.db import init_db
-    from nonebot_plugin_datastore.script.cli import cli
+    from nonebot_plugin_datastore.script.cli import cli, run_sync
 
     require("tests.example")
     require("tests.example2")
@@ -85,7 +84,7 @@ async def test_migrate(app: App, tmp_path: Path):
 
     from nonebot_plugin_datastore import PluginData
     from nonebot_plugin_datastore.db import init_db
-    from nonebot_plugin_datastore.script.cli import cli
+    from nonebot_plugin_datastore.script.cli import cli, run_sync
 
     require("tests.example")
     require("tests.example2")
@@ -120,7 +119,7 @@ async def test_migrate(app: App, tmp_path: Path):
 async def test_upgrade(app: App):
     from nonebot import require
 
-    from nonebot_plugin_datastore.script.cli import cli
+    from nonebot_plugin_datastore.script.cli import cli, run_sync
 
     require("tests.example")
 
@@ -135,7 +134,7 @@ async def test_downgrade(app: App):
     from nonebot import require
 
     from nonebot_plugin_datastore.db import init_db
-    from nonebot_plugin_datastore.script.cli import cli
+    from nonebot_plugin_datastore.script.cli import cli, run_sync
 
     require("tests.example")
     await init_db()
@@ -151,7 +150,7 @@ async def test_other_commands(app: App):
     from nonebot import require
 
     from nonebot_plugin_datastore.db import init_db
-    from nonebot_plugin_datastore.script.cli import cli
+    from nonebot_plugin_datastore.script.cli import cli, run_sync
 
     require("tests.example")
     require("tests.example2")
