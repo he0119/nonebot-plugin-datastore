@@ -91,6 +91,8 @@ async def do_something():
 
 ### 命令行支持（需安装 [nb-cli 1.0+](https://github.com/nonebot/nb-cli)）
 
+如果使用 pipx 安装的 nb-cli，则需要运行 `pip install nonebot-plugin-datastore[cli]` 安装命令行所需依赖。
+
 #### 数据存储路径
 
 ```shell
