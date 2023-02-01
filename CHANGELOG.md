@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Fixed
+
+- 修复缺少 nb_cli 模块的问题
+
 ## [0.5.6] - 2023-01-26
 
 ### Added
