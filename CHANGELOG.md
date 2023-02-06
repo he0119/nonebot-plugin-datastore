@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [0.5.7] - 2023-02-06
+
 ### Fixed
 
 - 修复缺少 nb_cli 模块的问题
 - 数据库初始化前执行的函数运行出错，则不继续执行后续初始化
-- 为每个插件创建一个独立的 registry
+- 修复插件间模型定义冲突的问题
 
 ## [0.5.6] - 2023-01-26
 
@@ -132,7 +134,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.6...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.7...HEAD
+[0.5.7]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.6...v0.5.7
 [0.5.6]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.5...v0.5.6
 [0.5.5]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.4...v0.5.5
 [0.5.4]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.3...v0.5.4
