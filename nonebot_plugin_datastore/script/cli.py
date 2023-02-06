@@ -91,7 +91,7 @@ async def upgrade(name: Optional[str], revision: str):
         try:
             await asyncio.gather(*cors)
         except Exception as e:
-            logger.error("数据库初始化前执行的函数出错")
+            click.echo("数据库初始化前执行的函数出错")
             raise
     plugins = get_plugins(name)
     for plugin in plugins:

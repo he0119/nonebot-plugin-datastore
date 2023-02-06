@@ -128,6 +128,11 @@ async def test_upgrade(app: App):
     assert result.exit_code == 0
     assert result.output == ""
 
+    require("tests.example2")
+    result = await run_sync(runner.invoke)(cli, ["upgrade"])
+    assert result.exit_code == 1
+    assert result.output == "数据库初始化前执行的函数出错\n"
+
 
 @pytest.mark.anyio
 async def test_downgrade(app: App):
