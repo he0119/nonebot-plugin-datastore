@@ -38,12 +38,12 @@ async def test_revision(app: App, tmp_path: Path):
     from nonebot import require
 
     from nonebot_plugin_datastore import PluginData
-    from nonebot_plugin_datastore.db import init_db
     from nonebot_plugin_datastore.script.cli import cli, run_sync
+    from nonebot_plugin_datastore.script.utils import run_upgrade
 
     require("tests.example")
     require("tests.example2")
-    await init_db()
+    await run_upgrade()
 
     runner = CliRunner()
 
@@ -83,12 +83,12 @@ async def test_migrate(app: App, tmp_path: Path):
     from nonebot import require
 
     from nonebot_plugin_datastore import PluginData
-    from nonebot_plugin_datastore.db import init_db
     from nonebot_plugin_datastore.script.cli import cli, run_sync
+    from nonebot_plugin_datastore.script.utils import run_upgrade
 
     require("tests.example")
     require("tests.example2")
-    await init_db()
+    await run_upgrade()
 
     runner = CliRunner()
 
@@ -149,8 +149,8 @@ async def test_downgrade(app: App):
 async def test_other_commands(app: App):
     from nonebot import require
 
-    from nonebot_plugin_datastore.db import init_db
     from nonebot_plugin_datastore.script.cli import cli, run_sync
+    from nonebot_plugin_datastore.script.utils import run_upgrade
 
     require("tests.example")
     require("tests.example2")
@@ -172,7 +172,7 @@ async def test_other_commands(app: App):
     assert result.exit_code == 1
     assert result.output == ""
 
-    await init_db()
+    await run_upgrade()
 
     result = await run_sync(runner.invoke)(cli, ["check", "--name", "example"])
     assert result.exit_code == 0
