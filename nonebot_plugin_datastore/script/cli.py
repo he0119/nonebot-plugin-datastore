@@ -1,3 +1,4 @@
+import asyncio
 from argparse import Namespace
 from functools import partial, wraps
 from typing import Any, Callable, Coroutine, Optional, TypeVar
@@ -5,9 +6,11 @@ from typing import Any, Callable, Coroutine, Optional, TypeVar
 import anyio
 import click
 from nonebot.log import logger
+from nonebot.utils import is_coroutine_callable
 from typing_extensions import ParamSpec
 
 from ..config import plugin_config
+from ..db import _pre_db_init_funcs
 from ..plugin import PluginData
 from . import command
 from .utils import Config, get_plugins
@@ -78,6 +81,18 @@ async def migrate(name: Optional[str], message: Optional[str]):
 @run_async
 async def upgrade(name: Optional[str], revision: str):
     """升级数据库版本"""
+    # 执行数据库初始化前执行的函数
+    # 比如 bison 需要在迁移之前把 alembic_version 表重命名
+    cors = [
+        func() if is_coroutine_callable(func) else run_sync(func)()
+        for func in _pre_db_init_funcs
+    ]
+    if cors:
+        try:
+            await asyncio.gather(*cors)
+        except Exception as e:
+            click.echo("数据库初始化前执行的函数出错")
+            raise
     plugins = get_plugins(name)
     for plugin in plugins:
         logger.info(f"升级插件 {plugin} 的数据库")

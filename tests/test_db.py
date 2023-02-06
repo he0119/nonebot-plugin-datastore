@@ -99,7 +99,8 @@ async def test_pre_db_init_error(app: None):
 
     require("tests.example2")
 
-    await init_db()
+    with pytest.raises(Exception):
+        await init_db()
 
 
 async def test_compatibility(app: None):
