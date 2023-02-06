@@ -22,7 +22,7 @@ import httpx
 import pygtrie
 from nonebot import get_loaded_plugins, get_plugin
 from nonebot.log import logger
-from sqlalchemy.orm import declared_attr
+from sqlalchemy.orm import declared_attr, registry
 from sqlmodel import MetaData, SQLModel
 
 from .config import plugin_config
@@ -295,11 +295,19 @@ class PluginData(metaclass=Singleton):
         if self._model is None:
             self._metadata = MetaData(info={"name": self._name})
 
-            class _SQLModel(SQLModel):
+            # 为每个插件创建一个独立的 registry
+            plugin_registry = registry()
+
+            class _SQLModel(SQLModel, registry=plugin_registry):
                 metadata = self._metadata
 
                 @declared_attr
                 def __tablename__(cls) -> str:
+                    """设置表名前缀，避免表名冲突
+
+                    规则为：插件名_表名
+                    https://docs.sqlalchemy.org/en/14/orm/declarative_mixins.html#augmenting-the-base
+                    """
                     return f"{self._name}_{cls.__name__.lower()}"
 
             self._model = _SQLModel
