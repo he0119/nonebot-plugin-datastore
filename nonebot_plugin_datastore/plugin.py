@@ -296,11 +296,9 @@ class PluginData(metaclass=Singleton):
             self._metadata = MetaData(info={"name": self._name})
 
             # 为每个插件创建一个独立的 registry
-            plugin_registry = registry()
+            plugin_registry = registry(metadata=self._metadata)
 
             class _SQLModel(SQLModel, registry=plugin_registry):
-                metadata = self._metadata
-
                 @declared_attr
                 def __tablename__(cls) -> str:
                     """设置表名前缀，避免表名冲突
