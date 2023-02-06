@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 ### Fixed
 
 - 修复缺少 nb_cli 模块的问题
+- 数据库初始化前执行的函数运行出错，则不继续执行后续初始化
 
 ## [0.5.6] - 2023-01-26
 

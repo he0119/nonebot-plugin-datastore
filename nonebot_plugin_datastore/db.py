@@ -53,7 +53,8 @@ async def init_db():
         try:
             await asyncio.gather(*cors)
         except Exception as e:
-            logger.error(f"数据库初始化前执行的函数出错: {e}")
+            logger.error("数据库初始化前执行的函数出错")
+            raise
 
     # 兼容以前不支持迁移的版本
     async with get_engine().begin() as conn:
