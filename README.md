@@ -74,7 +74,7 @@ class Example(Model, table=True):
 
 # 数据库相关操作
 @matcher.handle()
-def handle(session: AsyncSession = Depends(get_session)):
+async def handle(session: AsyncSession = Depends(get_session)):
     example = Example(message="matcher")
     session.add(example)
     await session.commit()
