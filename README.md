@@ -23,6 +23,9 @@ _✨ NoneBot 数据存储插件 ✨_
   <a href="https://codecov.io/gh/he0119/nonebot-plugin-datastore">
     <img src="https://codecov.io/gh/he0119/nonebot-plugin-datastore/branch/main/graph/badge.svg?token=jd5ufc1alv"/>
   </a>
+  <a href="https://jq.qq.com/?_wv=1027&k=7zQUpiGp">
+    <img src="https://img.shields.io/badge/QQ%E7%BE%A4-730374631-orange?style=flat-square" alt="QQ Chat Group">
+  </a>
 </p>
 
 ## 使用方式
@@ -102,7 +105,7 @@ nb datastore dir
 nb datastore dir --name plugin_name
 ```
 
-#### 数据库管理
+#### 数据库管理，详细用法见 [Alembic](https://alembic.sqlalchemy.org/en/latest/)
 
 生成迁移文件
 
