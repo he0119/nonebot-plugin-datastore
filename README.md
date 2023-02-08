@@ -105,7 +105,7 @@ nb datastore dir
 nb datastore dir --name plugin_name
 ```
 
-#### 数据库管理
+#### 数据库管理，详细用法见 [Alembic](https://alembic.sqlalchemy.org/en/latest/)
 
 生成迁移文件
 
