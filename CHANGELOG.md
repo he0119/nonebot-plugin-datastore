@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Added
+
+- 添加运行 cli 缺少依赖时的提示
+
 ### Fixed
 
 - 添加 py.typed 文件
