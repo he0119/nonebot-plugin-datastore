@@ -3,11 +3,16 @@ from argparse import Namespace
 from functools import partial, wraps
 from typing import Any, Callable, Coroutine, Optional, TypeVar
 
-import anyio
-import click
 from nonebot.log import logger
 from nonebot.utils import is_coroutine_callable
-from typing_extensions import ParamSpec
+
+try:
+    import anyio
+    import click
+    from typing_extensions import ParamSpec
+except ImportError as e:  # pragma: no cover
+    raise ImportError("请使用 `pip install nonebot-plugin-datastore[cli]` 安装所需依赖") from e
+
 
 from ..config import plugin_config
 from ..db import _pre_db_init_funcs
