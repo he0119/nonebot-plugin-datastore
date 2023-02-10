@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [0.5.8] - 2023-02-10
+
 ### Added
 
 - 添加运行 cli 缺少依赖时的提示
@@ -142,7 +144,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.7...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.8...HEAD
+[0.5.8]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.7...v0.5.8
 [0.5.7]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.6...v0.5.7
 [0.5.6]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.5...v0.5.6
 [0.5.5]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.4...v0.5.5
