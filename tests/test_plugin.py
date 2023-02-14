@@ -15,3 +15,17 @@ async def test_get_plugin_data_failed(app: App):
         import tests.example
 
     assert e.value.args[0] == "插件名称为空，且自动获取失败"
+
+
+async def test_plugin_dir_is_file(app: App):
+    """插件数据文件夹已经存在且为文件"""
+    from nonebot_plugin_datastore import PluginData
+    from nonebot_plugin_datastore.config import plugin_config
+
+    plugin_dir = plugin_config.datastore_data_dir / "test"
+    plugin_dir.touch()
+    assert plugin_dir.is_file()
+
+    data = PluginData("test")
+    with pytest.raises(RuntimeError):
+        data.data_dir
