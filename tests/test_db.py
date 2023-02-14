@@ -72,11 +72,11 @@ async def test_default_db_url(nonebug_init: None):
     # 加载插件
     nonebot.load_plugin("nonebot_plugin_datastore")
 
-    from nonebot_plugin_datastore.config import BASE_DATA_DIR, plugin_config
+    from nonebot_plugin_datastore.config import plugin_config
 
     assert (
         plugin_config.datastore_database_url
-        == f"sqlite+aiosqlite:///{BASE_DATA_DIR / 'data.db'}"
+        == f"sqlite+aiosqlite:///{plugin_config.datastore_data_dir / 'data.db'}"
     )
 
 
