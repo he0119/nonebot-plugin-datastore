@@ -1,3 +1,4 @@
+import sys
 from typing import TYPE_CHECKING, Optional, Type
 
 from pydantic import create_model
@@ -82,3 +83,14 @@ def make_fake_event(
             extra = "forbid"
 
     return FakeEvent
+
+
+def clear_plugins() -> None:
+    from nonebot.plugin import _managers, _plugins
+
+    for plugin in _plugins.values():
+        keys = [key for key in sys.modules if key.startswith(plugin.module_name)]
+        for key in keys:
+            del sys.modules[key]
+    _plugins.clear()
+    _managers.clear()
