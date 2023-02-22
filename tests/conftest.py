@@ -13,7 +13,7 @@ def anyio_backend():
 
 
 @pytest.fixture
-def app(nonebug_init: None, tmp_path: Path):
+def app(nonebug_init: None, tmp_path: Path, request):
     import nonebot
 
     config = nonebot.get_driver().config
@@ -21,10 +21,22 @@ def app(nonebug_init: None, tmp_path: Path):
     config.datastore_cache_dir = tmp_path / "cache"
     config.datastore_config_dir = tmp_path / "config"
     config.datastore_data_dir = tmp_path / "data"
+    # 设置配置
+    if param := getattr(request, "param", {}):
+        for k, v in param.items():
+            setattr(config, k, v)
 
     clear_plugins()
 
     # 加载插件
     nonebot.load_plugin("nonebot_plugin_datastore")
 
-    return App()
+    yield App()
+
+    # 清除之前设置的配置
+    delattr(config, "datastore_cache_dir")
+    delattr(config, "datastore_config_dir")
+    delattr(config, "datastore_data_dir")
+    if param := getattr(request, "param", {}):
+        for k in param.keys():
+            delattr(config, k)

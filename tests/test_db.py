@@ -4,7 +4,7 @@ import pytest
 from nonebot import require
 from nonebug import App
 
-from .utils import make_fake_event, make_fake_message
+from .utils import clear_plugins, make_fake_event, make_fake_message
 
 
 async def test_db(app: App):
@@ -49,8 +49,30 @@ async def test_db(app: App):
         assert examples[2].message == "matcher"
 
 
-async def test_default_db_url(app: App):
+@pytest.mark.parametrize(
+    "app",
+    [pytest.param({"datastore_enable_database": "false"}, id="disable_db")],
+    indirect=True,
+)
+async def test_disable_db(app: App):
+    """测试禁用数据库"""
+    from nonebot_plugin_datastore import create_session
+
+    with pytest.raises(ValueError) as e:
+        create_session()
+
+    assert str(e.value) == "数据库未启用"
+
+
+async def test_default_db_url(nonebug_init: None):
     """测试默认数据库地址"""
+    import nonebot
+
+    clear_plugins()
+
+    # 加载插件
+    nonebot.load_plugin("nonebot_plugin_datastore")
+
     from nonebot_plugin_datastore.config import plugin_config
 
     assert (
