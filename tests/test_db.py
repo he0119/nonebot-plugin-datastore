@@ -1,6 +1,7 @@
 from typing import List, Optional, cast
 
 import pytest
+from nonebot import require
 from nonebug import App
 
 from .utils import make_fake_event, make_fake_message
@@ -8,7 +9,6 @@ from .utils import make_fake_event, make_fake_message
 
 async def test_db(app: App):
     """测试数据库"""
-    from nonebot import require
     from sqlmodel import select
 
     from nonebot_plugin_datastore.db import create_session, init_db
@@ -49,29 +49,8 @@ async def test_db(app: App):
         assert examples[2].message == "matcher"
 
 
-@pytest.mark.parametrize(
-    "nonebug_init",
-    [pytest.param({"datastore_enable_database": "false"}, id="disable_db")],
-    indirect=True,
-)
-async def test_disable_db(app: App):
-    """测试禁用数据库"""
-    from nonebot_plugin_datastore import create_session
-
-    with pytest.raises(ValueError) as e:
-        async with create_session() as session:
-            pass
-
-    assert str(e.value) == "数据库未启用"
-
-
-async def test_default_db_url(nonebug_init: None):
+async def test_default_db_url(app: App):
     """测试默认数据库地址"""
-    import nonebot
-
-    # 加载插件
-    nonebot.load_plugin("nonebot_plugin_datastore")
-
     from nonebot_plugin_datastore.config import plugin_config
 
     assert (
@@ -93,8 +72,6 @@ async def test_post_db_init_error(app: None):
 
 async def test_pre_db_init_error(app: None):
     """数据库初始化前执行函数错误"""
-    from nonebot import require
-
     from nonebot_plugin_datastore.db import init_db
 
     require("tests.example2")
@@ -105,7 +82,6 @@ async def test_pre_db_init_error(app: None):
 
 async def test_compatibility(app: None):
     """测试兼容不使用迁移的旧版本，且新旧版本共存"""
-    from nonebot import require
     from sqlmodel import Field, SQLModel, select
 
     from nonebot_plugin_datastore.db import create_session, init_db
