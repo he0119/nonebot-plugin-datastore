@@ -3,6 +3,8 @@ from pathlib import Path
 import pytest
 from nonebug.app import App
 
+from .utils import clear_plugins
+
 
 @pytest.fixture
 def anyio_backend():
@@ -11,11 +13,7 @@ def anyio_backend():
 
 
 @pytest.fixture
-def app(
-    nonebug_init: None,
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> App:
+def app(nonebug_init: None, tmp_path: Path):
     import nonebot
 
     config = nonebot.get_driver().config
@@ -24,7 +22,9 @@ def app(
     config.datastore_config_dir = tmp_path / "config"
     config.datastore_data_dir = tmp_path / "data"
 
+    clear_plugins()
+
     # 加载插件
     nonebot.load_plugin("nonebot_plugin_datastore")
 
-    return App(monkeypatch)
+    return App()
