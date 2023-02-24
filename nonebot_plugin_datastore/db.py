@@ -1,7 +1,7 @@
 """ 数据库 """
 import asyncio
 import os
-from typing import TYPE_CHECKING, AsyncGenerator, Callable
+from typing import TYPE_CHECKING, AsyncGenerator, Callable, Dict, List
 
 from nonebot import get_driver
 from nonebot.log import logger
@@ -9,6 +9,8 @@ from nonebot.utils import is_coroutine_callable, run_sync
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
+
+from nonebot_plugin_datastore.utils import get_caller_plugin_name
 
 from .config import plugin_config
 
@@ -18,7 +20,7 @@ if TYPE_CHECKING:
 
 _engine = None
 
-_pre_db_init_funcs = []
+_pre_db_init_funcs: Dict[str, List] = {}
 _post_db_init_funcs = []
 
 
@@ -30,7 +32,10 @@ def get_engine() -> "AsyncEngine":
 
 def pre_db_init(func: Callable) -> Callable:
     """数据库初始化前执行的函数"""
-    _pre_db_init_funcs.append(func)
+    name = get_caller_plugin_name()
+    if name not in _pre_db_init_funcs:
+        _pre_db_init_funcs[name] = []
+    _pre_db_init_funcs[name].append(func)
     return func
 
 
@@ -45,9 +50,10 @@ async def init_db():
     from .script.utils import run_upgrade
 
     # 执行数据库初始化前执行的函数
+    pre_db_init_funcs = [i for funcs in _pre_db_init_funcs.values() for i in funcs]
     cors = [
         func() if is_coroutine_callable(func) else run_sync(func)()
-        for func in _pre_db_init_funcs
+        for func in pre_db_init_funcs
     ]
     if cors:
         try:

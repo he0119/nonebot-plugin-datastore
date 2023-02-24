@@ -88,18 +88,18 @@ async def upgrade(name: Optional[str], revision: str):
     """升级数据库版本"""
     # 执行数据库初始化前执行的函数
     # 比如 bison 需要在迁移之前把 alembic_version 表重命名
-    cors = [
-        func() if is_coroutine_callable(func) else run_sync(func)()
-        for func in _pre_db_init_funcs
-    ]
-    if cors:
-        try:
-            await asyncio.gather(*cors)
-        except Exception as e:
-            click.echo("数据库初始化前执行的函数出错")
-            raise
     plugins = get_plugins(name)
     for plugin in plugins:
+        cors = [
+            func() if is_coroutine_callable(func) else run_sync(func)()
+            for func in _pre_db_init_funcs.get(plugin, [])
+        ]
+        if cors:
+            try:
+                await asyncio.gather(*cors)
+            except Exception as e:
+                click.echo("数据库初始化前执行的函数出错")
+                raise
         logger.info(f"升级插件 {plugin} 的数据库")
         config = Config(plugin)
         await command.upgrade(config, revision)

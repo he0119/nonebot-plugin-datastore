@@ -1,8 +1,6 @@
 """ 插件数据 """
-import inspect
 import json
 import pickle
-from functools import lru_cache
 from pathlib import Path
 from typing import (
     IO,
@@ -18,13 +16,13 @@ from typing import (
 )
 
 import httpx
-import pygtrie
-from nonebot import get_loaded_plugins, get_plugin
+from nonebot import get_plugin
 from nonebot.log import logger
 from sqlalchemy.orm import declared_attr, registry
 from sqlmodel import MetaData, SQLModel
 
 from .config import plugin_config
+from .utils import get_caller_plugin_name
 
 if TYPE_CHECKING:
     from nonebot.plugin import Plugin
@@ -338,27 +336,6 @@ def get_plugin_data(name: Optional[str] = None) -> PluginData:
 
     如果名称为空，则尝试自动获取调用者所在的插件名
     """
-    if not name and (frame := inspect.currentframe()):
-        frame = frame.f_back
-        if not frame:
-            raise ValueError("无法找到调用者")  # pragma: no cover
-
-        module_name = frame.f_locals["__name__"]
-        plugin = _get_plugin_by_module_name(module_name)
-        if plugin:
-            name = plugin.name
-
-    if not name:
-        raise ValueError("插件名称为空，且自动获取失败")
+    name = name or get_caller_plugin_name()
 
     return PluginData(name)
-
-
-@lru_cache
-def _get_plugin_by_module_name(module_name: str) -> Optional["Plugin"]:
-    """通过模块名获取插件"""
-    t = pygtrie.StringTrie(separator=".")
-    for plugin in get_loaded_plugins():
-        t[plugin.module_name] = plugin
-    plugin = t.longest_prefix(module_name).value
-    return plugin
