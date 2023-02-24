@@ -12,7 +12,7 @@ async def test_get_plugin_data_failed(app: App):
 
     # 没有加载插件直接使用
     with pytest.raises(ValueError) as e:
-        import tests.example
+        import tests.example.plugin1
 
     assert e.value.args[0] == "插件名称为空，且自动获取失败"
 

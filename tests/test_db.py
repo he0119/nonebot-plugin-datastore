@@ -13,8 +13,8 @@ async def test_db(app: App):
 
     from nonebot_plugin_datastore.db import create_session, init_db
 
-    require("tests.example")
-    from .example import Example, test
+    require("tests.example.plugin1")
+    from .example.plugin1 import Example, test
 
     await init_db()
 
@@ -96,7 +96,7 @@ async def test_pre_db_init_error(app: None):
     """数据库初始化前执行函数错误"""
     from nonebot_plugin_datastore.db import init_db
 
-    require("tests.example2")
+    require("tests.example.plugin2")
 
     with pytest.raises(Exception):
         await init_db()
@@ -108,8 +108,8 @@ async def test_compatibility(app: None):
 
     from nonebot_plugin_datastore.db import create_session, init_db
 
-    require("tests.example")
-    from .example import Example
+    require("tests.example.plugin1")
+    from .example.plugin1 import Example
 
     class Test(SQLModel, table=True):
         id: Optional[int] = Field(default=None, primary_key=True)

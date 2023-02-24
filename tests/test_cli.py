@@ -41,21 +41,21 @@ async def test_revision(app: App, tmp_path: Path):
     from nonebot_plugin_datastore.script.cli import cli, run_sync
     from nonebot_plugin_datastore.script.utils import run_upgrade
 
-    require("tests.example")
-    require("tests.example2")
+    require("tests.example.plugin1")
+    require("tests.example.plugin2")
     await run_upgrade()
 
     runner = CliRunner()
 
     # 测试跳过生成迁移文件
     result = await run_sync(runner.invoke)(
-        cli, ["revision", "--autogenerate", "--name", "example"]
+        cli, ["revision", "--autogenerate", "--name", "plugin1"]
     )
     assert result.exit_code == 0
     assert result.output == ""
 
     # 手动设置迁移文件目录
-    PluginData("example2").set_migration_dir(tmp_path / "revision")
+    PluginData("plugin2").set_migration_dir(tmp_path / "revision")
 
     # 测试生成迁移文件
     migration_dir = tmp_path / "revision"
@@ -63,7 +63,7 @@ async def test_revision(app: App, tmp_path: Path):
     assert not migration_dir.exists()
 
     result = await run_sync(runner.invoke)(
-        cli, ["revision", "--autogenerate", "--name", "example2", "-m", "test"]
+        cli, ["revision", "--autogenerate", "--name", "plugin2", "-m", "test"]
     )
     assert result.exit_code == 0
     assert "Generating" in result.output
@@ -73,7 +73,7 @@ async def test_revision(app: App, tmp_path: Path):
 
     # 测试插件如果不在项目目录下，会报错
     with runner.isolated_filesystem(temp_dir=tmp_path) as td:
-        result = await run_sync(runner.invoke)(cli, ["revision", "--name", "example2"])
+        result = await run_sync(runner.invoke)(cli, ["revision", "--name", "plugin2"])
         assert result.exit_code == 2
         assert "未找到插件" in result.output
 
@@ -86,19 +86,19 @@ async def test_migrate(app: App, tmp_path: Path):
     from nonebot_plugin_datastore.script.cli import cli, run_sync
     from nonebot_plugin_datastore.script.utils import run_upgrade
 
-    require("tests.example")
-    require("tests.example2")
+    require("tests.example.plugin1")
+    require("tests.example.plugin2")
     await run_upgrade()
 
     runner = CliRunner()
 
     # 测试跳过生成迁移文件
-    result = await run_sync(runner.invoke)(cli, ["migrate", "--name", "example"])
+    result = await run_sync(runner.invoke)(cli, ["migrate", "--name", "plugin1"])
     assert result.exit_code == 0
     assert result.output == ""
 
     # 手动设置迁移文件目录
-    PluginData("example2").set_migration_dir(tmp_path / "revision")
+    PluginData("plugin2").set_migration_dir(tmp_path / "revision")
 
     # 测试生成迁移文件
     migration_dir = tmp_path / "revision"
@@ -106,7 +106,7 @@ async def test_migrate(app: App, tmp_path: Path):
     assert not migration_dir.exists()
 
     result = await run_sync(runner.invoke)(
-        cli, ["migrate", "--name", "example2", "-m", "test"]
+        cli, ["migrate", "--name", "plugin2", "-m", "test"]
     )
     assert result.exit_code == 0
     assert "Generating" in result.output
@@ -121,14 +121,14 @@ async def test_upgrade(app: App):
 
     from nonebot_plugin_datastore.script.cli import cli, run_sync
 
-    require("tests.example")
+    require("tests.example.plugin1")
 
     runner = CliRunner()
     result = await run_sync(runner.invoke)(cli, ["upgrade"])
     assert result.exit_code == 0
     assert result.output == ""
 
-    require("tests.example2")
+    require("tests.example.plugin2")
     result = await run_sync(runner.invoke)(cli, ["upgrade"])
     assert result.exit_code == 1
     assert result.output == "数据库初始化前执行的函数出错\n"
@@ -141,7 +141,7 @@ async def test_downgrade(app: App):
     from nonebot_plugin_datastore.db import init_db
     from nonebot_plugin_datastore.script.cli import cli, run_sync
 
-    require("tests.example")
+    require("tests.example.plugin1")
     await init_db()
 
     runner = CliRunner()
@@ -157,8 +157,8 @@ async def test_other_commands(app: App):
     from nonebot_plugin_datastore.script.cli import cli, run_sync
     from nonebot_plugin_datastore.script.utils import run_upgrade
 
-    require("tests.example")
-    require("tests.example2")
+    require("tests.example.plugin1")
+    require("tests.example.plugin2")
 
     runner = CliRunner()
     result = await run_sync(runner.invoke)(cli, ["history"])
@@ -179,7 +179,7 @@ async def test_other_commands(app: App):
 
     await run_upgrade()
 
-    result = await run_sync(runner.invoke)(cli, ["check", "--name", "example"])
+    result = await run_sync(runner.invoke)(cli, ["check", "--name", "plugin1"])
     assert result.exit_code == 0
     assert result.output == ""
 
@@ -187,6 +187,6 @@ async def test_other_commands(app: App):
     assert result.exit_code == 0
     assert "当前存储路径:" in result.output
 
-    result = await run_sync(runner.invoke)(cli, ["dir", "--name", "example"])
+    result = await run_sync(runner.invoke)(cli, ["dir", "--name", "plugin1"])
     assert result.exit_code == 0
-    assert "插件 example 的存储路径:" in result.output
+    assert "插件 plugin1 的存储路径:" in result.output

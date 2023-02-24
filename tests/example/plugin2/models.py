@@ -5,7 +5,7 @@ from sqlmodel import Field
 
 from nonebot_plugin_datastore import get_plugin_data
 
-DATA = get_plugin_data("example2")
+DATA = get_plugin_data("plugin2")
 
 DATA.set_migration_dir(Path(__file__).parent / "test-migration")
 
