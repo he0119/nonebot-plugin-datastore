@@ -1,19 +1,9 @@
 """ 插件数据 """
+import abc
 import json
 import pickle
 from pathlib import Path
-from typing import (
-    IO,
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Generic,
-    Optional,
-    Type,
-    TypeVar,
-    Union,
-    overload,
-)
+from typing import IO, Any, Callable, Generic, Optional, Type, TypeVar, Union, overload
 
 import httpx
 from nonebot import get_plugin
@@ -24,38 +14,26 @@ from sqlmodel import MetaData, SQLModel
 from .config import plugin_config
 from .utils import get_caller_plugin_name
 
-if TYPE_CHECKING:
-    from nonebot.plugin import Plugin
-
 T = TypeVar("T")
 R = TypeVar("R")
 
 
-class Config:
+class Config(abc.ABC):
     """插件配置管理"""
 
-    def __init__(self, path: Path) -> None:
-        self._path = path
-        self._data = {}
-        if self._path.exists():
-            self._load_config()
-        else:
-            self._save_config()
+    def __init__(self, plugin_data: "PluginData") -> None:
+        self._plugin_data = plugin_data
 
-    def _load_config(self) -> None:
-        """读取配置"""
-        with self._path.open("r", encoding="utf8") as f:
-            self._data = json.load(f)
-
-    def _save_config(self) -> None:
-        """保存配置"""
-        with self._path.open("w", encoding="utf8") as f:
-            json.dump(self._data, f, ensure_ascii=False, indent=2)
-
+    @abc.abstractmethod
     def _get(self, key: str) -> Any:
         """获取配置键值"""
         # TODO: 支持从数据库读取数据
-        return self._data[key]
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _set(self, key: str, value: Any) -> None:
+        """设置配置键值"""
+        raise NotImplementedError
 
     @overload
     def get(self, __key: str) -> Union[Any, None]:
@@ -81,6 +59,46 @@ class Config:
 
     def set(self, key: str, value: Any) -> None:
         """设置配置"""
+        self._set(key, value)
+
+
+class JsonConfig(Config):
+    """JSON 格式配置"""
+
+    def __init__(self, plugin_data: "PluginData") -> None:
+        super().__init__(plugin_data)
+        self._data = {}
+        self._load_config()
+
+    @property
+    def _path(self) -> Path:
+        """配置文件路径"""
+        return self._plugin_data.config_dir / f"{self._plugin_data.name}.json"
+
+    def _ensure_config(self) -> None:
+        """确保配置文件存在"""
+        if not self._path.exists():
+            with self._path.open("w", encoding="utf8") as f:
+                json.dump(self._data, f, ensure_ascii=False, indent=2)
+
+    def _load_config(self) -> None:
+        """读取配置"""
+        self._ensure_config()
+        with self._path.open("r", encoding="utf8") as f:
+            self._data = json.load(f)
+
+    def _save_config(self) -> None:
+        """保存配置"""
+        self._ensure_config()
+        with self._path.open("w", encoding="utf8") as f:
+            json.dump(self._data, f, ensure_ascii=False, indent=2)
+
+    def _get(self, key: str) -> Any:
+        if not self._data:
+            self._load_config()
+        return self._data[key]
+
+    def _set(self, key: str, value: Any) -> None:
         self._data[key] = value
         self._save_config()
 
@@ -170,7 +188,7 @@ class PluginData(metaclass=Singleton):
 
     def __init__(self, name: str) -> None:
         # 插件名，用来确定插件的文件夹位置
-        self._name = name
+        self.name = name
 
         # 插件配置
         self._config = None
@@ -191,7 +209,7 @@ class PluginData(metaclass=Singleton):
     @property
     def cache_dir(self) -> Path:
         """缓存目录"""
-        directory = plugin_config.datastore_cache_dir / self._name
+        directory = plugin_config.datastore_cache_dir / self.name
         # 每次调用都检查一下目录是否存在
         # 防止运行时有人删除目录
         self._ensure_dir(directory)
@@ -210,7 +228,7 @@ class PluginData(metaclass=Singleton):
     @property
     def data_dir(self) -> Path:
         """数据目录"""
-        directory = plugin_config.datastore_data_dir / self._name
+        directory = plugin_config.datastore_data_dir / self.name
         self._ensure_dir(directory)
         return directory
 
@@ -218,7 +236,7 @@ class PluginData(metaclass=Singleton):
     def config(self) -> Config:
         """获取配置管理"""
         if not self._config:
-            self._config = Config(self.config_dir / f"{self._name}.json")
+            self._config = JsonConfig(self)
         return self._config
 
     def dump_pkl(self, data: Any, filename: str, cache: bool = False, **kwargs) -> None:
@@ -292,7 +310,7 @@ class PluginData(metaclass=Singleton):
     def Model(self) -> Type[SQLModel]:
         """数据库模型"""
         if self._model is None:
-            self._metadata = MetaData(info={"name": self._name})
+            self._metadata = MetaData(info={"name": self.name})
 
             # 为每个插件创建一个独立的 registry
             plugin_registry = registry(metadata=self._metadata)
@@ -305,7 +323,7 @@ class PluginData(metaclass=Singleton):
                     规则为：插件名_表名
                     https://docs.sqlalchemy.org/en/14/orm/declarative_mixins.html#augmenting-the-base
                     """
-                    return f"{self._name}_{cls.__name__.lower()}"
+                    return f"{self.name}_{cls.__name__.lower()}"
 
             self._model = _SQLModel
         return self._model
@@ -319,7 +337,7 @@ class PluginData(metaclass=Singleton):
     def migration_dir(self) -> Optional[Path]:
         """数据库迁移文件夹"""
         if self._migration_path is None:
-            plugin = get_plugin(self._name)
+            plugin = get_plugin(self.name)
             if plugin and plugin.module.__file__ and PluginData(plugin.name).metadata:
                 self._migration_path = (
                     Path(plugin.module.__file__).parent / "migrations"
