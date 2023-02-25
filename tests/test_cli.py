@@ -135,6 +135,26 @@ async def test_upgrade(app: App):
 
 
 @pytest.mark.anyio
+async def test_upgrade_single_plugin(app: App):
+    """测试单独升级某个插件"""
+    from nonebot import require
+
+    from nonebot_plugin_datastore.script.cli import cli, run_sync
+
+    require("tests.example.plugin1")
+    require("tests.example.plugin2")
+
+    runner = CliRunner()
+    result = await run_sync(runner.invoke)(cli, ["upgrade", "--name", "plugin1"])
+    assert result.exit_code == 0
+    assert result.output == ""
+
+    result = await run_sync(runner.invoke)(cli, ["upgrade", "--name", "plugin2"])
+    assert result.exit_code == 1
+    assert result.output == "数据库初始化前执行的函数出错\n"
+
+
+@pytest.mark.anyio
 async def test_downgrade(app: App):
     from nonebot import require
 

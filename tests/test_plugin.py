@@ -14,7 +14,7 @@ async def test_get_plugin_data_failed(app: App):
     with pytest.raises(ValueError) as e:
         import tests.example.plugin1
 
-    assert e.value.args[0] == "插件名称为空，且自动获取失败"
+    assert e.value.args[0] == "自动获取插件名失败"
 
 
 async def test_plugin_dir_is_file(app: App):
