@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 修复运行中删除目录导致报错的问题
 - 升级数据库时只执行对应插件的 pre_db_init 函数
+- 修复运行中删除文件后写入配置时报错的问题
 
 ## [0.5.8] - 2023-02-10
 
