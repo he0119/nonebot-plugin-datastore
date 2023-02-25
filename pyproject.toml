@@ -51,6 +51,18 @@ asyncio_mode = "auto"
 pythonVersion = "3.8"
 pythonPlatform = "All"
 
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@overload",
+]
+omit = [
+  "*/script/command.py",
+]
+
 [tool.poetry.plugins.nb_scripts]
 datastore = "nonebot_plugin_datastore.script.cli:main"
 
