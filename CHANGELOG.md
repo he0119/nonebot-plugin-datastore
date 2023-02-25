@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [0.5.9] - 2023-02-25
+
 ### Fixed
 
 - 修复运行中删除目录导致报错的问题
@@ -150,7 +152,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.8...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.9...HEAD
+[0.5.9]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.8...v0.5.9
 [0.5.8]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.7...v0.5.8
 [0.5.7]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.6...v0.5.7
 [0.5.6]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.5...v0.5.6
