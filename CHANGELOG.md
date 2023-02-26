@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 添加 engine_options 配置项
 
+### Fixed
+
+- 修复自定义数据库连接可能会出现文件夹未创建的问题
+
 ## [0.5.9] - 2023-02-25
 
 ### Fixed
