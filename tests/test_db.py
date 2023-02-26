@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import List, Optional, cast
 
 import pytest
@@ -82,7 +83,7 @@ async def test_default_db_url(nonebug_init: None):
     )
 
 
-async def test_post_db_init_error(app: None):
+async def test_post_db_init_error(app: App):
     """数据库初始化后执行函数错误"""
     from nonebot_plugin_datastore.db import init_db, post_db_init
 
@@ -93,7 +94,7 @@ async def test_post_db_init_error(app: None):
     await init_db()
 
 
-async def test_pre_db_init_error(app: None):
+async def test_pre_db_init_error(app: App):
     """数据库初始化前执行函数错误"""
     from nonebot_plugin_datastore.db import init_db
 
@@ -103,7 +104,7 @@ async def test_pre_db_init_error(app: None):
         await init_db()
 
 
-async def test_compatibility(app: None):
+async def test_compatibility(app: App):
     """测试兼容不使用迁移的旧版本，且新旧版本共存"""
     from sqlmodel import Field, SQLModel, select
 
@@ -162,3 +163,27 @@ async def test_engine_options_poolclass(app: App):
 
     engine = get_engine()
     assert isinstance(engine.pool, QueuePool)
+
+
+@pytest.mark.parametrize(
+    "app",
+    [
+        pytest.param(
+            {"datastore_database_url": "sqlite+aiosqlite:///data/test/test.db"},
+            id="url",
+        )
+    ],
+    indirect=True,
+)
+async def test_create_db(app: App):
+    """测试创建数据库"""
+    from nonebot_plugin_datastore.db import init_db
+
+    database_path = Path("data/test/test.db")
+
+    assert not database_path.exists()
+    await init_db()
+    assert database_path.exists()
+
+    database_path.unlink()
+    database_path.parent.rmdir()
