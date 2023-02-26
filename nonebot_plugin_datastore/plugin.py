@@ -8,8 +8,8 @@ from typing import IO, Any, Callable, Generic, Optional, Type, TypeVar, Union, o
 import httpx
 from nonebot import get_plugin
 from nonebot.log import logger
-from sqlalchemy.orm import declared_attr, registry
-from sqlmodel import MetaData, SQLModel
+from sqlalchemy import MetaData
+from sqlalchemy.orm import DeclarativeBase, declared_attr, registry
 
 from .config import plugin_config
 from .utils import get_caller_plugin_name
@@ -307,7 +307,7 @@ class PluginData(metaclass=Singleton):
         return NetworkFile[T, R](url, filename, self, process_data, cache)
 
     @property
-    def Model(self) -> Type[SQLModel]:
+    def Model(self) -> Type[DeclarativeBase]:
         """数据库模型"""
         if self._model is None:
             self._metadata = MetaData(info={"name": self.name})
@@ -315,17 +315,19 @@ class PluginData(metaclass=Singleton):
             # 为每个插件创建一个独立的 registry
             plugin_registry = registry(metadata=self._metadata)
 
-            class _SQLModel(SQLModel, registry=plugin_registry):
-                @declared_attr
+            class _Base(DeclarativeBase):
+                registry = plugin_registry
+
+                @declared_attr.directive
                 def __tablename__(cls) -> str:
                     """设置表名前缀，避免表名冲突
 
                     规则为：插件名_表名
-                    https://docs.sqlalchemy.org/en/14/orm/declarative_mixins.html#augmenting-the-base
+                    https://docs.sqlalchemy.org/en/20/orm/declarative_mixins.html#augmenting-the-base
                     """
                     return f"{self.name}_{cls.__name__.lower()}"
 
-            self._model = _SQLModel
+            self._model = _Base
         return self._model
 
     @property
