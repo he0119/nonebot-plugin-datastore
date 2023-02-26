@@ -138,6 +138,21 @@ nb datastore downgrade --name plugin_name
 nb datastore downgrade --name plugin_name revision
 ```
 
+## 注意
+
+### 数据库连接超时
+
+当使用 `mysql` 时，你可能会遇到 `2013: lost connection to mysql server during query` 的报错。
+
+如果遇到这种错误，可以尝试设置 `pool_recycle` 为一个小于数据库超时的值。或者设置 `pool_pre_ping` 为 `True`。
+
+```env
+DATASTORE_ENGINE_OPTIONS={"pool_recycle": 3600}
+DATASTORE_ENGINE_OPTIONS={"pool_pre_ping": true}
+```
+
+详细介绍可查看 `SQAlchemy` 文档的 [dealing-with-disconnects](https://docs.sqlalchemy.org/en/20/core/pooling.html#dealing-with-disconnects) 章节。
+
 ## 配置项
 
 配置方式：直接在 `NoneBot` 全局配置文件中添加以下配置项即可。
