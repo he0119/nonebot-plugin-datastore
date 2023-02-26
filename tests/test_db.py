@@ -3,6 +3,7 @@ from typing import List, Optional, cast
 import pytest
 from nonebot import require
 from nonebug import App
+from sqlalchemy.pool import NullPool, QueuePool
 
 from .utils import clear_plugins, make_fake_event, make_fake_message
 
@@ -126,3 +127,38 @@ async def test_compatibility(app: None):
         result = await session.exec(statement)  # type: ignore
         example = cast(Example, result.first())
         assert example.message == "post"
+
+
+@pytest.mark.parametrize(
+    "app",
+    [pytest.param({"datastore_engine_options": {"pool_recycle": 7200}}, id="options")],
+    indirect=True,
+)
+async def test_engine_options(app: App):
+    """测试引擎配置"""
+    from nonebot_plugin_datastore.config import plugin_config
+    from nonebot_plugin_datastore.db import get_engine
+
+    assert plugin_config.datastore_engine_options == {"pool_recycle": 7200}
+
+    engine = get_engine()
+    # 默认值为 -1
+    assert engine.pool._recycle == 7200  # type: ignore
+    assert isinstance(engine.pool, NullPool)
+
+
+@pytest.mark.parametrize(
+    "app",
+    [
+        pytest.param(
+            {"datastore_engine_options": {"poolclass": QueuePool}}, id="options"
+        )
+    ],
+    indirect=True,
+)
+async def test_engine_options_poolclass(app: App):
+    """测试设置引擎连接池"""
+    from nonebot_plugin_datastore.db import get_engine
+
+    engine = get_engine()
+    assert isinstance(engine.pool, QueuePool)

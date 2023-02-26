@@ -1,6 +1,6 @@
 """ 配置 """
 from pathlib import Path
-from typing import Dict
+from typing import Any, Dict
 
 from nonebot import get_driver, require
 from pydantic import BaseModel, Extra, root_validator
@@ -20,6 +20,7 @@ class Config(BaseModel, extra=Extra.ignore):
     """
     datastore_enable_database: bool = True
     datastore_database_echo: bool = False
+    datastore_engine_options: Dict[str, Any] = {}
 
     @root_validator(pre=True, allow_reuse=True)
     def set_defaults(cls, values: Dict):

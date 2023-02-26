@@ -67,7 +67,7 @@ omit = [
 datastore = "nonebot_plugin_datastore.script.cli:main"
 
 [tool.nonebot]
-plugins = ["tests.example", "tests.example2"]
+plugins = ["tests.example.plugin1"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

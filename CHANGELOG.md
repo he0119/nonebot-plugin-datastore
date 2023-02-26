@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Added
+
+- 添加 engine_options 配置项
+
 ## [0.5.9] - 2023-02-25
 
 ### Fixed
