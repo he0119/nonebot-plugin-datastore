@@ -1,11 +1,12 @@
 """ 数据库 """
 import asyncio
-import os
+from pathlib import Path
 from typing import TYPE_CHECKING, AsyncGenerator, Callable, Dict, List
 
 from nonebot import get_driver
 from nonebot.log import logger
 from nonebot.utils import is_coroutine_callable, run_sync
+from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
@@ -85,7 +86,16 @@ async def init_db():
 if plugin_config.datastore_enable_database:
     # 创建数据文件夹
     # 防止数据库创建失败
-    os.makedirs(plugin_config.datastore_data_dir, exist_ok=True)
+    url = make_url(plugin_config.datastore_database_url)
+    if (
+        url.drivername.startswith("sqlite")
+        and url.database is not None
+        and url.database not in [":memory:", ""]
+    ):
+        database_path = Path(url.database)
+        database_path.parent.mkdir(parents=True, exist_ok=True)
+        logger.debug(f"创建数据库文件夹: {database_path.parent}")
+    # 创建数据库引擎
     engine_options = {}
     engine_options.update(plugin_config.datastore_engine_options)
     engine_options.setdefault("echo", plugin_config.datastore_database_echo)
