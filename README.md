@@ -144,7 +144,7 @@ nb datastore downgrade --name plugin_name revision
 
 ### datastore_cache_dir
 
-- 类型: `str`
+- 类型: `Path`
 - 默认:
   - macOS: ~/Library/Caches/nonebot2
   - Unix: ~/.cache/nonebot2 (XDG default)
@@ -153,7 +153,7 @@ nb datastore downgrade --name plugin_name revision
 
 ### datastore_config_dir
 
-- 类型: `str`
+- 类型: `Path`
 - 默认:
   - macOS: same as user_data_dir
   - Unix: ~/.config/nonebot2
@@ -163,7 +163,7 @@ nb datastore downgrade --name plugin_name revision
 
 ### datastore_data_dir
 
-- 类型: `str`
+- 类型: `Path`
 - 默认:
   - macOS: ~/Library/Application Support/nonebot2
   - Unix: ~/.local/share/nonebot2 or in $XDG_DATA_HOME, if defined
@@ -187,7 +187,13 @@ nb datastore downgrade --name plugin_name revision
 
 - 类型: `bool`
 - 默认: `False`
-- 说明: 是否显示数据库执行的语句与其参数列表
+- 说明: `echo` 和 `echo_pool` 的默认值，是否显示数据库执行的语句与其参数列表，还有连接池的相关信息
+
+### datastore_engine_options
+
+- 类型: `dict[str, Any]`
+- 默认: `{}`
+- 说明: 向 `sqlalchemy.ext.asyncio.create_async_engine()` 传递的参数
 
 ## 计划
 

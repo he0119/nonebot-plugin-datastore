@@ -86,9 +86,14 @@ if plugin_config.datastore_enable_database:
     # 创建数据文件夹
     # 防止数据库创建失败
     os.makedirs(plugin_config.datastore_data_dir, exist_ok=True)
+    engine_options = {}
+    engine_options.update(plugin_config.datastore_engine_options)
+    engine_options.setdefault("echo", plugin_config.datastore_database_echo)
+    engine_options.setdefault("echo_pool", plugin_config.datastore_database_echo)
+    logger.debug(f"数据库引擎参数: {engine_options}")
     _engine = create_async_engine(
         plugin_config.datastore_database_url,
-        echo=plugin_config.datastore_database_echo,
+        **engine_options,
     )
 
     get_driver().on_startup(init_db)
