@@ -24,11 +24,11 @@ typing-extensions = { version = ">=4.4", optional = true }
 [tool.poetry.group.dev.dependencies]
 black = "*"
 isort = "*"
+pre-commit = "*"
 nonebug = "^0.3.1"
 pytest-cov = "^4.0.0"
 pytest-xdist = "^3.1.0"
 pytest-mock = "^3.10.0"
-pre-commit = "^2.17.0"
 pytest-asyncio = "^0.20.3"
 nb-cli = "^1.0.0"
 nonebot2 = { extras = ["httpx", "fastapi"], version = "^2.0.0-rc.1" }
