@@ -1,16 +1,15 @@
-"""empty message
+"""init db
 
-Revision ID: 6b6cd695b2e7
+Revision ID: a1219e33400e
 Revises: 
-Create Date: 2023-02-06 19:18:07.691156
+Create Date: 2023-02-26 16:29:31.475062
 
 """
 import sqlalchemy as sa
-import sqlmodel
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "6b6cd695b2e7"
+revision = "a1219e33400e"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,7 +20,7 @@ def upgrade() -> None:
     op.create_table(
         "plugin2_example",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("message", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("message", sa.String(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(

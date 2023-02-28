@@ -8,8 +8,7 @@ from nonebot.log import logger
 from nonebot.utils import is_coroutine_callable, run_sync
 from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import create_async_engine
-from sqlmodel import SQLModel
-from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from nonebot_plugin_datastore.utils import get_caller_plugin_name
 
@@ -62,10 +61,6 @@ async def init_db():
         except Exception as e:
             logger.error("数据库初始化前执行的函数出错")
             raise
-
-    # 兼容以前不支持迁移的版本
-    async with get_engine().begin() as conn:
-        await conn.run_sync(SQLModel.metadata.create_all)
 
     await run_upgrade()
 

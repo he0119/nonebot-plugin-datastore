@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Changed
+
+- 切换到 SQLAlchemy 2.0
+
 ## [0.5.10] - 2023-02-26
 
 ### Added

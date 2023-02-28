@@ -6,11 +6,10 @@ Create Date: 2023-01-14 18:03:01.886658
 
 """
 import sqlalchemy as sa
-import sqlmodel
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "bef062d23d1f"
+revision = "b6475c9488b6"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,7 +20,7 @@ def upgrade() -> None:
     op.create_table(
         "plugin1_example",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("message", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("message", sa.String(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
     # ### end Alembic commands ###
