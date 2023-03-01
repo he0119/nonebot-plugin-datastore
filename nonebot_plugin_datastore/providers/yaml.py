@@ -47,7 +47,7 @@ class Config(ConfigProvider):
             yaml.dump(self._data, f, Dumper=Dumper)
 
     def _get_sync(self, key: str) -> Any:
-        if self._data is None:
+        if not self._data:
             self._load_config()
         try:
             return self._data[key]

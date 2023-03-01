@@ -63,9 +63,11 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "if TYPE_CHECKING:",
     "@overload",
+    "except ImportError:",
 ]
 omit = [
   "*/script/command.py",
+  "**/migrations",
 ]
 
 [tool.poetry.plugins.nb_scripts]

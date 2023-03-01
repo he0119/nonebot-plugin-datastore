@@ -40,7 +40,7 @@ class Config(ConfigProvider):
             json.dump(self._data, f, ensure_ascii=False, indent=2)
 
     def _get_sync(self, key: str) -> Any:
-        if self._data is None:
+        if not self._data:
             self._load_config()
         try:
             return self._data[key]
