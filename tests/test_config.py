@@ -16,8 +16,11 @@ async def test_read_config(app: App):
         json.dump({"test": 1}, f)
 
     data = PluginData("test")
-    assert data.config.get_sync("test") == 1
     assert await data.config.get("test") == 1
+    assert data.config.get_sync("test") == 1
+
+    assert await data.config.get("async") == None
+    assert data.config.get_sync("sync") == None
 
 
 async def test_write_config(app: App):
