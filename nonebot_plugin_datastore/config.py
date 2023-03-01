@@ -1,6 +1,6 @@
 """ 配置 """
 from pathlib import Path
-from typing import Any, Dict, Type
+from typing import Any, Dict
 
 from nonebot import _resolve_dot_notation, get_driver
 from nonebot_plugin_localstore import get_cache_dir, get_config_dir, get_data_dir
@@ -21,13 +21,7 @@ class Config(BaseModel, extra=Extra.ignore):
     datastore_enable_database: bool = True
     datastore_database_echo: bool = False
     datastore_engine_options: Dict[str, Any] = {}
-    datastore_config_provider: str
-
-    @property
-    def config_provider(self) -> Type[ConfigProvider]:
-        return self._config_provider
-
-    _config_provider: Type[ConfigProvider] = PrivateAttr()
+    datastore_config_provider: str = "~json"
 
     @root_validator(pre=True, allow_reuse=True)
     def set_defaults(cls, values: Dict):
@@ -56,15 +50,6 @@ class Config(BaseModel, extra=Extra.ignore):
                 "datastore_database_url"
             ] = f"sqlite+aiosqlite:///{values['datastore_data_dir'] / 'data.db'}"
 
-        # 设置默认配置提供器
-        # 默认使用 JSON
-        if not values.get("datastore_config_provider"):
-            values["datastore_config_provider"] = "~json"
-        cls._config_provider = _resolve_dot_notation(
-            values["datastore_config_provider"],
-            default_attr="Config",
-            default_prefix="nonebot_plugin_datastore.providers.",
-        )
         return values
 
 

@@ -1,5 +1,6 @@
 import json
 
+import pytest
 from nonebug import App
 
 
@@ -54,3 +55,30 @@ async def test_write_config_while_folder_deleted(app: App):
     plugin_config.datastore_config_dir.rmdir()
 
     await data.config.set("test", 1)
+
+
+@pytest.mark.parametrize(
+    "app",
+    [
+        pytest.param({"datastore_config_provider": "~json"}, id="json"),
+        pytest.param({"datastore_config_provider": "~database"}, id="database"),
+    ],
+    indirect=True,
+)
+async def test_read_write_config(app: App):
+    """测试读写配置"""
+    from nonebot_plugin_datastore import PluginData
+    from nonebot_plugin_datastore.db import init_db
+    from nonebot_plugin_datastore.providers.database import Config
+
+    data = PluginData("test")
+    if isinstance(data.config, Config):
+        await init_db()
+
+    simple = 1
+    await data.config.set("test", simple)
+    assert await data.config.get("test") == simple
+
+    complex = {"a": 1, "b": [1, 2, 3], "c": {"d": 1}}
+    await data.config.set("test", complex)
+    assert await data.config.get("test") == complex

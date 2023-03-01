@@ -208,10 +208,16 @@ DATASTORE_ENGINE_OPTIONS={"pool_pre_ping": true}
 - 默认: `{}`
 - 说明: 向 `sqlalchemy.ext.asyncio.create_async_engine()` 传递的参数
 
+### datastore_config_provider
+
+- 类型: `str`
+- 默认: `~json`
+- 说明: 选择存放配置的类型，当前支持 json, yaml, toml, database 四种类型，也可设置为实现 `ConfigProvider` 的自定义类型。
+
 ## 计划
 
 - [x] 调整配置为 K-V 存储
 - [x] 调整配置存放位置至专门的配置目录
 - [x] 数据库为可选项
-- [ ] 支持将配置存放至数据库中
+- [x] 支持将配置存放至数据库中
 - [x] 支持 Alembic

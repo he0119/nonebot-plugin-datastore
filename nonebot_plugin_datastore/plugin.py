@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import IO, Any, Callable, Generic, Optional, Type, TypeVar
 
 import httpx
-from nonebot import get_plugin
+from nonebot import _resolve_dot_notation, get_plugin
 from nonebot.log import logger
 from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase, declared_attr, registry
@@ -151,7 +151,12 @@ class PluginData(metaclass=Singleton):
     def config(self) -> ConfigProvider:
         """获取配置管理"""
         if not self._config:
-            self._config = plugin_config.config_provider(self)
+            ProviderClass = _resolve_dot_notation(
+                plugin_config.datastore_config_provider,
+                default_attr="Config",
+                default_prefix="nonebot_plugin_datastore.providers.",
+            )
+            self._config = ProviderClass(self)
         return self._config
 
     def dump_pkl(self, data: Any, filename: str, cache: bool = False, **kwargs) -> None:

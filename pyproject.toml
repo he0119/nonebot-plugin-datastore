@@ -67,7 +67,7 @@ omit = [
 datastore = "nonebot_plugin_datastore.script.cli:main"
 
 [tool.nonebot]
-plugins = []
+plugins = ["nonebot_plugin_datastore"]
 plugin_dirs = ["tests/registry"]
 
 [build-system]
