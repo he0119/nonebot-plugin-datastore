@@ -8,7 +8,8 @@
       "name": "Pytest",
       "type": "python",
       "request": "launch",
-      "module": "pytest"
+      "module": "pytest",
+      "justMyCode": false
     },
     {
       "name": "upgrade",

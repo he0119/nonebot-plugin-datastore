@@ -1,9 +1,8 @@
 """ 插件数据 """
-import abc
 import json
 import pickle
 from pathlib import Path
-from typing import IO, Any, Callable, Generic, Optional, Type, TypeVar, Union, overload
+from typing import IO, Any, Callable, Generic, Optional, Type, TypeVar
 
 import httpx
 from nonebot import get_plugin
@@ -12,95 +11,11 @@ from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase, declared_attr, registry
 
 from .config import plugin_config
+from .providers import ConfigProvider
 from .utils import get_caller_plugin_name
 
 T = TypeVar("T")
 R = TypeVar("R")
-
-
-class Config(abc.ABC):
-    """插件配置管理"""
-
-    def __init__(self, plugin_data: "PluginData") -> None:
-        self._plugin_data = plugin_data
-
-    @abc.abstractmethod
-    def _get(self, key: str) -> Any:
-        """获取配置键值"""
-        # TODO: 支持从数据库读取数据
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def _set(self, key: str, value: Any) -> None:
-        """设置配置键值"""
-        raise NotImplementedError
-
-    @overload
-    def get(self, __key: str) -> Union[Any, None]:
-        ...
-
-    @overload
-    def get(self, __key: str, __default: T) -> T:
-        ...
-
-    def get(self, key, default=None):
-        """获得配置
-
-        如果配置获取失败则使用 `default` 值并保存
-        如果不提供 `default` 默认返回 None
-        """
-        try:
-            value = self._get(key)
-        except:
-            value = default
-            # 保存默认配置
-            self.set(key, value)
-        return value
-
-    def set(self, key: str, value: Any) -> None:
-        """设置配置"""
-        self._set(key, value)
-
-
-class JsonConfig(Config):
-    """JSON 格式配置"""
-
-    def __init__(self, plugin_data: "PluginData") -> None:
-        super().__init__(plugin_data)
-        self._data = {}
-        self._load_config()
-
-    @property
-    def _path(self) -> Path:
-        """配置文件路径"""
-        return self._plugin_data.config_dir / f"{self._plugin_data.name}.json"
-
-    def _ensure_config(self) -> None:
-        """确保配置文件存在"""
-        if not self._path.exists():
-            with self._path.open("w", encoding="utf8") as f:
-                json.dump(self._data, f, ensure_ascii=False, indent=2)
-
-    def _load_config(self) -> None:
-        """读取配置"""
-        self._ensure_config()
-        with self._path.open("r", encoding="utf8") as f:
-            self._data = json.load(f)
-
-    def _save_config(self) -> None:
-        """保存配置"""
-        self._ensure_config()
-        with self._path.open("w", encoding="utf8") as f:
-            json.dump(self._data, f, ensure_ascii=False, indent=2)
-
-    def _get(self, key: str) -> Any:
-        if not self._data:
-            self._load_config()
-        return self._data[key]
-
-    def _set(self, key: str, value: Any) -> None:
-        self._data[key] = value
-        self._save_config()
 
 
 class NetworkFile(Generic[T, R]):
@@ -233,10 +148,10 @@ class PluginData(metaclass=Singleton):
         return directory
 
     @property
-    def config(self) -> Config:
+    def config(self) -> ConfigProvider:
         """获取配置管理"""
         if not self._config:
-            self._config = JsonConfig(self)
+            self._config = plugin_config.config_provider(self)
         return self._config
 
     def dump_pkl(self, data: Any, filename: str, cache: bool = False, **kwargs) -> None:
