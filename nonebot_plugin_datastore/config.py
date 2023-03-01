@@ -2,11 +2,9 @@
 from pathlib import Path
 from typing import Any, Dict
 
-from nonebot import get_driver, require
-from pydantic import BaseModel, Extra, root_validator
-
-require("nonebot_plugin_localstore")
+from nonebot import get_driver
 from nonebot_plugin_localstore import get_cache_dir, get_config_dir, get_data_dir
+from pydantic import BaseModel, Extra, root_validator
 
 
 class Config(BaseModel, extra=Extra.ignore):
@@ -21,6 +19,7 @@ class Config(BaseModel, extra=Extra.ignore):
     datastore_enable_database: bool = True
     datastore_database_echo: bool = False
     datastore_engine_options: Dict[str, Any] = {}
+    datastore_config_provider: str = "~json"
 
     @root_validator(pre=True, allow_reuse=True)
     def set_defaults(cls, values: Dict):
@@ -48,6 +47,7 @@ class Config(BaseModel, extra=Extra.ignore):
             values[
                 "datastore_database_url"
             ] = f"sqlite+aiosqlite:///{values['datastore_data_dir'] / 'data.db'}"
+
         return values
 
 

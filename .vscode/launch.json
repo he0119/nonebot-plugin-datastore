@@ -5,10 +5,21 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Run",
+      "type": "python",
+      "request": "launch",
+      "module": "nb_cli",
+      "args": [
+        "run"
+      ],
+      "justMyCode": false,
+    },
+    {
       "name": "Pytest",
       "type": "python",
       "request": "launch",
-      "module": "pytest"
+      "module": "pytest",
+      "justMyCode": false
     },
     {
       "name": "upgrade",
