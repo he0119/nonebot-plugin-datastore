@@ -1,6 +1,13 @@
-import json
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
+
+import yaml
+
+try:
+    from yaml import CDumper as Dumper
+    from yaml import CLoader as Loader
+except ImportError:
+    from yaml import Loader, Dumper
 
 from . import ConfigProvider
 
@@ -19,25 +26,25 @@ class Config(ConfigProvider):
     @property
     def _path(self) -> Path:
         """配置文件路径"""
-        return self._plugin_data.config_dir / f"{self._plugin_data.name}.json"
+        return self._plugin_data.config_dir / f"{self._plugin_data.name}.yaml"
 
     def _ensure_config(self) -> None:
         """确保配置文件存在"""
         if not self._path.exists():
             with self._path.open("w", encoding="utf8") as f:
-                json.dump(self._data, f, ensure_ascii=False, indent=2)
+                yaml.dump(self._data, f, Dumper=Dumper)
 
     def _load_config(self) -> None:
         """读取配置"""
         self._ensure_config()
         with self._path.open("r", encoding="utf8") as f:
-            self._data = json.load(f)
+            self._data = yaml.load(f, Loader=Loader)
 
     def _save_config(self) -> None:
         """保存配置"""
         self._ensure_config()
         with self._path.open("w", encoding="utf8") as f:
-            json.dump(self._data, f, ensure_ascii=False, indent=2)
+            yaml.dump(self._data, f, Dumper=Dumper)
 
     def _get_sync(self, key: str) -> Any:
         if self._data is None:
