@@ -1,11 +1,21 @@
 import abc
-from typing import TYPE_CHECKING, Any, Coroutine, TypeVar, Union, overload
+from typing import TYPE_CHECKING, Any, TypeVar, Union, overload
+
+from nonebot import logger
 
 if TYPE_CHECKING:
     from ..plugin import PluginData
 
 T = TypeVar("T")
 R = TypeVar("R")
+
+
+class KeyNotFoundError(Exception):
+    """键值未找到"""
+
+    def __init__(self, key: str) -> None:
+        self.key = key
+        super().__init__(f"Key {key} not found")
 
 
 class ConfigProvider(abc.ABC):
@@ -51,7 +61,7 @@ class ConfigProvider(abc.ABC):
         """
         try:
             value = self._get_sync(key)
-        except:
+        except KeyNotFoundError:
             value = default
             # 保存默认配置
             self.set_sync(key, value)
@@ -77,7 +87,7 @@ class ConfigProvider(abc.ABC):
         """
         try:
             value = await self._get(key)
-        except:
+        except KeyNotFoundError:
             value = default
             # 保存默认配置
             await self.set(key, value)

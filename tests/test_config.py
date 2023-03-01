@@ -77,6 +77,10 @@ async def test_read_write_config(app: App):
     if isinstance(data.config, Config):
         await init_db()
 
+    assert await data.config.get("test") is None
+    assert await data.config.get("test", "test") is None
+    assert await data.config.get("other", "test") == "test"
+
     simple = 1
     await data.config.set("test", simple)
     assert await data.config.get("test") == simple

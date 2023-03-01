@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any
 
 import rtoml
 
-from . import ConfigProvider
+from . import ConfigProvider, KeyNotFoundError
 
 if TYPE_CHECKING:
     from ..plugin import PluginData
@@ -43,7 +43,10 @@ class Config(ConfigProvider):
     def _get_sync(self, key: str) -> Any:
         if self._data is None:
             self._load_config()
-        return self._data[key]
+        try:
+            return self._data[key]
+        except KeyError:
+            raise KeyNotFoundError(key)
 
     def _set_sync(self, key: str, value: Any) -> None:
         self._data[key] = value
