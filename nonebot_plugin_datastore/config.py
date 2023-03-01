@@ -2,11 +2,9 @@
 from pathlib import Path
 from typing import Any, Dict
 
-from nonebot import _resolve_dot_notation, get_driver
+from nonebot import get_driver
 from nonebot_plugin_localstore import get_cache_dir, get_config_dir, get_data_dir
-from pydantic import BaseModel, Extra, PrivateAttr, root_validator
-
-from .providers import ConfigProvider
+from pydantic import BaseModel, Extra, root_validator
 
 
 class Config(BaseModel, extra=Extra.ignore):

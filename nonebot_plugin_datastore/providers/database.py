@@ -16,7 +16,7 @@ class ConfigModel(plugin_data.Model):
 
 
 class Config(ConfigProvider):
-    """JSON 格式配置"""
+    """数据库格式配置"""
 
     async def _get(self, key: str) -> Any:
         db_key = self._plugin_data.name + "_" + key

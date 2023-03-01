@@ -8,8 +8,8 @@ async def test_singleton(app: App):
     data1 = PluginData("test")
     data2 = PluginData("test")
     assert data1 is data2
-    data1.config.set_sync("test", 1)
-    assert data2.config.get_sync("test") == 1
+    await data1.config.set("test", 1)
+    assert await data2.config.get("test") == 1
 
 
 async def test_singleton_keyword(app: App):
@@ -22,8 +22,8 @@ async def test_singleton_keyword(app: App):
     data1 = PluginData("test")
     data2 = PluginData(name="test")
     assert data1 is data2
-    data1.config.set_sync("test", 1)
-    assert data2.config.get_sync("test") == 1
+    await data1.config.set("test", 1)
+    assert await data2.config.get("test") == 1
 
 
 async def test_singleton_different(app: App):
@@ -36,5 +36,5 @@ async def test_singleton_different(app: App):
     data1 = PluginData("test")
     data2 = PluginData("test2")
     assert data1 is not data2
-    data1.config.set_sync("test", 1)
-    assert data2.config.get_sync("test") is None
+    await data1.config.set("test", 1)
+    assert await data2.config.get("test") is None

@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 class Config(ConfigProvider):
-    """JSON 格式配置"""
+    """yaml 格式配置"""
 
     def __init__(self, plugin_data: "PluginData") -> None:
         super().__init__(plugin_data)
