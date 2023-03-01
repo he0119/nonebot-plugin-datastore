@@ -39,6 +39,7 @@ nonebot2 = { extras = ["httpx", "fastapi"], version = "^2.0.0-rc.1" }
 cli = ["anyio", "click", "typing-extensions"]
 toml = ["rtoml"]
 yaml = ["pyyaml"]
+all = ["anyio", "click", "typing-extensions", "rtoml", "pyyaml"]
 
 [tool.black]
 line-length = 88

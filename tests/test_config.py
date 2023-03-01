@@ -71,11 +71,11 @@ async def test_read_write_config(app: App):
     """测试读写配置"""
     from nonebot_plugin_datastore import PluginData
     from nonebot_plugin_datastore.db import init_db
-    from nonebot_plugin_datastore.providers.database import Config
 
     data = PluginData("test")
-    if isinstance(data.config, Config):
-        await init_db()
+    assert data.config
+
+    await init_db()
 
     assert await data.config.get("test") is None
     assert await data.config.get("test", "test") is None
