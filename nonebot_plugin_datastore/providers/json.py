@@ -39,7 +39,7 @@ class Config(ConfigProvider):
         with self._path.open("w", encoding="utf8") as f:
             json.dump(self._data, f, ensure_ascii=False, indent=2)
 
-    def _get_sync(self, key: str) -> Any:
+    async def _get(self, key: str) -> Any:
         if not self._data:
             self._load_config()
         try:
@@ -47,12 +47,6 @@ class Config(ConfigProvider):
         except KeyError:
             raise KeyNotFoundError(key)
 
-    def _set_sync(self, key: str, value: Any) -> None:
+    async def _set(self, key: str, value: Any) -> None:
         self._data[key] = value
         self._save_config()
-
-    async def _get(self, key: str) -> Any:
-        return self._get_sync(key)
-
-    async def _set(self, key: str, value: Any) -> None:
-        self._set_sync(key, value)

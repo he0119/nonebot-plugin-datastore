@@ -36,9 +36,3 @@ class Config(ConfigProvider):
         async with create_session() as session:
             await session.merge(ConfigModel(key=db_key, value=value))
             await session.commit()
-
-    def _get_sync(self, key: str) -> Any:
-        raise NotImplementedError
-
-    def _set_sync(self, key: str, value: Any) -> None:
-        raise NotImplementedError

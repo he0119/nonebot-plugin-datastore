@@ -17,10 +17,8 @@ async def test_read_config(app: App):
 
     data = PluginData("test")
     assert await data.config.get("test") == 1
-    assert data.config.get_sync("test") == 1
 
-    assert await data.config.get("async") == None
-    assert data.config.get_sync("sync") == None
+    assert await data.config.get("test1") == None
 
 
 async def test_write_config(app: App):
@@ -32,13 +30,11 @@ async def test_write_config(app: App):
     assert config_file.exists() is False
 
     data = PluginData("test")
-    await data.config.set("async", 1)
-    data.config.set_sync("sync", 2)
+    await data.config.set("test", 1)
 
     with open(config_file, encoding="utf8") as f:
         data = json.load(f)
-        assert data["async"] == 1
-        assert data["sync"] == 2
+        assert data["test"] == 1
 
 
 async def test_write_config_while_folder_deleted(app: App):
