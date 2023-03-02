@@ -2,7 +2,7 @@
 import json
 import pickle
 from pathlib import Path
-from typing import IO, Any, Callable, Generic, Optional, Type, TypeVar
+from typing import Any, Callable, Generic, Optional, Type, TypeVar
 
 import httpx
 from nonebot import _resolve_dot_notation, get_plugin
@@ -151,12 +151,7 @@ class PluginData(metaclass=Singleton):
     def config(self) -> ConfigProvider:
         """获取配置管理"""
         if not self._config:
-            ProviderClass = _resolve_dot_notation(
-                plugin_config.datastore_config_provider,
-                default_attr="Config",
-                default_prefix="nonebot_plugin_datastore.providers.",
-            )
-            self._config = ProviderClass(self)
+            self._config = _ProviderClass(self)
         return self._config
 
     def dump_pkl(self, data: Any, filename: str, cache: bool = False, **kwargs) -> None:
@@ -184,7 +179,7 @@ class PluginData(metaclass=Singleton):
             data = json.load(f, **kwargs)
         return data
 
-    def open(self, filename: str, mode: str = "r", cache: bool = False, **kwargs) -> IO:
+    def open(self, filename: str, mode: str = "r", cache: bool = False, **kwargs):
         """打开文件，默认打开数据文件夹下的文件"""
         if cache:
             path = self.cache_dir / filename
@@ -279,3 +274,11 @@ def get_plugin_data(name: Optional[str] = None) -> PluginData:
     name = name or get_caller_plugin_name()
 
     return PluginData(name)
+
+
+# 需要等到 PluginData 和 get_plugin_data 定义后才能导入对应的配置
+_ProviderClass = _resolve_dot_notation(
+    plugin_config.datastore_config_provider,
+    default_attr="Config",
+    default_prefix="nonebot_plugin_datastore.providers.",
+)

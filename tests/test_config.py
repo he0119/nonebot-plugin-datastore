@@ -72,7 +72,6 @@ async def test_read_write_config(app: App):
     from nonebot_plugin_datastore.db import init_db
 
     data = PluginData("test")
-    assert data.config
 
     await init_db()
 
@@ -87,3 +86,7 @@ async def test_read_write_config(app: App):
     complex = {"a": 1, "b": [1, 2, 3], "c": {"d": 1}}
     await data.config.set("test", complex)
     assert await data.config.get("test") == complex
+
+    # 两个插件的配置不会相互影响
+    data1 = PluginData("test1")
+    assert await data1.config.get("test") is None
