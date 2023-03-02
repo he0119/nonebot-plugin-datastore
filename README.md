@@ -28,6 +28,20 @@ _✨ NoneBot 数据存储插件 ✨_
   </a>
 </p>
 
+## 安装
+
+- 使用 nb-cli
+
+```sh
+nb plugin install nonebot-plugin-datastore
+```
+
+- 使用 pip
+
+```sh
+pip install nonebot-plugin-datastore
+```
+
 ## 使用方式
 
 先在插件代码最前面声明依赖
@@ -52,17 +66,20 @@ plugin_data.config_dir
 plugin_data.data_dir
 
 # 读取配置
-plugin_data.config.get(key)
+await plugin_data.config.get(key)
 # 存储配置
-plugin_data.config.set(key, value)
+await plugin_data.config.set(key, value)
 ```
 
 ### 数据库相关功能，详细用法见 [SQLAlchemy](https://docs.sqlalchemy.org/orm/quickstart.html)
 
 ```python
+from nonebot import on_command
 from nonebot.params import Depends
-from nonebot_plugin_datastore import get_plugin_data, get_session
 from sqlalchemy.ext.asyncio.session import AsyncSession
+from sqlalchemy.orm import Mapped, mapped_column
+
+from nonebot_plugin_datastore import get_plugin_data, get_session
 
 # 定义模型
 Model = get_plugin_data().Model
@@ -72,6 +89,8 @@ class Example(Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     message: Mapped[str]
+
+matcher = on_command("test")
 
 # 数据库相关操作
 @matcher.handle()
@@ -84,6 +103,7 @@ async def handle(session: AsyncSession = Depends(get_session)):
 # 如需在 NoneBot 启动时且数据库初始化后运行的函数
 # 请使用 post_db_init 而不是 Nonebot 的 on_startup
 from nonebot_plugin_datastore.db import post_db_init
+
 
 @post_db_init
 async def do_something():
