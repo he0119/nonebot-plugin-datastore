@@ -4,7 +4,8 @@ from sqlalchemy import JSON, select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .. import create_session, get_plugin_data
+from ..db import create_session
+from ..plugin import get_plugin_data
 from . import ConfigProvider, KeyNotFoundError
 
 plugin_data = get_plugin_data()
