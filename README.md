@@ -158,7 +158,7 @@ nb datastore downgrade --name plugin_name revision
 
 ## 注意
 
-### 数据库连接超时
+### 数据库连接丢失
 
 当使用 `mysql` 时，你可能会遇到 `2013: lost connection to mysql server during query` 的报错。
 
@@ -234,10 +234,8 @@ DATASTORE_ENGINE_OPTIONS={"pool_pre_ping": true}
 - 默认: `~json`
 - 说明: 选择存放配置的类型，当前支持 json, yaml, toml, database 四种类型，也可设置为实现 `ConfigProvider` 的自定义类型。
 
-## 计划
+## 鸣谢
 
-- [x] 调整配置为 K-V 存储
-- [x] 调整配置存放位置至专门的配置目录
-- [x] 数据库为可选项
-- [x] 支持将配置存放至数据库中
-- [x] 支持 Alembic
+- [`NoneBot Plugin LocalStore`](https://github.com/nonebot/plugin-localstore): 提供了默认的文件存储位置
+- [`Flask-SQLAlchemy`](https://github.com/pallets-eco/flask-sqlalchemy/): 借鉴了数据库的实现思路
+- [`Flask-Alembic`](https://github.com/davidism/flask-alembic): 借鉴了命令行的实现思路
