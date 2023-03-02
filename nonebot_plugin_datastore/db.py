@@ -97,10 +97,7 @@ if plugin_config.datastore_enable_database:
     engine_options.setdefault("echo_pool", plugin_config.datastore_database_echo)
     logger.debug(f"数据库连接地址: {plugin_config.datastore_database_url}")
     logger.debug(f"数据库引擎参数: {engine_options}")
-    _engine = create_async_engine(
-        plugin_config.datastore_database_url,
-        **engine_options,
-    )
+    _engine = create_async_engine(url, **engine_options)
 
     get_driver().on_startup(init_db)
 
