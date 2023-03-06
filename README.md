@@ -158,6 +158,12 @@ nb datastore downgrade --name plugin_name revision
 
 ## 注意
 
+### 数据库迁移
+
+推荐启动机器人前运行 `nb datastore upgrade` 升级数据库至最新版本。因为当前插件自动迁移依赖 `NoneBot` 的 `on_startup` 钩子，很容易受到其他插件影响。
+
+这里推荐 [tiangolo/uvicorn-gunicorn](https://github.com/tiangolo/uvicorn-gunicorn-docker) 镜像，通过配置 `prestart.sh` 可确保启动机器人运行迁移脚本。具体的例子可参考 [CoolQBot](https://github.com/he0119/CoolQBot/)。
+
 ### 数据库连接丢失
 
 当使用 `mysql` 时，你可能会遇到 `2013: lost connection to mysql server during query` 的报错。
