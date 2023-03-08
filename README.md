@@ -164,7 +164,7 @@ nb datastore downgrade --name plugin_name revision
 
 这里推荐 [tiangolo/uvicorn-gunicorn](https://github.com/tiangolo/uvicorn-gunicorn-docker) 镜像，通过配置 `prestart.sh` 可确保启动机器人前运行迁移脚本。具体的例子可参考 [CoolQBot](https://github.com/he0119/CoolQBot/)。
 
-### 数据库连接丢失
+### MySQL 数据库连接丢失
 
 当使用 `MySQL` 时，你可能会遇到 `2013: lost connection to mysql server during query` 的报错。
 
@@ -176,6 +176,10 @@ DATASTORE_ENGINE_OPTIONS={"pool_pre_ping": true}
 ```
 
 详细介绍可查看 `SQLAlchemy` 文档的 [dealing-with-disconnects](https://docs.sqlalchemy.org/en/20/core/pooling.html#dealing-with-disconnects) 章节。
+
+### SQLite 数据库已锁定
+
+使用 `SQLite` 数据库时，如果在写入时遇到 `(sqlite3.OperationalError) database is locked` 错误。可尝试将 `poolclass` 设置为 `StaticPool`，保持有且仅有一个连接。不过这样设置之后，在程序运行期间，你的数据库文件都将被占用。
 
 ## 配置项
 
