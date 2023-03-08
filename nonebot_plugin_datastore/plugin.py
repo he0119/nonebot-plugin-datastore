@@ -52,7 +52,7 @@ class NetworkFile(Generic[T, R]):
     def load_from_local(self) -> T:
         """从本地获取数据"""
         logger.info("正在加载本地数据")
-        data = self._plugin_data.load_json(self._filename)
+        data = self._plugin_data.load_json(self._filename, self._cache)
         return data
 
     @property
@@ -62,7 +62,7 @@ class NetworkFile(Generic[T, R]):
         先从本地加载，如果本地文件不存在则从网络加载
         """
         if self._data is None:
-            if self._plugin_data.exists(self._filename):
+            if self._plugin_data.exists(self._filename, self._cache):
                 data = self.load_from_local()
             else:
                 data = await self.load_from_network()
