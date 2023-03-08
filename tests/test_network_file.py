@@ -153,3 +153,21 @@ async def test_download_file_with_kwargs(app: App, mocker: MockerFixture):
         assert data == f.read()
 
     get.assert_called_once_with("http://example.com", timeout=30)
+
+
+async def test_load_local_file_in_cache_dir(app: App, mocker: MockerFixture):
+    """测试读取本地文件，放在缓存目录中"""
+    from nonebot_plugin_datastore import PluginData
+
+    get = mocker.patch("httpx.AsyncClient.get", side_effect=mocked_get)
+
+    plugin_data = PluginData("test")
+    plugin_data.dump_json({"key": "值"}, "test", cache=True)
+
+    file = plugin_data.network_file("http://example.com", "test", cache=True)
+
+    data = await file.data
+    assert data == {"key": "值"}
+
+    # 访问数据，因为会读取本地文件，所以不会请求网络
+    get.assert_not_called()
