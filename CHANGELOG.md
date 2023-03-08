@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 切换到 SQLAlchemy 2.0
 
+### Fixed
+
+- 修复 NetworkFile 在设置 cache=True 时无法缓存数据的问题
+
 ## [0.5.10] - 2023-02-26
 
 ### Added
