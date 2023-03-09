@@ -24,6 +24,28 @@ _pre_db_init_funcs: Dict[str, List] = {}
 _post_db_init_funcs = []
 
 
+def _make_engine() -> "AsyncEngine":
+    """创建数据库引擎"""
+    url = make_url(plugin_config.datastore_database_url)
+    if (
+        url.drivername.startswith("sqlite")
+        and url.database is not None
+        and url.database not in [":memory:", ""]
+    ):
+        # 创建数据文件夹，防止数据库创建失败
+        database_path = Path(url.database)
+        database_path.parent.mkdir(parents=True, exist_ok=True)
+        logger.debug(f"创建数据库文件夹: {database_path.parent}")
+    # 创建数据库引擎
+    engine_options = {}
+    engine_options.update(plugin_config.datastore_engine_options)
+    engine_options.setdefault("echo", plugin_config.datastore_database_echo)
+    engine_options.setdefault("echo_pool", plugin_config.datastore_database_echo)
+    logger.debug(f"数据库连接地址: {plugin_config.datastore_database_url}")
+    logger.debug(f"数据库引擎参数: {engine_options}")
+    return create_async_engine(url, **engine_options)
+
+
 def get_engine() -> "AsyncEngine":
     if _engine is None:
         raise ValueError("数据库未启用")
@@ -79,26 +101,7 @@ async def init_db():
 
 
 if plugin_config.datastore_enable_database:
-    # 创建数据文件夹
-    # 防止数据库创建失败
-    url = make_url(plugin_config.datastore_database_url)
-    if (
-        url.drivername.startswith("sqlite")
-        and url.database is not None
-        and url.database not in [":memory:", ""]
-    ):
-        database_path = Path(url.database)
-        database_path.parent.mkdir(parents=True, exist_ok=True)
-        logger.debug(f"创建数据库文件夹: {database_path.parent}")
-    # 创建数据库引擎
-    engine_options = {}
-    engine_options.update(plugin_config.datastore_engine_options)
-    engine_options.setdefault("echo", plugin_config.datastore_database_echo)
-    engine_options.setdefault("echo_pool", plugin_config.datastore_database_echo)
-    logger.debug(f"数据库连接地址: {plugin_config.datastore_database_url}")
-    logger.debug(f"数据库引擎参数: {engine_options}")
-    _engine = create_async_engine(url, **engine_options)
-
+    _engine = _make_engine()
     get_driver().on_startup(init_db)
 
 

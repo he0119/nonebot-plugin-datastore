@@ -22,6 +22,7 @@ async def test_plugin_dir_is_file(app: App):
     from nonebot_plugin_datastore import PluginData
     from nonebot_plugin_datastore.config import plugin_config
 
+    plugin_config.datastore_data_dir.mkdir(parents=True, exist_ok=True)
     plugin_dir = plugin_config.datastore_data_dir / "test"
     plugin_dir.touch()
     assert plugin_dir.is_file()
