@@ -31,7 +31,7 @@ nonebug = "^0.3.1"
 pytest-cov = "^4.0.0"
 pytest-xdist = "^3.1.0"
 pytest-mock = "^3.10.0"
-pytest-asyncio = "^0.20.3"
+pytest-asyncio = ">=0.20.3,<0.22.0"
 nb-cli = "^1.0.0"
 nonebot2 = { extras = ["httpx", "fastapi"], version = "^2.0.0-rc.1" }
 
