@@ -10,9 +10,8 @@ from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from nonebot_plugin_datastore.utils import get_caller_plugin_name
-
 from .config import plugin_config
+from .utils import get_caller_plugin_name
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio.engine import AsyncEngine
