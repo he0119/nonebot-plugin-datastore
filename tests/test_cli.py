@@ -210,3 +210,33 @@ async def test_other_commands(app: App):
     result = await run_sync(runner.invoke)(cli, ["dir", "--name", "plugin1"])
     assert result.exit_code == 0
     assert "插件 plugin1 的存储路径:" in result.output
+
+
+@pytest.mark.anyio
+async def test_revision_path_with_space(app: App, tmp_path: Path):
+    """测试迁移文件目录路径中包含空格时的情况"""
+    from nonebot import require
+
+    from nonebot_plugin_datastore import PluginData
+    from nonebot_plugin_datastore.script.cli import cli, run_sync
+
+    require("tests.example.plugin2")
+
+    runner = CliRunner()
+
+    # 手动设置迁移文件目录
+    migration_dir = tmp_path / "revision test"
+    PluginData("plugin2").set_migration_dir(migration_dir)
+
+    # 测试生成迁移文件
+    assert migration_dir
+    assert not migration_dir.exists()
+
+    result = await run_sync(runner.invoke)(
+        cli, ["revision", "--autogenerate", "--name", "plugin2", "-m", "test"]
+    )
+    assert result.exit_code == 0
+    assert "Generating" in result.output
+    assert "test.py" in result.output
+
+    assert migration_dir.exists()
