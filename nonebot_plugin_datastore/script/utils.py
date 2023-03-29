@@ -58,6 +58,7 @@ class Config(AlembicConfig):
         self.set_main_option(
             "version_locations", str(PluginData(plugin_name).migration_dir)
         )
+        self.set_main_option("version_path_separator", "os")
 
 
 def do_run_migrations(connection, plugin_name: Optional[str] = None):
