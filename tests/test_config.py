@@ -63,6 +63,7 @@ async def test_write_config_while_folder_deleted(app: App):
         pytest.param({"datastore_config_provider": "~database"}, id="database"),
         pytest.param({"datastore_config_provider": "~toml"}, id="toml"),
         pytest.param({"datastore_config_provider": "~yaml"}, id="yaml"),
+        pytest.param({"datastore_config_provider": "~yaml:Config"}, id="yaml_config"),
     ],
     indirect=True,
 )
