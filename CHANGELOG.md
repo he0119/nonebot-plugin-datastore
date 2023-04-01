@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Fixed
+
+- 修复在 NoneBot2 RC4 上报错的问题
+
 ## [0.6.1] - 2023-03-29
 
 ### Fixed
