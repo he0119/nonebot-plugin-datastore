@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [0.6.2] - 2023-04-01
+
 ### Fixed
 
 - 修复在 NoneBot2 RC4 上报错的问题
@@ -186,7 +188,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.1...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.2...HEAD
+[0.6.2]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.10...v0.6.0
 [0.5.10]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.9...v0.5.10
