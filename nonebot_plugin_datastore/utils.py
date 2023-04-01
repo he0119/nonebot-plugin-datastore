@@ -1,6 +1,7 @@
+import importlib
 import inspect
 from functools import lru_cache
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 import pygtrie
 from nonebot import get_loaded_plugins
@@ -44,3 +45,19 @@ def _get_plugin_by_module_name(module_name: str) -> Optional["Plugin"]:
         t[plugin.module_name] = plugin
     plugin = t.longest_prefix(module_name).value
     return plugin
+
+
+def resolve_dot_notation(
+    obj_str: str, default_attr: str, default_prefix: Optional[str] = None
+) -> Any:
+    """解析并导入点分表示法的对象"""
+    modulename, _, cls = obj_str.partition(":")
+    if default_prefix is not None and modulename.startswith("~"):
+        modulename = default_prefix + modulename[1:]
+    module = importlib.import_module(modulename)
+    if not cls:
+        return getattr(module, default_attr)
+    instance = module
+    for attr_str in cls.split("."):
+        instance = getattr(instance, attr_str)
+    return instance

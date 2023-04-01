@@ -5,14 +5,14 @@ from pathlib import Path
 from typing import Any, Callable, Generic, Optional, Type, TypeVar
 
 import httpx
-from nonebot import _resolve_dot_notation, get_plugin
+from nonebot import get_plugin
 from nonebot.log import logger
 from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase, declared_attr, registry
 
 from .config import plugin_config
 from .providers import ConfigProvider
-from .utils import get_caller_plugin_name
+from .utils import get_caller_plugin_name, resolve_dot_notation
 
 T = TypeVar("T")
 R = TypeVar("R")
@@ -156,7 +156,7 @@ class PluginData(metaclass=Singleton):
 
     def dump_pkl(self, data: Any, filename: str, cache: bool = False, **kwargs) -> None:
         with self.open(filename, "wb", cache=cache) as f:
-            pickle.dump(data, f, **kwargs)
+            pickle.dump(data, f, **kwargs)  # type: ignore
 
     def load_pkl(self, filename: str, cache: bool = False, **kwargs) -> Any:
         with self.open(filename, "rb", cache=cache) as f:
@@ -277,7 +277,7 @@ def get_plugin_data(name: Optional[str] = None) -> PluginData:
 
 
 # 需要等到 PluginData 和 get_plugin_data 定义后才能导入对应的配置
-_ProviderClass = _resolve_dot_notation(
+_ProviderClass = resolve_dot_notation(
     plugin_config.datastore_config_provider,
     default_attr="Config",
     default_prefix="nonebot_plugin_datastore.providers.",
