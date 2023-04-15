@@ -76,14 +76,17 @@ async def run_funcs(funcs: List[Callable]) -> None:
 
 async def run_pre_db_init_funcs(plugin: str) -> None:
     """运行数据库初始化前执行的函数"""
-    logger.debug(f"运行插件 {plugin} 的数据库初始化前执行的函数")
-    await run_funcs(_pre_db_init_funcs.get(plugin, []))
+    funcs = _pre_db_init_funcs.get(plugin, [])
+    if funcs:
+        logger.debug(f"运行插件 {plugin} 的数据库初始化前执行的函数")
+        await run_funcs(funcs)
 
 
 async def run_post_db_init_funcs() -> None:
     """运行数据库初始化后执行的函数"""
-    logger.debug("运行数据库初始化后执行的函数")
-    await run_funcs(_post_db_init_funcs)
+    if _post_db_init_funcs:
+        logger.debug("运行数据库初始化后执行的函数")
+        await run_funcs(_post_db_init_funcs)
 
 
 async def init_db():
@@ -93,10 +96,10 @@ async def init_db():
 
     plugins = get_plugins()
     for plugin in plugins:
-        logger.debug(f"初始化插件 {plugin} 的数据库")
         # 执行数据库初始化前执行的函数
         await run_pre_db_init_funcs(plugin)
-        # 升级到最新版本
+        # 初始化数据库，升级到最新版本
+        logger.debug(f"初始化插件 {plugin} 的数据库")
         config = Config(plugin)
         await upgrade(config, "head")
 
