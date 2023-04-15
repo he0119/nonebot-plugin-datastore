@@ -87,9 +87,9 @@ async def upgrade(name: Optional[str], revision: str):
     # 比如 bison 需要在迁移之前把 alembic_version 表重命名
     plugins = get_plugins(name)
     for plugin in plugins:
+        await run_pre_db_init_funcs(plugin)
         logger.info(f"升级插件 {plugin} 的数据库")
         config = Config(plugin)
-        await run_pre_db_init_funcs(plugin)
         await command.upgrade(config, revision)
 
 
