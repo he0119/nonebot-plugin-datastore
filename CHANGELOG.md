@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Changed
+
+- 顺序执行钩子函数并统一命令行与初始化时的行为
+
 ## [0.6.2] - 2023-04-01
 
 ### Fixed

@@ -96,7 +96,7 @@ async def test_pre_db_init_error(app: App):
     """数据库初始化前执行函数错误"""
     from nonebot_plugin_datastore.db import init_db
 
-    require("tests.example.plugin2")
+    require("tests.example.pre_db_init_error")
 
     with pytest.raises(Exception):
         await init_db()
