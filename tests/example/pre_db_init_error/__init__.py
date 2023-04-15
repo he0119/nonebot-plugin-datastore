@@ -8,6 +8,11 @@ from .models import Example
 
 
 @pre_db_init
+def _():
+    pass
+
+
+@pre_db_init
 async def _():
     async with create_session() as session:
         example = Example(message="pre")
