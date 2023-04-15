@@ -1,5 +1,4 @@
 """ 数据库 """
-import asyncio
 from pathlib import Path
 from typing import TYPE_CHECKING, AsyncGenerator, Callable, Dict, List
 
@@ -66,37 +65,48 @@ def post_db_init(func: Callable) -> Callable:
     return func
 
 
+async def run_funcs(funcs: List[Callable]) -> None:
+    """运行所有函数"""
+    for func in funcs:
+        if is_coroutine_callable(func):
+            await func()
+        else:
+            await run_sync(func)()
+
+
+async def run_pre_db_init_funcs(plugin: str) -> None:
+    """运行数据库初始化前执行的函数"""
+    logger.debug(f"运行插件 {plugin} 的数据库初始化前执行的函数")
+    await run_funcs(_pre_db_init_funcs.get(plugin, []))
+
+
+async def run_post_db_init_funcs() -> None:
+    """运行数据库初始化后执行的函数"""
+    logger.debug("运行数据库初始化后执行的函数")
+    await run_funcs(_post_db_init_funcs)
+
+
 async def init_db():
     """初始化数据库"""
-    from .script.utils import run_upgrade
+    from .script.command import upgrade
+    from .script.utils import Config, get_plugins
 
-    # 执行数据库初始化前执行的函数
-    pre_db_init_funcs = [i for funcs in _pre_db_init_funcs.values() for i in funcs]
-    cors = [
-        func() if is_coroutine_callable(func) else run_sync(func)()
-        for func in pre_db_init_funcs
-    ]
-    if cors:
-        try:
-            await asyncio.gather(*cors)
-        except Exception as e:
-            logger.error("数据库初始化前执行的函数出错")
-            raise
-
-    await run_upgrade()
+    plugins = get_plugins()
+    for plugin in plugins:
+        logger.debug(f"初始化插件 {plugin} 的数据库")
+        # 执行数据库初始化前执行的函数
+        await run_pre_db_init_funcs(plugin)
+        # 升级到最新版本
+        config = Config(plugin)
+        await upgrade(config, "head")
 
     logger.info("数据库初始化完成")
 
     # 执行数据库初始化后执行的函数
-    cors = [
-        func() if is_coroutine_callable(func) else run_sync(func)()
-        for func in _post_db_init_funcs
-    ]
-    if cors:
-        try:
-            await asyncio.gather(*cors)
-        except Exception as e:
-            logger.error(f"数据库初始化后执行的函数出错: {e}")
+    try:
+        await run_post_db_init_funcs()
+    except Exception as e:
+        logger.error(f"数据库初始化后执行的函数出错: {e}")
 
 
 if plugin_config.datastore_enable_database:

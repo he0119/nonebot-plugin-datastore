@@ -1,11 +1,3 @@
-import asyncio
-from argparse import Namespace
-from functools import partial, wraps
-from typing import Any, Callable, Coroutine, Optional, TypeVar
-
-from nonebot.log import logger
-from nonebot.utils import is_coroutine_callable
-
 try:
     import anyio
     import click
@@ -13,9 +5,14 @@ try:
 except ImportError as e:  # pragma: no cover
     raise ImportError("请使用 `pip install nonebot-plugin-datastore[cli]` 安装所需依赖") from e
 
+from argparse import Namespace
+from functools import partial, wraps
+from typing import Any, Callable, Coroutine, Optional, TypeVar
+
+from nonebot.log import logger
 
 from ..config import plugin_config
-from ..db import _pre_db_init_funcs
+from ..db import run_pre_db_init_funcs
 from ..plugin import PluginData
 from . import command
 from .utils import Config, get_plugins
@@ -90,18 +87,9 @@ async def upgrade(name: Optional[str], revision: str):
     # 比如 bison 需要在迁移之前把 alembic_version 表重命名
     plugins = get_plugins(name)
     for plugin in plugins:
-        cors = [
-            func() if is_coroutine_callable(func) else run_sync(func)()
-            for func in _pre_db_init_funcs.get(plugin, [])
-        ]
-        if cors:
-            try:
-                await asyncio.gather(*cors)
-            except Exception as e:
-                click.echo("数据库初始化前执行的函数出错")
-                raise
         logger.info(f"升级插件 {plugin} 的数据库")
         config = Config(plugin)
+        await run_pre_db_init_funcs(plugin)
         await command.upgrade(config, revision)
 
 

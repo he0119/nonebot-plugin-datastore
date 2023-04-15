@@ -107,15 +107,3 @@ async def run_migration(plugin_name: Optional[str] = None):
 
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations, plugin_name)
-
-
-async def run_upgrade():
-    """初始化数据库"""
-    from .command import upgrade
-
-    plugins = get_plugins()
-    for plugin in plugins:
-        logger.debug(f"初始化插件 {plugin} 的数据库")
-        config = Config(plugin)
-        # 升级到最新版本
-        await upgrade(config, "head")

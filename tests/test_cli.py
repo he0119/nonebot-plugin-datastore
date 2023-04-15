@@ -38,12 +38,12 @@ async def test_revision(app: App, tmp_path: Path):
     from nonebot import require
 
     from nonebot_plugin_datastore import PluginData
+    from nonebot_plugin_datastore.db import init_db
     from nonebot_plugin_datastore.script.cli import cli, run_sync
-    from nonebot_plugin_datastore.script.utils import run_upgrade
 
     require("tests.example.plugin1")
     require("tests.example.plugin2")
-    await run_upgrade()
+    await init_db()
 
     runner = CliRunner()
 
@@ -83,12 +83,12 @@ async def test_migrate(app: App, tmp_path: Path):
     from nonebot import require
 
     from nonebot_plugin_datastore import PluginData
+    from nonebot_plugin_datastore.db import init_db
     from nonebot_plugin_datastore.script.cli import cli, run_sync
-    from nonebot_plugin_datastore.script.utils import run_upgrade
 
     require("tests.example.plugin1")
     require("tests.example.plugin2")
-    await run_upgrade()
+    await init_db()
 
     runner = CliRunner()
 
@@ -128,10 +128,10 @@ async def test_upgrade(app: App):
     assert result.exit_code == 0
     assert result.output == ""
 
-    require("tests.example.plugin2")
+    require("tests.example.pre_db_init_error")
     result = await run_sync(runner.invoke)(cli, ["upgrade"])
     assert result.exit_code == 1
-    assert result.output == "数据库初始化前执行的函数出错\n"
+    assert result.output == ""
 
 
 @pytest.mark.anyio
@@ -142,16 +142,18 @@ async def test_upgrade_single_plugin(app: App):
     from nonebot_plugin_datastore.script.cli import cli, run_sync
 
     require("tests.example.plugin1")
-    require("tests.example.plugin2")
+    require("tests.example.pre_db_init_error")
 
     runner = CliRunner()
     result = await run_sync(runner.invoke)(cli, ["upgrade", "--name", "plugin1"])
     assert result.exit_code == 0
     assert result.output == ""
 
-    result = await run_sync(runner.invoke)(cli, ["upgrade", "--name", "plugin2"])
+    result = await run_sync(runner.invoke)(
+        cli, ["upgrade", "--name", "pre_db_init_error"]
+    )
     assert result.exit_code == 1
-    assert result.output == "数据库初始化前执行的函数出错\n"
+    assert result.output == ""
 
 
 @pytest.mark.anyio
@@ -174,8 +176,8 @@ async def test_downgrade(app: App):
 async def test_other_commands(app: App):
     from nonebot import require
 
+    from nonebot_plugin_datastore.db import init_db
     from nonebot_plugin_datastore.script.cli import cli, run_sync
-    from nonebot_plugin_datastore.script.utils import run_upgrade
 
     require("tests.example.plugin1")
     require("tests.example.plugin2")
@@ -197,7 +199,7 @@ async def test_other_commands(app: App):
     assert result.exit_code == 1
     assert result.output == ""
 
-    await run_upgrade()
+    await init_db()
 
     result = await run_sync(runner.invoke)(cli, ["check", "--name", "plugin1"])
     assert result.exit_code == 0
