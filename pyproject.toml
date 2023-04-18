@@ -14,7 +14,7 @@ python = "^3.8"
 nonebot2 = { extras = ["httpx"], version = "^2.0.0-rc.1" }
 nonebot-plugin-localstore = ">=0.2.0,!=0.3.0,!=0.4.0,<0.5.0"
 sqlalchemy = "^2.0.3"
-aiosqlite = ">=0.17,<0.19"
+aiosqlite = ">=0.17,<0.20"
 alembic = "^1.9.1"
 
 anyio = { version = ">=3.6", optional = true }
