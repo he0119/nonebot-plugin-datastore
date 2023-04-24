@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [0.6.3] - 2023-04-24
+
 ### Changed
 
 - 顺序执行钩子函数并统一命令行与初始化时的行为
@@ -193,7 +195,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.2...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.3...HEAD
+[0.6.3]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.5.10...v0.6.0
