@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-datastore"
-version = "0.6.3"
+version = "1.0.0"
 description = "适用于 Nonebot2 的数据存储插件"
 authors = ["hemengyang <hmy0119@gmail.com>"]
 license = "MIT"
@@ -32,7 +32,7 @@ pytest-xdist = "^3.1.0"
 pytest-mock = "^3.10.0"
 pytest-asyncio = ">=0.20.3,<0.22.0"
 nb-cli = "^1.0.0"
-nonebot2 = { extras = ["httpx", "fastapi"], version = "^2.0.0-rc.1" }
+nonebot2 = { extras = ["httpx", "fastapi"], version = "^2.0.0" }
 
 [tool.poetry.extras]
 cli = ["anyio", "click", "typing-extensions"]

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [1.0.0] - 2023-06-06
+
 ### Added
 
 - 添加插件元数据
@@ -199,7 +201,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.3...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.3...v1.0.0
 [0.6.3]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.0...v0.6.1
