@@ -11,8 +11,8 @@ documentation = "https://github.com/he0119/nonebot-plugin-datastore#readme"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-nonebot2 = { extras = ["httpx"], version = "^2.0.0-rc.1" }
-nonebot-plugin-localstore = ">=0.2.0,!=0.3.0,!=0.4.0,<0.5.0"
+nonebot2 = { extras = ["httpx"], version = "^2.0.0" }
+nonebot-plugin-localstore = ">=0.2.0,!=0.3.0,!=0.4.0,<0.6.0"
 sqlalchemy = { extras = ["aiosqlite"], version = "^2.0.0" }
 alembic = "^1.9.1"
 
