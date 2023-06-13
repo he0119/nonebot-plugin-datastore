@@ -149,7 +149,7 @@ async def revision(
 
 
 async def check(
-    config: "Config",
+    config: Config,
 ) -> None:
     """Check if revision command with autogenerate has pending upgrade ops.
 
