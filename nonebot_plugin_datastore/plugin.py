@@ -101,6 +101,8 @@ class PluginData(metaclass=Singleton):
     提供保存和读取文件/数据的方法。
     """
 
+    global_registry = registry()
+
     def __init__(self, name: str) -> None:
         # 插件名，用来确定插件的文件夹位置
         self.name = name
@@ -112,6 +114,7 @@ class PluginData(metaclass=Singleton):
         self._metadata = None
         self._model = None
         self._migration_path = None
+        self._use_global_registry = False
 
     @staticmethod
     def _ensure_dir(path: Path):
@@ -226,9 +229,11 @@ class PluginData(metaclass=Singleton):
         """数据库模型"""
         if self._model is None:
             self._metadata = MetaData(info={"name": self.name})
-
-            # 为每个插件创建一个独立的 registry
-            plugin_registry = registry(metadata=self._metadata)
+            if self._use_global_registry:
+                plugin_registry = self.global_registry
+            else:
+                # 为每个插件创建一个独立的 registry
+                plugin_registry = registry(metadata=self._metadata)
 
             class _Base(DeclarativeBase):
                 registry = plugin_registry
@@ -240,7 +245,18 @@ class PluginData(metaclass=Singleton):
                     规则为：插件名_表名
                     https://docs.sqlalchemy.org/en/20/orm/declarative_mixins.html#augmenting-the-base
                     """
-                    return f"{self.name}_{cls.__name__.lower()}"
+                    table_name = f"{self.name}_{cls.__name__.lower()}"
+                    if self._use_global_registry:
+                        # 如果使用全局 registry，则需要在 metadata 中记录表名和插件名的对应关系
+                        # 因为所有插件共用一个 metadata，没法通过 metadata.name 指定插件名
+                        if plugin_name_map := cls.metadata.info.get("plugin_name_map"):
+                            plugin_name_map[table_name] = self.name
+                        else:
+                            cls.metadata.info["plugin_name_map"] = {
+                                table_name: self.name
+                            }
+
+                    return table_name
 
             self._model = _Base
         return self._model
@@ -248,6 +264,8 @@ class PluginData(metaclass=Singleton):
     @property
     def metadata(self) -> Optional[MetaData]:
         """获取数据库元数据"""
+        if self._use_global_registry:
+            return self.global_registry.metadata
         return self._metadata
 
     @property
@@ -264,6 +282,14 @@ class PluginData(metaclass=Singleton):
     def set_migration_dir(self, path: Path) -> None:
         """设置数据库迁移文件夹"""
         self._migration_path = path
+
+    def use_global_registry(self):
+        """使用全局的 registry
+
+        请在获取 Model 之前调用此方法
+        用于解决多个插件模型互相关联时的问题，请谨慎启用
+        """
+        self._use_global_registry = True
 
 
 def get_plugin_data(name: Optional[str] = None) -> PluginData:

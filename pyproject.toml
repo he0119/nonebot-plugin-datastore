@@ -71,7 +71,7 @@ datastore = "nonebot_plugin_datastore.script.cli:main"
 
 [tool.nonebot]
 plugins = ["nonebot_plugin_datastore"]
-plugin_dirs = ["tests/registry"]
+plugin_dirs = []
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

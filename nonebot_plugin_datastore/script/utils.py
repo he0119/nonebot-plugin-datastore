@@ -82,10 +82,24 @@ def do_run_migrations(connection, plugin_name: Optional[str] = None):
                 directives[:] = []
 
     def include_object(object, name, type_, reflected, compare_to):
-        if type_ == "table" and object.metadata.info.get("name") != plugin_name:
+        if type_ != "table":
             return False
-        else:
+
+        table_info_name = object.metadata.info.get("name")
+        # 因为所有插件共用一个 metadata
+        # 通过存放在 metadata.info 中的 plugin_name_map 判断是否为当前插件的表
+        if (
+            table_info_name is None
+            and target_metadata
+            and target_metadata.info.get("plugin_name_map", {}).get(object.fullname)
+            == plugin_name
+        ):
             return True
+
+        if table_info_name == plugin_name:
+            return True
+
+        return False
 
     context.configure(
         connection=connection,
