@@ -24,9 +24,9 @@ async def test_global_registry(app: App):
     from nonebot_plugin_datastore.db import init_db
 
     require("tests.registry.plugin3")
-    require("tests.registry.plugin4")
+    require("tests.registry.plugin3_plugin4")
 
-    from tests.registry.plugin4 import Example
+    from tests.registry.plugin3_plugin4 import Example
 
     await init_db()
 

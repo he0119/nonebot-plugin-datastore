@@ -70,8 +70,8 @@ omit = ["*/script/command.py", "*/migrations/*"]
 datastore = "nonebot_plugin_datastore.script.cli:main"
 
 [tool.nonebot]
-plugins = ["nonebot_plugin_datastore", "tests.registry.plugin3", "tests.registry.plugin4"]
-# plugin_dirs = ["tests/registry"]
+plugins = ["nonebot_plugin_datastore"]
+plugin_dirs = []
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

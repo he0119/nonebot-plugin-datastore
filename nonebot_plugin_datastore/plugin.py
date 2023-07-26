@@ -245,7 +245,18 @@ class PluginData(metaclass=Singleton):
                     规则为：插件名_表名
                     https://docs.sqlalchemy.org/en/20/orm/declarative_mixins.html#augmenting-the-base
                     """
-                    return f"{self.name}_{cls.__name__.lower()}"
+                    table_name = f"{self.name}_{cls.__name__.lower()}"
+                    if self._use_global_registry:
+                        # 如果使用全局 registry，则需要在 metadata 中记录表名和插件名的对应关系
+                        # 因为所有插件共用一个 metadata，没法通过 metadata.name 指定插件名
+                        if plugin_name_map := cls.metadata.info.get("plugin_name_map"):
+                            plugin_name_map[table_name] = self.name
+                        else:
+                            cls.metadata.info["plugin_name_map"] = {
+                                table_name: self.name
+                            }
+
+                    return table_name
 
             self._model = _Base
         return self._model

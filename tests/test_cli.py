@@ -242,3 +242,26 @@ async def test_revision_path_with_space(app: App, tmp_path: Path):
     assert "test.py" in result.output
 
     assert migration_dir.exists()
+
+
+@pytest.mark.anyio
+async def test_migrate_global_registry(app: App, tmp_path: Path):
+    """测试使用全局注册表的插件迁移
+
+    确保可以识别到对应插件的模型
+    """
+    from nonebot import require
+
+    from nonebot_plugin_datastore.db import init_db
+    from nonebot_plugin_datastore.script.cli import cli, run_sync
+
+    require("tests.registry.plugin3")
+    require("tests.registry.plugin3_plugin4")
+    await init_db()
+
+    runner = CliRunner()
+
+    # 测试跳过生成迁移文件
+    result = await run_sync(runner.invoke)(cli, ["migrate", "--name", "plugin3"])
+    assert result.exit_code == 0
+    assert result.output == ""
