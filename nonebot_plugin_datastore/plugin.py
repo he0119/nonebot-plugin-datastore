@@ -1,7 +1,6 @@
 """ 插件数据 """
 import json
 import pickle
-import weakref
 from pathlib import Path
 from typing import Any, Callable, Generic, Optional, Type, TypeVar
 
@@ -102,7 +101,7 @@ class PluginData(metaclass=Singleton):
     提供保存和读取文件/数据的方法。
     """
 
-    global_class_registry = weakref.WeakValueDictionary()
+    global_registry = registry()
 
     def __init__(self, name: str) -> None:
         # 插件名，用来确定插件的文件夹位置
@@ -231,9 +230,7 @@ class PluginData(metaclass=Singleton):
         if self._model is None:
             self._metadata = MetaData(info={"name": self.name})
             if self._use_global_registry:
-                plugin_registry = registry(
-                    metadata=self._metadata, class_registry=self.global_class_registry
-                )
+                plugin_registry = self.global_registry
             else:
                 # 为每个插件创建一个独立的 registry
                 plugin_registry = registry(metadata=self._metadata)
@@ -256,6 +253,8 @@ class PluginData(metaclass=Singleton):
     @property
     def metadata(self) -> Optional[MetaData]:
         """获取数据库元数据"""
+        if self._use_global_registry:
+            return self.global_registry.metadata
         return self._metadata
 
     @property

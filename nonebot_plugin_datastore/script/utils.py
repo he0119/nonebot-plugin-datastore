@@ -82,10 +82,17 @@ def do_run_migrations(connection, plugin_name: Optional[str] = None):
                 directives[:] = []
 
     def include_object(object, name, type_, reflected, compare_to):
-        if type_ == "table" and object.metadata.info.get("name") != plugin_name:
+        if type_ != "table":
             return False
-        else:
+
+        table_name = object.metadata.info.get("name")
+        if table_name is None and object.fullname.startswith(f"{plugin_name}_"):
             return True
+
+        if table_name == plugin_name:
+            return True
+
+        return False
 
     context.configure(
         connection=connection,
