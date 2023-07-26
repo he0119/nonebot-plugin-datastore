@@ -181,6 +181,35 @@ DATASTORE_ENGINE_OPTIONS={"pool_pre_ping": true}
 
 使用 `SQLite` 数据库时，如果在写入时遇到 `(sqlite3.OperationalError) database is locked` 错误。可尝试将 `poolclass` 设置为 `StaticPool`，保持有且仅有一个连接。不过这样设置之后，在程序运行期间，你的数据库文件都将被占用。
 
+### 不同插件的表之间的关联关系
+
+datastore 默认会给每个插件的 Base 模型提供独立的 registry，所以不同插件间的表无法建立关联关系。如果你需要与其他插件的表建立关联关系，请在需要关联的两个插件中都调用 use_global_registry 函数使用全局 registry。
+
+```python
+# 定义模型
+db = get_plugin_data()
+db.use_global_registry()
+
+class Example(db.Model):
+    """实例函数"""
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    message: Mapped[str]
+
+    tests: Mapped["Test"] = relationship(back_populates="example")
+
+
+class Test(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    example_id: Mapped[int] = mapped_column(ForeignKey("plugin_example.id"))
+    example: Mapped[Example] = relationship(back_populates="tests")
+
+# 注意，为了避免不同插件的模型同名而报错，请一定要加上这一句，避免报错
+# sqlalchemy.exc.InvalidRequestError: Multiple classes found for path "Test" in the registry of this declarative base. Please use a fully module-qualified path.
+Example.tests = relationship(Test, back_populates="example")
+```
+
 ## 配置项
 
 配置方式：直接在 `NoneBot` 全局配置文件中添加以下配置项即可。
