@@ -85,11 +85,14 @@ def do_run_migrations(connection, plugin_name: Optional[str] = None):
         if type_ != "table":
             return False
 
-        table_name = object.metadata.info.get("name")
-        if table_name is None and object.fullname.startswith(f"{plugin_name}_"):
+        table_info_name = object.metadata.info.get("name")
+        # 共用一个注册表没法通过 metadata.info 区分，只能通过 table.fullname
+        # FIXME: 如果其中一个插件是 aaa，另一个插件是 aaa_bbb
+        # 那么插件 aaa_bbb 的模型会被包含在插件 aaa 中
+        if table_info_name is None and object.fullname.startswith(f"{plugin_name}_"):
             return True
 
-        if table_name == plugin_name:
+        if table_info_name == plugin_name:
             return True
 
         return False
