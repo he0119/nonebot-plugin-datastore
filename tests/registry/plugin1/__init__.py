@@ -4,7 +4,7 @@ from nonebot.params import Depends
 from nonebot_plugin_datastore import get_session
 from nonebot_plugin_datastore.db import AsyncSession
 
-from .models import Example, Test
+from .models import Example
 
 test = on_command("test")
 

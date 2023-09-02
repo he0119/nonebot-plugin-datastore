@@ -26,7 +26,6 @@ async def test_exists(app: App):
 async def test_open_file(app: App):
     """测试打开文件"""
     from nonebot_plugin_datastore import PluginData
-    from nonebot_plugin_datastore.config import plugin_config
 
     data = PluginData("test")
 

@@ -81,17 +81,17 @@ async def revision(
 
     script_directory = ScriptDirectory.from_config(config)
 
-    command_args = dict(
-        message=message,
-        autogenerate=autogenerate,
-        sql=sql,
-        head=head,
-        splice=splice,
-        branch_label=branch_label,
-        version_path=version_path,
-        rev_id=rev_id,
-        depends_on=depends_on,
-    )
+    command_args = {
+        "message": message,
+        "autogenerate": autogenerate,
+        "sql": sql,
+        "head": head,
+        "splice": splice,
+        "branch_label": branch_label,
+        "version_path": version_path,
+        "rev_id": rev_id,
+        "depends_on": depends_on,
+    }
     revision_context = RevisionContext(
         config,
         script_directory,
@@ -141,7 +141,7 @@ async def revision(
         # in addition to the hooks present within each run_migrations() call,
         # or at the end of env.py run_migrations_online().
 
-    scripts = [script for script in revision_context.generate_scripts()]
+    scripts = list(revision_context.generate_scripts())
     if len(scripts) == 1:
         return scripts[0]
     else:
@@ -161,17 +161,17 @@ async def check(
 
     script_directory = ScriptDirectory.from_config(config)
 
-    command_args = dict(
-        message=None,
-        autogenerate=True,
-        sql=False,
-        head="head",
-        splice=False,
-        branch_label=None,
-        version_path=None,
-        rev_id=None,
-        depends_on=None,
-    )
+    command_args = {
+        "message": None,
+        "autogenerate": True,
+        "sql": False,
+        "head": "head",
+        "splice": False,
+        "branch_label": None,
+        "version_path": None,
+        "rev_id": None,
+        "depends_on": None,
+    }
     revision_context = RevisionContext(
         config,
         script_directory,
