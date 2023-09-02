@@ -67,6 +67,10 @@ exclude_lines = [
 ]
 omit = ["*/script/command.py", "*/migrations/*"]
 
+[tool.ruff]
+select = ["E", "W", "F", "UP", "C", "T", "PYI", "Q"]
+ignore = ["E402", "E501", "E711", "C901", "UP037"]
+
 [tool.poetry.plugins.nb_scripts]
 datastore = "nonebot_plugin_datastore.script.cli:main"
 

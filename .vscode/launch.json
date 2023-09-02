@@ -9,10 +9,8 @@
       "type": "python",
       "request": "launch",
       "module": "nb_cli",
-      "args": [
-        "run"
-      ],
-      "justMyCode": false,
+      "args": ["run"],
+      "justMyCode": false
     },
     {
       "name": "Pytest",
@@ -26,12 +24,7 @@
       "type": "python",
       "request": "launch",
       "module": "nb_cli",
-      "args": [
-        "datastore",
-        "upgrade",
-        "-n",
-        "example"
-      ],
+      "args": ["datastore", "upgrade", "-n", "example"],
       "justMyCode": false
     },
     {
@@ -39,18 +32,14 @@
       "type": "python",
       "request": "launch",
       "module": "nb_cli",
-      "args": [
-        "datastore",
-        "revision",
-        "--autogenerate",
-      ],
+      "args": ["datastore", "revision", "--autogenerate"],
       "justMyCode": false
     },
     {
       "name": "Debug Unit Test",
       "type": "python",
       "request": "test",
-      "justMyCode": false,
+      "justMyCode": false
     }
   ]
 }

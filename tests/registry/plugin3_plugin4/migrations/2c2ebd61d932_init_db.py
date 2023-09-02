@@ -1,7 +1,7 @@
 """init db
 
 Revision ID: 2c2ebd61d932
-Revises: 
+Revises:
 Create Date: 2023-07-26 16:29:04.779418
 
 """

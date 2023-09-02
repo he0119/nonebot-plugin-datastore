@@ -72,7 +72,7 @@ async def test_revision(app: App, tmp_path: Path):
     assert migration_dir.exists()
 
     # 测试插件如果不在项目目录下，会报错
-    with runner.isolated_filesystem(temp_dir=tmp_path) as td:
+    with runner.isolated_filesystem(temp_dir=tmp_path):
         result = await run_sync(runner.invoke)(cli, ["revision", "--name", "plugin2"])
         assert result.exit_code == 2
         assert "未找到插件" in result.output
