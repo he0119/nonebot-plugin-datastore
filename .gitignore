@@ -140,8 +140,8 @@ dmypy.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
 
+# VSCode
 .vscode/*
 !.vscode/launch.json
-!.vscode/settings.json
-.env.dev
+
 data/

@@ -54,6 +54,7 @@ asyncio_mode = "auto"
 [tool.pyright]
 pythonVersion = "3.8"
 pythonPlatform = "All"
+typeCheckingMode = "basic"
 
 [tool.coverage.report]
 exclude_lines = [
