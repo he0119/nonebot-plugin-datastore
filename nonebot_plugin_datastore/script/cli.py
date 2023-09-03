@@ -7,7 +7,7 @@ except ImportError as e:  # pragma: no cover
 
 from argparse import Namespace
 from functools import partial, wraps
-from typing import Any, Callable, Coroutine, Optional, TypeVar
+from typing import Any, Callable, Coroutine, List, Optional, TypeVar
 
 from nonebot.log import logger
 
@@ -37,6 +37,16 @@ def run_async(func: Callable[P, Coroutine[Any, Any, R]]) -> Callable[P, R]:
     return wrapper
 
 
+def get_plugins_or_bad_parameter(
+    name: Optional[str], exclude_others: bool = False
+) -> List[str]:
+    """获取使用了数据库的插件名，如果没找到则抛出 click 的 BadParameter 异常"""
+    try:
+        return get_plugins(name, exclude_others)
+    except ValueError:
+        raise click.BadParameter(message="未找到插件", param_hint="name")
+
+
 @click.group()
 def cli():
     """Datastore CLI"""
@@ -57,7 +67,7 @@ def cli():
 @run_async
 async def revision(name: Optional[str], message: Optional[str], autogenerate: bool):
     """创建迁移文件"""
-    plugins = get_plugins(name, True)
+    plugins = get_plugins_or_bad_parameter(name, True)
     for plugin in plugins:
         logger.info(f"尝试生成插件 {plugin} 的迁移文件")
         config = Config(plugin, cmd_opts=Namespace(autogenerate=autogenerate))
@@ -70,7 +80,7 @@ async def revision(name: Optional[str], message: Optional[str], autogenerate: bo
 @run_async
 async def migrate(name: Optional[str], message: Optional[str]):
     """自动根据模型更改创建迁移文件"""
-    plugins = get_plugins(name, True)
+    plugins = get_plugins_or_bad_parameter(name, True)
     for plugin in plugins:
         logger.info(f"尝试生成插件 {plugin} 的迁移文件")
         config = Config(plugin, cmd_opts=Namespace(autogenerate=True))
@@ -85,7 +95,7 @@ async def upgrade(name: Optional[str], revision: str):
     """升级数据库版本"""
     # 执行数据库初始化前执行的函数
     # 比如 bison 需要在迁移之前把 alembic_version 表重命名
-    plugins = get_plugins(name)
+    plugins = get_plugins_or_bad_parameter(name)
     for plugin in plugins:
         await run_pre_db_init_funcs(plugin)
         logger.info(f"升级插件 {plugin} 的数据库")
@@ -99,7 +109,7 @@ async def upgrade(name: Optional[str], revision: str):
 @run_async
 async def downgrade(name: Optional[str], revision: str):
     """降级数据库版本"""
-    plugins = get_plugins(name)
+    plugins = get_plugins_or_bad_parameter(name)
     for plugin in plugins:
         logger.info(f"降级插件 {plugin} 的数据库")
         config = Config(plugin)
@@ -124,7 +134,7 @@ async def history(
     indicate_current: bool,
 ):
     """数据库版本历史"""
-    plugins = get_plugins(name)
+    plugins = get_plugins_or_bad_parameter(name)
     for plugin in plugins:
         logger.info(f"查看插件 {plugin} 的数据库历史")
         config = Config(plugin)
@@ -137,7 +147,7 @@ async def history(
 @run_async
 async def current(name: Optional[str], verbose: bool):
     """数据库当前版本"""
-    plugins = get_plugins(name)
+    plugins = get_plugins_or_bad_parameter(name)
     for plugin in plugins:
         logger.info(f"查看插件 {plugin} 的数据库当前版本")
         config = Config(plugin)
@@ -149,7 +159,7 @@ async def current(name: Optional[str], verbose: bool):
 @click.option("--verbose", "-v", is_flag=True, help="显示详细信息")
 def heads(name: Optional[str], verbose: bool):
     """数据库最新版本"""
-    plugins = get_plugins(name)
+    plugins = get_plugins_or_bad_parameter(name)
     for plugin in plugins:
         logger.info(f"查看插件 {plugin} 的数据库当前可用的 heads")
         config = Config(plugin)
@@ -161,7 +171,7 @@ def heads(name: Optional[str], verbose: bool):
 @run_async
 async def check(name: Optional[str]):
     """数据库是否需要升级"""
-    plugins = get_plugins(name, True)
+    plugins = get_plugins_or_bad_parameter(name, True)
     for plugin in plugins:
         logger.info(f"检查插件 {plugin} 的数据库是否需要新的迁移文件")
         config = Config(plugin)
@@ -179,7 +189,7 @@ def dir(name: Optional[str] = None):
         click.echo(f"数据目录: {plugin_config.datastore_data_dir}")
         return
 
-    plugins = get_plugins(name)
+    plugins = get_plugins_or_bad_parameter(name)
     for plugin in plugins:
         plugin_data = PluginData(plugin)
         click.echo(f"插件 {plugin} 的存储路径:")

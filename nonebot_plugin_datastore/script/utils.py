@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING, List, Optional
 
 from alembic import context
 from alembic.config import Config as AlembicConfig
-from click import BadParameter
 from nonebot import get_loaded_plugins, get_plugin
 from nonebot.log import logger
 
@@ -47,7 +46,7 @@ def get_plugins(name: Optional[str] = None, exclude_others: bool = False) -> Lis
     if (plugin := get_plugin(name)) and _should_include(plugin):
         return [plugin.name]
 
-    raise BadParameter(message="未找到插件", param_hint="name")
+    raise ValueError(f"未找到插件: {name}")
 
 
 class Config(AlembicConfig):
