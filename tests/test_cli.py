@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 
 import pytest
@@ -108,6 +109,37 @@ async def test_migrate(app: App, tmp_path: Path):
     result = await run_sync(runner.invoke)(
         cli, ["migrate", "--name", "plugin2", "-m", "test"]
     )
+    assert result.exit_code == 0
+    assert "Generating" in result.output
+    assert "test.py" in result.output
+
+    assert migration_dir.exists()
+
+
+@pytest.mark.anyio
+async def test_migrate_change(app: App, tmp_path: Path):
+    from nonebot import require
+
+    from nonebot_plugin_datastore import PluginData
+    from nonebot_plugin_datastore.db import init_db
+    from nonebot_plugin_datastore.script.cli import cli, run_sync
+
+    require("tests.example.plugin_migrate")
+    await init_db()
+
+    runner = CliRunner()
+
+    migration_dir = tmp_path / "migrations"
+    # 手动设置迁移文件目录
+    PluginData("plugin_migrate").set_migration_dir(migration_dir)
+    shutil.copytree(
+        Path(__file__).parent / "example" / "plugin_migrate" / "migrations",
+        migration_dir,
+    )
+    assert migration_dir.exists()
+
+    # 测试生成迁移文件报错
+    result = await run_sync(runner.invoke)(cli, ["migrate", "-m", "test"])
     assert result.exit_code == 0
     assert "Generating" in result.output
     assert "test.py" in result.output

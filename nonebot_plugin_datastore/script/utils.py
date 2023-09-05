@@ -82,7 +82,7 @@ def do_run_migrations(connection, plugin_name: Optional[str] = None):
 
     def include_object(object, name, type_, reflected, compare_to):
         if type_ != "table":
-            return False
+            return True
 
         table_info_name = object.metadata.info.get("name")
         # 因为所有插件共用一个 metadata

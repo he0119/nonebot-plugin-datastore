@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 ### Fixed
 
 - 修复意外导入 click 的错误
+- 修复无法正确生成迁移脚本的问题
 
 ## [1.1.0] - 2023-07-26
 
