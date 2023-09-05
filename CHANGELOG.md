@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [1.1.1] - 2023-09-05
+
 ### Fixed
 
 - 修复意外导入 click 的错误
@@ -212,7 +214,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.1.0...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.3...v1.0.0
 [0.6.3]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.2...v0.6.3
