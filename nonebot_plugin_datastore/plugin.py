@@ -94,6 +94,8 @@ class Singleton(type):
         return cls._instances[name]
 
 
+# https://alembic.sqlalchemy.org/en/latest/naming.html
+# https://alembic.sqlalchemy.org/en/latest/naming.html#integration-of-naming-conventions-into-operations-autogenerate
 NAMING_CONVENTION: Dict = {
     "ix": "ix_%(column_0_label)s",
     "uq": "uq_%(table_name)s_%(column_0_name)s",
