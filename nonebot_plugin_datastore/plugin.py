@@ -2,7 +2,7 @@
 import json
 import pickle
 from pathlib import Path
-from typing import Any, Callable, Generic, Optional, Type, TypeVar
+from typing import Any, Callable, Dict, Generic, Optional, Type, TypeVar
 
 import httpx
 from nonebot import get_plugin
@@ -94,6 +94,15 @@ class Singleton(type):
         return cls._instances[name]
 
 
+NAMING_CONVENTION: Dict = {
+    "ix": "ix_%(column_0_label)s",
+    "uq": "uq_%(table_name)s_%(column_0_name)s",
+    "ck": "ck_%(table_name)s_%(constraint_name)s",
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+    "pk": "pk_%(table_name)s",
+}
+
+
 class PluginData(metaclass=Singleton):
     """插件数据管理
 
@@ -101,7 +110,7 @@ class PluginData(metaclass=Singleton):
     提供保存和读取文件/数据的方法。
     """
 
-    global_registry = registry()
+    global_registry = registry(metadata=MetaData(naming_convention=NAMING_CONVENTION))
 
     def __init__(self, name: str) -> None:
         # 插件名，用来确定插件的文件夹位置
@@ -228,7 +237,10 @@ class PluginData(metaclass=Singleton):
     def Model(self) -> Type[DeclarativeBase]:
         """数据库模型"""
         if self._model is None:
-            self._metadata = MetaData(info={"name": self.name})
+            self._metadata = MetaData(
+                info={"name": self.name},
+                naming_convention=NAMING_CONVENTION,
+            )
             if self._use_global_registry:
                 plugin_registry = self.global_registry
             else:
