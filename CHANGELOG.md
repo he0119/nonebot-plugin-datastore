@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Added
+
+- 默认设置 naming_convention
+
 ## [1.1.1] - 2023-09-05
 
 ### Fixed
