@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [1.1.2] - 2023-09-15
+
 ### Added
 
 - 默认设置 naming_convention
@@ -218,7 +220,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.1.1...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v0.6.3...v1.0.0
