@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Added
+
+- 适配 Pydantic V2
+
 ## [1.1.2] - 2023-09-15
 
 ### Added
