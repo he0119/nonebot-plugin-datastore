@@ -2,12 +2,14 @@
 from pathlib import Path
 from typing import Any, Dict
 
-from nonebot import get_driver
+from nonebot import get_plugin_config
 from nonebot_plugin_localstore import get_cache_dir, get_config_dir, get_data_dir
-from pydantic import BaseModel, Extra, root_validator
+from pydantic import BaseModel
+
+from .compat import model_validator
 
 
-class Config(BaseModel, extra=Extra.ignore):
+class Config(BaseModel):
     datastore_cache_dir: Path
     datastore_config_dir: Path
     datastore_data_dir: Path
@@ -21,7 +23,7 @@ class Config(BaseModel, extra=Extra.ignore):
     datastore_engine_options: Dict[str, Any] = {}
     datastore_config_provider: str = "~json"
 
-    @root_validator(pre=True, allow_reuse=True)
+    @model_validator(mode="before")
     def set_defaults(cls, values: Dict):
         """设置默认值"""
         # 设置默认目录
@@ -51,4 +53,4 @@ class Config(BaseModel, extra=Extra.ignore):
         return values
 
 
-plugin_config = Config.parse_obj(get_driver().config)
+plugin_config = get_plugin_config(Config)
