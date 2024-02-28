@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 from nonebot import require
 from nonebug import App
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.pool import NullPool, QueuePool
 
 from .utils import clear_plugins, make_fake_event, make_fake_message
@@ -58,10 +59,8 @@ async def test_disable_db(app: App):
     """测试禁用数据库"""
     from nonebot_plugin_datastore import create_session
 
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(ValueError, match="数据库未启用"):
         create_session()
-
-    assert str(e.value) == "数据库未启用"
 
 
 async def test_default_db_url(nonebug_init: None):
@@ -98,7 +97,7 @@ async def test_pre_db_init_error(app: App):
 
     require("tests.example.pre_db_init_error")
 
-    with pytest.raises(Exception):
+    with pytest.raises(OperationalError):
         await init_db()
 
 

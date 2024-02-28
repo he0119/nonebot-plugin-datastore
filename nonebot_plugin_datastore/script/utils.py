@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from alembic import context
 from alembic.config import Config as AlembicConfig
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 SCRIPT_LOCATION = Path(__file__).parent / "migration"
 
 
-def get_plugins(name: Optional[str] = None, exclude_others: bool = False) -> List[str]:
+def get_plugins(name: Optional[str] = None, exclude_others: bool = False) -> list[str]:
     """获取使用了数据库的插件名"""
 
     def _should_include(plugin: "Plugin") -> bool:

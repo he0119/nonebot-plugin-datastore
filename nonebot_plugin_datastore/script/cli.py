@@ -3,11 +3,14 @@ try:
     import click
     from typing_extensions import ParamSpec
 except ImportError as e:  # pragma: no cover
-    raise ImportError("请使用 `pip install nonebot-plugin-datastore[cli]` 安装所需依赖") from e
+    raise ImportError(
+        "请使用 `pip install nonebot-plugin-datastore[cli]` 安装所需依赖"
+    ) from e
 
 from argparse import Namespace
+from collections.abc import Coroutine
 from functools import partial, wraps
-from typing import Any, Callable, Coroutine, List, Optional, TypeVar
+from typing import Any, Callable, Optional, TypeVar
 
 from nonebot.log import logger
 
@@ -39,7 +42,7 @@ def run_async(func: Callable[P, Coroutine[Any, Any, R]]) -> Callable[P, R]:
 
 def get_plugins_or_bad_parameter(
     name: Optional[str], exclude_others: bool = False
-) -> List[str]:
+) -> list[str]:
     """获取使用了数据库的插件名，如果没找到则抛出 click 的 BadParameter 异常"""
     try:
         return get_plugins(name, exclude_others)

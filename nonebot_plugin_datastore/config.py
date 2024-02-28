@@ -1,6 +1,6 @@
 """ 配置 """
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from nonebot import get_plugin_config
 from nonebot_plugin_localstore import get_cache_dir, get_config_dir, get_data_dir
@@ -20,11 +20,11 @@ class Config(BaseModel):
     """
     datastore_enable_database: bool = True
     datastore_database_echo: bool = False
-    datastore_engine_options: Dict[str, Any] = {}
+    datastore_engine_options: dict[str, Any] = {}
     datastore_config_provider: str = "~json"
 
     @model_validator(mode="before")
-    def set_defaults(cls, values: Dict):
+    def set_defaults(cls, values: dict):
         """设置默认值"""
         # 设置默认目录
         # 仅在未设置时调用 get_*_dir 函数，因为这些函数会自动创建目录

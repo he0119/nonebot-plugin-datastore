@@ -1,5 +1,5 @@
 import sys
-from typing import TYPE_CHECKING, Optional, Type
+from typing import TYPE_CHECKING, Optional
 
 from pydantic import create_model
 
@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from nonebot.adapters import Event, Message
 
 
-def make_fake_message() -> Type["Message"]:
+def make_fake_message() -> type["Message"]:
     from nonebot.adapters import Message, MessageSegment
 
     class FakeMessageSegment(MessageSegment):
@@ -50,7 +50,7 @@ def make_fake_event(
     _message: Optional["Message"] = None,
     _to_me: bool = True,
     **fields,
-) -> Type["Event"]:
+) -> type["Event"]:
     from nonebot.adapters import Event
 
     _Fake = create_model("_Fake", __base__=Event, **fields)

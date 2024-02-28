@@ -1,7 +1,9 @@
 try:
     import rtoml
 except ImportError as e:  # pragma: no cover
-    raise ImportError("请使用 `pip install nonebot-plugin-datastore[toml]` 安装所需依赖") from e
+    raise ImportError(
+        "请使用 `pip install nonebot-plugin-datastore[toml]` 安装所需依赖"
+    ) from e
 
 from pathlib import Path
 from typing import TYPE_CHECKING, Any

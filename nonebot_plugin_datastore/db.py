@@ -1,6 +1,7 @@
 """ 数据库 """
+from collections.abc import AsyncGenerator
 from pathlib import Path
-from typing import TYPE_CHECKING, AsyncGenerator, Callable, Dict, List
+from typing import TYPE_CHECKING, Callable
 
 from nonebot import get_driver
 from nonebot.log import logger
@@ -18,7 +19,7 @@ if TYPE_CHECKING:
 
 _engine = None
 
-_pre_db_init_funcs: Dict[str, List] = {}
+_pre_db_init_funcs: dict[str, list] = {}
 _post_db_init_funcs = []
 
 
@@ -65,7 +66,7 @@ def post_db_init(func: Callable) -> Callable:
     return func
 
 
-async def run_funcs(funcs: List[Callable]) -> None:
+async def run_funcs(funcs: list[Callable]) -> None:
     """运行所有函数"""
     for func in funcs:
         if is_coroutine_callable(func):
