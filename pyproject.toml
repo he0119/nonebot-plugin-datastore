@@ -63,7 +63,7 @@ exclude_lines = [
   "@overload",
   "except ImportError:",
 ]
-omit = ["*/script/command.py", "*/migrations/*"]
+omit = ["*/script/command.py", "*/migrations/*", "*/compat.py"]
 
 [tool.ruff]
 select = ["E", "W", "F", "UP", "C", "T", "PYI", "Q"]
