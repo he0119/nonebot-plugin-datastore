@@ -37,14 +37,6 @@ toml = ["rtoml"]
 yaml = ["pyyaml"]
 all = ["anyio", "click", "typing-extensions", "rtoml", "pyyaml"]
 
-[tool.black]
-line-length = 88
-
-[tool.isort]
-profile = "black"
-line_length = 88
-skip_gitignore = true
-
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 
@@ -66,8 +58,12 @@ exclude_lines = [
 omit = ["*/script/command.py", "*/migrations/*", "*/compat.py"]
 
 [tool.ruff]
-select = ["E", "W", "F", "UP", "C", "T", "PYI", "Q"]
-ignore = ["E402", "E501", "E711", "C901", "UP037"]
+line-length = 88
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "UP", "C", "T", "PYI", "PT", "Q"]
+ignore = ["E402", "C901", "UP037"]
 
 [tool.poetry.plugins.nb_scripts]
 datastore = "nonebot_plugin_datastore.script.cli:main"

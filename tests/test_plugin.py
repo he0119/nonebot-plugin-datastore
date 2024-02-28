@@ -11,10 +11,8 @@ async def test_get_plugin_data_failed(app: App):
         get_plugin_data()
 
     # 没有加载插件直接使用
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(ValueError, match="自动获取插件名失败"):
         import tests.example.plugin1  # noqa: F401
-
-    assert e.value.args[0] == "自动获取插件名失败"
 
 
 async def test_plugin_dir_is_file(app: App):

@@ -2,7 +2,7 @@
 import json
 import pickle
 from pathlib import Path
-from typing import Any, Callable, Dict, Generic, Optional, Type, TypeVar
+from typing import Any, Callable, Generic, Optional, TypeVar
 
 import httpx
 from nonebot import get_plugin
@@ -96,7 +96,7 @@ class Singleton(type):
 
 # https://alembic.sqlalchemy.org/en/latest/naming.html
 # https://alembic.sqlalchemy.org/en/latest/naming.html#integration-of-naming-conventions-into-operations-autogenerate
-NAMING_CONVENTION: Dict = {
+NAMING_CONVENTION: dict = {
     "ix": "ix_%(column_0_label)s",
     "uq": "uq_%(table_name)s_%(column_0_name)s",
     "ck": "ck_%(table_name)s_%(constraint_name)s",
@@ -236,7 +236,7 @@ class PluginData(metaclass=Singleton):
         return NetworkFile[T, R](url, filename, self, process_data, cache)
 
     @property
-    def Model(self) -> Type[DeclarativeBase]:
+    def Model(self) -> type[DeclarativeBase]:
         """数据库模型"""
         if self._model is None:
             self._metadata = MetaData(
@@ -261,8 +261,8 @@ class PluginData(metaclass=Singleton):
                     """
                     table_name = f"{self.name}_{cls.__name__.lower()}"
                     if self._use_global_registry:
-                        # 如果使用全局 registry，则需要在 metadata 中记录表名和插件名的对应关系
-                        # 因为所有插件共用一个 metadata，没法通过 metadata.name 指定插件名
+                        # 如果使用全局 registry，则需要在 metadata 中记录表名和插件名的对应关系 # noqa: E501
+                        # 因为所有插件共用一个 metadata，没法通过 metadata.name 指定插件名 # noqa: E501
                         if plugin_name_map := cls.metadata.info.get("plugin_name_map"):
                             plugin_name_map[table_name] = self.name
                         else:

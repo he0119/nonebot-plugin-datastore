@@ -18,7 +18,7 @@ async def test_read_config(app: App):
     data = PluginData("test")
     assert await data.config.get("test") == 1
 
-    assert await data.config.get("test1") == None
+    assert await data.config.get("test1") is None
 
 
 async def test_write_config(app: App):
