@@ -1,4 +1,5 @@
-""" 插件数据 """
+"""插件数据"""
+
 import json
 import pickle
 from pathlib import Path
