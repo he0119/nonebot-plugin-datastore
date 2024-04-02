@@ -1,4 +1,5 @@
-""" 配置 """
+"""配置"""
+
 from pathlib import Path
 from typing import Any
 
@@ -46,9 +47,9 @@ class Config(BaseModel):
 
         # 设置默认数据库连接字符串
         if not values.get("datastore_database_url"):
-            values[
-                "datastore_database_url"
-            ] = f"sqlite+aiosqlite:///{values['datastore_data_dir'] / 'data.db'}"
+            values["datastore_database_url"] = (
+                f"sqlite+aiosqlite:///{values['datastore_data_dir'] / 'data.db'}"
+            )
 
         return values
 

@@ -1,4 +1,5 @@
-""" 数据库 """
+"""数据库"""
+
 from collections.abc import AsyncGenerator
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable

@@ -33,12 +33,10 @@ class ConfigProvider(abc.ABC):
         raise NotImplementedError
 
     @overload
-    async def get(self, __key: str) -> Union[Any, None]:
-        ...
+    async def get(self, __key: str) -> Union[Any, None]: ...
 
     @overload
-    async def get(self, __key: str, __default: T) -> T:
-        ...
+    async def get(self, __key: str, __default: T) -> T: ...
 
     async def get(self, key, default=None):
         """获得配置
