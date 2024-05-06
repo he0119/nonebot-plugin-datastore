@@ -19,8 +19,14 @@ def get_caller_plugin_name() -> str:
         if not module_name:
             raise ValueError("无法找到调用者")
 
+        if (
+            module_name.startswith("nonebot_plugin_datastore.")
+            or module_name == "nonebot_plugin_datastore"
+        ):
+            continue
+
         plugin = get_plugin_by_module_name(module_name)
-        if plugin and plugin.name != "nonebot_plugin_datastore":
+        if plugin and plugin.id_ != "nonebot_plugin_datastore":
             return plugin.name
 
     raise ValueError("自动获取插件名失败")
