@@ -79,9 +79,6 @@ def make_fake_event(
         def is_tome(self) -> bool:
             return _to_me
 
-        class Config:
-            extra = "forbid"
-
     return FakeEvent
 
 
