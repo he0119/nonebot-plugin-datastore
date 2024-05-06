@@ -8,7 +8,7 @@ from ..db import create_session
 from ..plugin import get_plugin_data
 from . import ConfigProvider, KeyNotFoundError
 
-plugin_data = get_plugin_data()
+plugin_data = get_plugin_data("nonebot_plugin_datastore")
 
 
 class ConfigModel(plugin_data.Model):

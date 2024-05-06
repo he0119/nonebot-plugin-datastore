@@ -6,12 +6,12 @@ async def test_get_plugin_data_failed(app: App):
     """获取插件数据失败"""
     from nonebot_plugin_datastore import get_plugin_data
 
-    # f_locals 中没有 __name__
-    with pytest.raises(KeyError):
+    # 不在插件中调用
+    with pytest.raises(ValueError, match="自动获取插件名失败"):
         get_plugin_data()
 
     # 没有加载插件直接使用
-    with pytest.raises(ValueError, match="自动获取插件名失败"):
+    with pytest.raises(ValueError, match="无法找到调用者"):
         import tests.example.plugin1  # noqa: F401
 
 
