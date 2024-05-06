@@ -4,7 +4,7 @@ import pytest
 from nonebot import require
 from nonebug import App
 from sqlalchemy.exc import OperationalError
-from sqlalchemy.pool import NullPool, QueuePool
+from sqlalchemy.pool import AsyncAdaptedQueuePool, NullPool
 
 from .utils import clear_plugins, make_fake_event, make_fake_message
 
@@ -123,7 +123,8 @@ async def test_engine_options(app: App):
     "app",
     [
         pytest.param(
-            {"datastore_engine_options": {"poolclass": QueuePool}}, id="options"
+            {"datastore_engine_options": {"poolclass": AsyncAdaptedQueuePool}},
+            id="options",
         )
     ],
     indirect=True,
@@ -133,7 +134,7 @@ async def test_engine_options_poolclass(app: App):
     from nonebot_plugin_datastore.db import get_engine
 
     engine = get_engine()
-    assert isinstance(engine.pool, QueuePool)
+    assert isinstance(engine.pool, AsyncAdaptedQueuePool)
 
 
 @pytest.mark.parametrize(
