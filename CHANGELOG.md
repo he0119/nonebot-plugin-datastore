@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Fixed
+
+- 让自动获取插件名更稳定
+
 ## [1.2.0] - 2024-02-28
 
 ### Added

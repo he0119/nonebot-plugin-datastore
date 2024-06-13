@@ -1,13 +1,8 @@
 import importlib
 import inspect
-from functools import lru_cache
-from typing import TYPE_CHECKING, Any, Optional
+from typing import Any, Optional
 
-import pygtrie
-from nonebot import get_loaded_plugins
-
-if TYPE_CHECKING:
-    from nonebot.plugin import Plugin
+from nonebot import get_plugin_by_module_name
 
 
 def get_caller_plugin_name() -> str:
@@ -15,36 +10,23 @@ def get_caller_plugin_name() -> str:
 
     尝试自动获取调用者所在的插件名
     """
-    name = None
-    if frame := inspect.currentframe():
-        # 因为是在插件内部调用，所以调用栈为
-        # 1. 当前函数
-        # 2. 调用者函数
-        # 3. 调用者所在的插件
-        # 需要往回跳两次
-        frame = frame.f_back.f_back  # type: ignore
-        if not frame:
-            raise ValueError("无法找到调用者")  # pragma: no cover
+    frame = inspect.currentframe()
+    if frame is None:
+        raise ValueError("无法获取当前栈帧")
 
-        module_name = frame.f_locals["__name__"]
-        plugin = _get_plugin_by_module_name(module_name)
-        if plugin:
-            name = plugin.name
+    while frame := frame.f_back:
+        module_name = (module := inspect.getmodule(frame)) and module.__name__
+        if not module_name:
+            raise ValueError("无法找到调用者")
 
-    if not name:
-        raise ValueError("自动获取插件名失败")
+        if module_name.split(".", maxsplit=1)[0] == "nonebot_plugin_datastore":
+            continue
 
-    return name
+        plugin = get_plugin_by_module_name(module_name)
+        if plugin and plugin.id_ != "nonebot_plugin_datastore":
+            return plugin.name
 
-
-@lru_cache
-def _get_plugin_by_module_name(module_name: str) -> Optional["Plugin"]:
-    """通过模块名获取插件"""
-    t = pygtrie.StringTrie(separator=".")
-    for plugin in get_loaded_plugins():
-        t[plugin.module_name] = plugin
-    plugin = t.longest_prefix(module_name).value
-    return plugin
+    raise ValueError("自动获取插件名失败")
 
 
 def resolve_dot_notation(
