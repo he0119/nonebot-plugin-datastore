@@ -12,7 +12,7 @@ def get_caller_plugin_name() -> str:
     """
     frame = inspect.currentframe()
     if frame is None:
-        raise ValueError("无法获取当前栈帧")
+        raise ValueError("无法获取当前栈帧")  # pragma: no cover
 
     while frame := frame.f_back:
         module_name = (module := inspect.getmodule(frame)) and module.__name__
@@ -26,7 +26,7 @@ def get_caller_plugin_name() -> str:
         if plugin and plugin.id_ != "nonebot_plugin_datastore":
             return plugin.name
 
-    raise ValueError("自动获取插件名失败")
+    raise ValueError("自动获取插件名失败")  # pragma: no cover
 
 
 def resolve_dot_notation(
