@@ -7,7 +7,9 @@ async def test_get_plugin_data_failed(app: App):
     from nonebot_plugin_datastore import get_plugin_data
 
     # 不在插件中调用
-    with pytest.raises(ValueError, match="自动获取插件名失败"):
+    # 挺奇妙的，如果用 pytest 跑会报无法找到调用者
+    # 但是 vscode 调试中跑就会报自动获取插件名失败
+    with pytest.raises(ValueError, match=r"无法找到调用者|自动获取插件名失败"):
         get_plugin_data()
 
     # 没有加载插件直接使用
