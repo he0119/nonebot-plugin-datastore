@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [1.3.0] - 2024-06-20
+
 ### Fixed
 
 - 限制 NoneBot 依赖版本至 2.3.0 以上
@@ -236,7 +238,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.2.1...HEAD
+[unreleased]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.1.2...v1.2.0
 [1.1.2]: https://github.com/he0119/nonebot-plugin-datastore/compare/v1.1.1...v1.1.2
