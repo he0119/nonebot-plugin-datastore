@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Fixed
+
+- 使用 logger.exception 记录数据库初始化后执行的函数发生的异常
+
 ## [1.3.0] - 2024-06-20
 
 ### Fixed

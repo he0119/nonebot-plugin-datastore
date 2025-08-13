@@ -110,8 +110,8 @@ async def init_db():
     # 执行数据库初始化后执行的函数
     try:
         await run_post_db_init_funcs()
-    except Exception as e:
-        logger.error(f"数据库初始化后执行的函数出错: {e}")
+    except Exception:
+        logger.exception("数据库初始化后执行的函数出现异常")
 
 
 if plugin_config.datastore_enable_database:
