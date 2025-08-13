@@ -313,7 +313,7 @@ async def history(
     if rev_range is not None:
         if ":" not in rev_range:
             raise CommandError(
-                "History range requires [start]:[end], " "[start]:, or :[end]"
+                "History range requires [start]:[end], [start]:, or :[end]"
             )
         base, head = rev_range.strip().split(":")
     else:
