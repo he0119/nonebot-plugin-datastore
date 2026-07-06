@@ -34,7 +34,7 @@ def test_cli_help(app: App):
     assert "[REVISION]" in result.output
 
 
-@pytest.mark.anyio()
+@pytest.mark.anyio
 async def test_revision(app: App, tmp_path: Path):
     from nonebot import require
 
@@ -79,7 +79,7 @@ async def test_revision(app: App, tmp_path: Path):
         assert "未找到插件" in result.output
 
 
-@pytest.mark.anyio()
+@pytest.mark.anyio
 async def test_migrate(app: App, tmp_path: Path):
     from nonebot import require
 
@@ -116,7 +116,7 @@ async def test_migrate(app: App, tmp_path: Path):
     assert migration_dir.exists()
 
 
-@pytest.mark.anyio()
+@pytest.mark.anyio
 async def test_migrate_change(app: App, tmp_path: Path):
     from nonebot import require
 
@@ -147,7 +147,7 @@ async def test_migrate_change(app: App, tmp_path: Path):
     assert migration_dir.exists()
 
 
-@pytest.mark.anyio()
+@pytest.mark.anyio
 async def test_upgrade(app: App):
     from nonebot import require
 
@@ -166,7 +166,7 @@ async def test_upgrade(app: App):
     assert result.output == ""
 
 
-@pytest.mark.anyio()
+@pytest.mark.anyio
 async def test_upgrade_single_plugin(app: App):
     """测试单独升级某个插件"""
     from nonebot import require
@@ -188,7 +188,7 @@ async def test_upgrade_single_plugin(app: App):
     assert result.output == ""
 
 
-@pytest.mark.anyio()
+@pytest.mark.anyio
 async def test_downgrade(app: App):
     from nonebot import require
 
@@ -204,7 +204,7 @@ async def test_downgrade(app: App):
     assert result.output == ""
 
 
-@pytest.mark.anyio()
+@pytest.mark.anyio
 async def test_other_commands(app: App):
     from nonebot import require
 
@@ -246,7 +246,7 @@ async def test_other_commands(app: App):
     assert "插件 plugin1 的存储路径:" in result.output
 
 
-@pytest.mark.anyio()
+@pytest.mark.anyio
 async def test_revision_path_with_space(app: App, tmp_path: Path):
     """测试迁移文件目录路径中包含空格时的情况"""
     from nonebot import require
@@ -276,7 +276,7 @@ async def test_revision_path_with_space(app: App, tmp_path: Path):
     assert migration_dir.exists()
 
 
-@pytest.mark.anyio()
+@pytest.mark.anyio
 async def test_migrate_global_registry(app: App, tmp_path: Path):
     """测试使用全局注册表的插件迁移
 

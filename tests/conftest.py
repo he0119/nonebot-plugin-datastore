@@ -6,13 +6,13 @@ from nonebug.app import App
 from .utils import clear_plugins
 
 
-@pytest.fixture()
+@pytest.fixture
 def anyio_backend():
     """https://anyio.readthedocs.io/en/stable/testing.html#specifying-the-backends-to-run-on"""
     return "asyncio"
 
 
-@pytest.fixture()
+@pytest.fixture
 def app(nonebug_init: None, tmp_path: Path, request):
     import nonebot
 
